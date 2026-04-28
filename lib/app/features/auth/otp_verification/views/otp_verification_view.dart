@@ -91,7 +91,7 @@ class _OtpBodyState extends State<_OtpBody> {
                                   ),
                                   boxShadow: const [
                                     BoxShadow(
-                                      color: Color(0x6622C55E),
+                                      color: Color(0x6610B981),
                                       blurRadius: 24,
                                       offset: Offset(0, 10),
                                     ),

@@ -422,7 +422,7 @@ class _MiniStat extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 7),
       decoration: BoxDecoration(
-        color: green ? const Color(0x1A22C55E) : AppColors.background,
+        color: green ? const Color(0x1A10B981) : AppColors.background,
         borderRadius: BorderRadius.circular(10),
       ),
       child: Column(

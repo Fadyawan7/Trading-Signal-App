@@ -192,7 +192,7 @@ Get.toNamed(AppRoutes.traderEditProfile);
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12),
                         gradient: const LinearGradient(
-                          colors: [Color(0xFF16A34A), Color(0xFF22C55E)],
+                          colors: [Color(0xFF059669), Color(0xFF34D399)],
                         ),
                       ),
                       child: const Icon(Icons.workspace_premium),

@@ -201,7 +201,7 @@ class _LogoBox extends StatelessWidget {
         ),
         boxShadow: const [
           BoxShadow(
-            color: Color(0x6622C55E),
+            color: Color(0x6610B981),
             blurRadius: 24,
             offset: Offset(0, 10),
           ),
@@ -237,7 +237,7 @@ class _RegisterBackground extends StatelessWidget {
         const Positioned(
           top: 170,
           left: 200,
-          child: _Orb(size: 140, c1: Color(0xFF16A34A), c2: Color(0xFF10B981)),
+          child: _Orb(size: 140, c1: Color(0xFF059669), c2: Color(0xFF10B981)),
         ),
         const Positioned(
           top: 140,
@@ -293,7 +293,7 @@ class _Orb extends StatelessWidget {
 class _GridPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
-    final paint = Paint()..color = const Color(0x336366F1);
+    final paint = Paint()..color = const Color(0x3314B8A6);
     const gap = 56.0;
     for (double x = 0; x <= size.width; x += gap) {
       canvas.drawLine(Offset(x, 0), Offset(x, size.height), paint);

@@ -548,10 +548,10 @@ class _SignalCard extends StatelessWidget {
                       borderRadius: BorderRadius.circular(8),
                       gradient: buy
                           ? const LinearGradient(
-                              colors: [Color(0xFF22C55E), Color(0xFF10B981)],
+                              colors: [Color(0xFF34D399), Color(0xFF10B981)],
                             )
                           : const LinearGradient(
-                              colors: [Color(0xFFEF4444), Color(0xFFF97316)],
+                              colors: [Color(0xFFEF4444), Color(0xFFF59E0B)],
                             ),
                     ),
                     child: Icon(

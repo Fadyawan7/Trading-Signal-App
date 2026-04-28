@@ -43,7 +43,7 @@ class _SubscriptionBodyState extends State<_SubscriptionBody> {
       ],
       'recommended': false,
       'icon': Icons.flash_on,
-      'colors': [Color(0xFF22C55E), Color(0xFF10B981)],
+      'colors': [Color(0xFF34D399), Color(0xFF10B981)],
     },
     {
       'id': 'pro',
@@ -63,7 +63,7 @@ class _SubscriptionBodyState extends State<_SubscriptionBody> {
       ],
       'recommended': true,
       'icon': Icons.workspace_premium,
-      'colors': [Color(0xFF16A34A), Color(0xFF22C55E)],
+      'colors': [Color(0xFF059669), Color(0xFF34D399)],
     },
     {
       'id': 'premium',
@@ -84,7 +84,7 @@ class _SubscriptionBodyState extends State<_SubscriptionBody> {
       ],
       'recommended': false,
       'icon': Icons.rocket_launch,
-      'colors': [Color(0xFFF97316), Color(0xFFEAB308)],
+      'colors': [Color(0xFFF59E0B), Color(0xFFEAB308)],
     },
   ];
 

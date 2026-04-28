@@ -34,21 +34,21 @@ class _PaymentBodyState extends State<_PaymentBody> {
         'name': 'Crypto Wallet',
         'description': 'Pay with USDT, BTC, or ETH',
         'icon': Icons.account_balance_wallet_outlined,
-        'colors': [Color(0xFFF97316), Color(0xFFEAB308)],
+        'colors': [Color(0xFFF59E0B), Color(0xFFEAB308)],
       },
       {
         'id': 'card',
         'name': 'Credit/Debit Card',
         'description': 'Visa, Mastercard, Amex',
         'icon': Icons.credit_card,
-        'colors': [Color(0xFF22C55E), Color(0xFF10B981)],
+        'colors': [Color(0xFF34D399), Color(0xFF10B981)],
       },
       {
         'id': 'bank',
         'name': 'Bank Transfer',
         'description': 'Direct bank transfer',
         'icon': Icons.account_balance,
-        'colors': [Color(0xFF16A34A), Color(0xFF10B981)],
+        'colors': [Color(0xFF059669), Color(0xFF10B981)],
       },
     ];
 

@@ -19,6 +19,8 @@ class TradingGroupsApp extends StatelessWidget {
       title: 'Trading Groups Marketplace',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.darkTheme,
+      darkTheme: AppTheme.darkTheme,
+      themeMode: ThemeMode.dark,
       initialRoute: AppRoutes.login,
       getPages: AppPages.pages,
       builder: (context, child) {

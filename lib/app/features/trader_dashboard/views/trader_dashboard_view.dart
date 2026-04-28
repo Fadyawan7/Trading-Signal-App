@@ -17,25 +17,25 @@ class TraderDashboardView extends GetView<TraderDashboardViewModel> {
         'label': 'Total Members',
         'value': '1,270',
         'icon': Icons.groups,
-        'colors': [Color(0xFF22C55E), Color(0xFF10B981)],
+        'colors': [Color(0xFF34D399), Color(0xFF10B981)],
       },
       {
         'label': 'Monthly Revenue',
         'value': '\$14,715',
         'icon': Icons.attach_money,
-        'colors': [Color(0xFF16A34A), Color(0xFF10B981)],
+        'colors': [Color(0xFF059669), Color(0xFF10B981)],
       },
       {
         'label': 'Avg. ROI',
         'value': '+94%',
         'icon': Icons.trending_up,
-        'colors': [Color(0xFF16A34A), Color(0xFF22C55E)],
+        'colors': [Color(0xFF059669), Color(0xFF34D399)],
       },
       {
         'label': 'Success Rate',
         'value': '78%',
         'icon': Icons.bar_chart,
-        'colors': [Color(0xFFF97316), Color(0xFFEAB308)],
+        'colors': [Color(0xFFF59E0B), Color(0xFFEAB308)],
       },
     ];
 
@@ -527,7 +527,7 @@ class _Crown extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
         gradient: const LinearGradient(
-          colors: [Color(0xFF16A34A), Color(0xFF22C55E)],
+          colors: [Color(0xFF059669), Color(0xFF34D399)],
         ),
       ),
       child: const Icon(Icons.workspace_premium),

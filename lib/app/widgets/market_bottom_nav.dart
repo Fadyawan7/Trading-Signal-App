@@ -43,7 +43,7 @@ class MarketBottomNav extends StatelessWidget {
               gradient: const LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-                colors: [Color(0xEC18212C), Color(0xD3121A24)],
+                colors: [Color(0xF0111827), Color(0xD90A0F1E)],
               ),
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(24),

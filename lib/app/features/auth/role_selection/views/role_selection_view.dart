@@ -182,7 +182,7 @@ class _RoleSelectionBg extends StatelessWidget {
 class _GridBgPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
-    final p = Paint()..color = const Color(0x106366F1);
+    final p = Paint()..color = const Color(0x1010B981);
     const gap = 60.0;
     for (double x = 0; x <= size.width; x += gap) {
       canvas.drawLine(Offset(x, 0), Offset(x, size.height), p);

@@ -48,9 +48,8 @@ class GroupDetailView extends GetView<GroupDetailViewModel> {
     ];
 
     return Scaffold(
-      
       appBar: AppBar(
-        title: const Text('Group Details',),
+        title: Text('Group Details'),
         backgroundColor: AppColors.background,
         centerTitle: true,
         surfaceTintColor: AppColors.background,
@@ -70,9 +69,8 @@ class GroupDetailView extends GetView<GroupDetailViewModel> {
           SizedBox(width: 20),
         ],
       ),
-        backgroundColor: AppColors.background,
+      backgroundColor: AppColors.background,
       body: SafeArea(
-        
         bottom: false,
         child: Stack(
           fit: StackFit.expand,
@@ -103,13 +101,13 @@ class GroupDetailView extends GetView<GroupDetailViewModel> {
                                   ),
                                 ),
                                 alignment: Alignment.center,
-                                child: const Text(
+                                child: Text(
                                   '🚀',
                                   style: TextStyle(fontSize: 32),
                                 ),
                               ),
                               const SizedBox(width: 12),
-                              const Expanded(
+                              Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -140,7 +138,7 @@ class GroupDetailView extends GetView<GroupDetailViewModel> {
                           ),
                           const SizedBox(height: 14),
                           Row(
-                            children: const [
+                            children: [
                               Expanded(
                                 child: _StatTile(
                                   label: 'Rating',
@@ -169,7 +167,7 @@ class GroupDetailView extends GetView<GroupDetailViewModel> {
                           const SizedBox(height: 14),
                           Column(
                             children: [
-                              const Row(
+                              Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
@@ -232,7 +230,7 @@ class GroupDetailView extends GetView<GroupDetailViewModel> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
+                            Text(
                               'About the Trader',
                               style: TextStyle(
                                 fontSize: 18,
@@ -255,13 +253,13 @@ class GroupDetailView extends GetView<GroupDetailViewModel> {
                                       ],
                                     ),
                                   ),
-                                  child: const Text(
+                                  child: Text(
                                     '👨‍💼',
                                     style: TextStyle(fontSize: 24),
                                   ),
                                 ),
                                 const SizedBox(width: 12),
-                                const Expanded(
+                                Expanded(
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
@@ -304,7 +302,7 @@ class GroupDetailView extends GetView<GroupDetailViewModel> {
                                     ),
                                     borderRadius: BorderRadius.circular(10),
                                   ),
-                                  child: const Text(
+                                  child: Text(
                                     'View Profile',
                                     style: TextStyle(
                                       color: AppColors.primary,
@@ -315,7 +313,7 @@ class GroupDetailView extends GetView<GroupDetailViewModel> {
                               ],
                             ),
                             const SizedBox(height: 12),
-                            const Row(
+                            Row(
                               children: [
                                 Expanded(
                                   child: _SmallPanel(
@@ -341,7 +339,7 @@ class GroupDetailView extends GetView<GroupDetailViewModel> {
                       radius: 18,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
+                        children: [
                           Text(
                             'About This Group',
                             style: TextStyle(
@@ -371,7 +369,7 @@ class GroupDetailView extends GetView<GroupDetailViewModel> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
+                          Text(
                             'Performance (Last 6 Months)',
                             style: TextStyle(
                               fontSize: 18,
@@ -394,7 +392,7 @@ class GroupDetailView extends GetView<GroupDetailViewModel> {
                                         margin: const EdgeInsets.symmetric(
                                           horizontal: 3,
                                         ),
-                                        decoration: const BoxDecoration(
+                                        decoration: BoxDecoration(
                                           gradient: LinearGradient(
                                             begin: Alignment.bottomCenter,
                                             end: Alignment.topCenter,
@@ -411,7 +409,7 @@ class GroupDetailView extends GetView<GroupDetailViewModel> {
                                       const SizedBox(height: 6),
                                       Text(
                                         p['month']! as String,
-                                        style: const TextStyle(
+                                        style: TextStyle(
                                           fontSize: 11,
                                           color: AppColors.mutedText,
                                         ),
@@ -423,7 +421,7 @@ class GroupDetailView extends GetView<GroupDetailViewModel> {
                             ),
                           ),
                           const SizedBox(height: 8),
-                          const Row(
+                          Row(
                             children: [
                               Expanded(
                                 child: _SmallCenter(
@@ -454,7 +452,7 @@ class GroupDetailView extends GetView<GroupDetailViewModel> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Row(
+                          Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
@@ -483,7 +481,7 @@ class GroupDetailView extends GetView<GroupDetailViewModel> {
                               padding: const EdgeInsets.only(bottom: 12),
                               child: Container(
                                 padding: const EdgeInsets.only(bottom: 12),
-                                decoration: const BoxDecoration(
+                                decoration: BoxDecoration(
                                   border: Border(
                                     bottom: BorderSide(color: AppColors.border),
                                   ),
@@ -518,13 +516,13 @@ class GroupDetailView extends GetView<GroupDetailViewModel> {
                                             children: [
                                               Text(
                                                 r['user']! as String,
-                                                style: const TextStyle(
+                                                style: TextStyle(
                                                   fontWeight: FontWeight.w600,
                                                 ),
                                               ),
                                               Text(
                                                 r['date']! as String,
-                                                style: const TextStyle(
+                                                style: TextStyle(
                                                   fontSize: 11,
                                                   color: AppColors.mutedText,
                                                 ),
@@ -535,7 +533,7 @@ class GroupDetailView extends GetView<GroupDetailViewModel> {
                                           Row(
                                             children: List.generate(
                                               r['rating']! as int,
-                                              (_) => const Padding(
+                                              (_) => Padding(
                                                 padding: EdgeInsets.only(
                                                   right: 2,
                                                 ),
@@ -550,7 +548,7 @@ class GroupDetailView extends GetView<GroupDetailViewModel> {
                                           const SizedBox(height: 4),
                                           Text(
                                             r['comment']! as String,
-                                            style: const TextStyle(
+                                            style: TextStyle(
                                               fontSize: 12,
                                               color: AppColors.mutedText,
                                               height: 1.35,
@@ -602,7 +600,7 @@ class _CategoryTag extends StatelessWidget {
       ),
       child: Text(
         label,
-        style: const TextStyle(
+        style: TextStyle(
           color: AppColors.primary,
           fontSize: 12,
           fontWeight: FontWeight.w600,
@@ -660,7 +658,7 @@ class _StatTile extends StatelessWidget {
           const SizedBox(height: 4),
           Text(
             label,
-            style: const TextStyle(fontSize: 11, color: AppColors.mutedText),
+            style: TextStyle(fontSize: 11, color: AppColors.mutedText),
           ),
         ],
       ),
@@ -685,11 +683,11 @@ class _SmallPanel extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(value, style: const TextStyle(fontWeight: FontWeight.w600)),
+          Text(value, style: TextStyle(fontWeight: FontWeight.w600)),
           const SizedBox(height: 2),
           Text(
             label,
-            style: const TextStyle(color: AppColors.mutedText, fontSize: 11),
+            style: TextStyle(color: AppColors.mutedText, fontSize: 11),
           ),
         ],
       ),
@@ -715,7 +713,7 @@ class _FeatureRow extends StatelessWidget {
               shape: BoxShape.circle,
               color: AppColors.primary.withValues(alpha: 0.16),
             ),
-            child: const Center(
+            child: Center(
               child: CircleAvatar(
                 radius: 3,
                 backgroundColor: AppColors.primary,
@@ -723,7 +721,7 @@ class _FeatureRow extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 8),
-          Text(text, style: const TextStyle(fontSize: 12.5)),
+          Text(text, style: TextStyle(fontSize: 12.5)),
         ],
       ),
     );
@@ -740,12 +738,9 @@ class _SmallCenter extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text(value, style: const TextStyle(fontWeight: FontWeight.w600)),
+        Text(value, style: TextStyle(fontWeight: FontWeight.w600)),
         const SizedBox(height: 2),
-        Text(
-          label,
-          style: const TextStyle(fontSize: 11, color: AppColors.mutedText),
-        ),
+        Text(label, style: TextStyle(fontSize: 11, color: AppColors.mutedText)),
       ],
     );
   }

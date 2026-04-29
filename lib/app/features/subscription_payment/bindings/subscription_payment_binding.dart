@@ -5,6 +5,8 @@ import '../viewmodel/subscription_payment_view_model.dart';
 class SubscriptionPaymentBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<SubscriptionPaymentViewModel>(() => SubscriptionPaymentViewModel());
+    Get.lazyPut<SubscriptionPaymentViewModel>(
+      () => SubscriptionPaymentViewModel(),
+    );
   }
 }

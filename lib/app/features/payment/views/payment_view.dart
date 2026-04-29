@@ -53,8 +53,8 @@ class _PaymentBodyState extends State<_PaymentBody> {
     ];
 
     return Scaffold(
-appBar: AppBar(
-        title: const Text('Payment Method',),
+      appBar: AppBar(
+        title: Text('Payment Method'),
         backgroundColor: AppColors.background,
         centerTitle: true,
         surfaceTintColor: AppColors.background,
@@ -69,12 +69,11 @@ appBar: AppBar(
             color: AppColors.text,
           ),
         ),
-        
       ),
-        backgroundColor: AppColors.background,      body: SafeArea(
+      backgroundColor: AppColors.background,
+      body: SafeArea(
         child: Column(
           children: [
-  
             Expanded(
               child: ListView(
                 padding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
@@ -83,7 +82,7 @@ appBar: AppBar(
                     radius: 18,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
+                      children: [
                         Text(
                           'Order Summary',
                           style: TextStyle(
@@ -108,7 +107,7 @@ appBar: AppBar(
                     ),
                   ),
                   const SizedBox(height: 16),
-                  const Text(
+                  Text(
                     'Select Payment Method',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                   ),
@@ -156,14 +155,14 @@ appBar: AppBar(
                                   children: [
                                     Text(
                                       m['name']! as String,
-                                      style: const TextStyle(
+                                      style: TextStyle(
                                         fontWeight: FontWeight.w600,
                                       ),
                                     ),
                                     const SizedBox(height: 2),
                                     Text(
                                       m['description']! as String,
-                                      style: const TextStyle(
+                                      style: TextStyle(
                                         color: AppColors.mutedText,
                                         fontSize: 12,
                                       ),
@@ -175,11 +174,11 @@ appBar: AppBar(
                                 Container(
                                   width: 24,
                                   height: 24,
-                                  decoration: const BoxDecoration(
+                                  decoration: BoxDecoration(
                                     shape: BoxShape.circle,
                                     color: AppColors.primary,
                                   ),
-                                  child: const Icon(
+                                  child: Icon(
                                     Icons.check,
                                     size: 14,
                                     color: Colors.white,
@@ -196,7 +195,7 @@ appBar: AppBar(
                     MarketPanel(
                       radius: 18,
                       child: Column(
-                        children: const [
+                        children: [
                           MarketTextInput(
                             label: 'Card Number',
                             hint: '1234 5678 9012 3456',
@@ -233,7 +232,7 @@ appBar: AppBar(
                         color: AppColors.primary.withValues(alpha: 0.22),
                       ),
                     ),
-                    child: const Text(
+                    child: Text(
                       '🔒 Your payment is secured with 256-bit SSL encryption',
                       textAlign: TextAlign.center,
                       style: TextStyle(color: AppColors.primary, fontSize: 12),
@@ -257,7 +256,7 @@ appBar: AppBar(
                   Wrap(
                     alignment: WrapAlignment.center,
                     children: [
-                      const Text(
+                      Text(
                         'By completing this payment, you agree to our ',
                         style: TextStyle(
                           color: AppColors.mutedText,
@@ -266,7 +265,7 @@ appBar: AppBar(
                       ),
                       InkWell(
                         onTap: () {},
-                        child: const Text(
+                        child: Text(
                           'Terms of Service',
                           style: TextStyle(
                             color: AppColors.accent,
@@ -274,7 +273,7 @@ appBar: AppBar(
                           ),
                         ),
                       ),
-                      const Text(
+                      Text(
                         ' and ',
                         style: TextStyle(
                           color: AppColors.mutedText,
@@ -283,7 +282,7 @@ appBar: AppBar(
                       ),
                       InkWell(
                         onTap: () {},
-                        child: const Text(
+                        child: Text(
                           'Refund Policy',
                           style: TextStyle(
                             color: AppColors.accent,

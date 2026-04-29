@@ -51,7 +51,7 @@ class _SubscriptionPaymentBodyState extends State<_SubscriptionPaymentBody> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     iconSquare(icon: Icons.arrow_back, onTap: Get.back),
-                    const Text(
+                    Text(
                       'Payment Method',
                       style: TextStyle(
                         fontSize: 20,
@@ -72,7 +72,7 @@ class _SubscriptionPaymentBodyState extends State<_SubscriptionPaymentBody> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
+                            Text(
                               'Selected Plan',
                               style: TextStyle(
                                 color: AppColors.mutedText,
@@ -81,7 +81,7 @@ class _SubscriptionPaymentBodyState extends State<_SubscriptionPaymentBody> {
                             ),
                             Text(
                               args['plan'] as String,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 28,
                                 fontWeight: FontWeight.w700,
                               ),
@@ -94,14 +94,14 @@ class _SubscriptionPaymentBodyState extends State<_SubscriptionPaymentBody> {
                         children: [
                           Text(
                             args['price'] as String,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 30,
                               fontWeight: FontWeight.w700,
                             ),
                           ),
                           Text(
                             '/${args['billing']}',
-                            style: const TextStyle(
+                            style: TextStyle(
                               color: AppColors.mutedText,
                               fontSize: 12,
                             ),
@@ -112,7 +112,7 @@ class _SubscriptionPaymentBodyState extends State<_SubscriptionPaymentBody> {
                   ),
                 ),
                 const SizedBox(height: 12),
-                const Text(
+                Text(
                   'Choose Payment Method',
                   style: TextStyle(fontWeight: FontWeight.w600),
                 ),
@@ -139,7 +139,7 @@ class _SubscriptionPaymentBodyState extends State<_SubscriptionPaymentBody> {
                 ),
                 if (method == 'card') ...[
                   const SizedBox(height: 12),
-                  const Text(
+                  Text(
                     'Card Details',
                     style: TextStyle(fontWeight: FontWeight.w600),
                   ),
@@ -150,7 +150,7 @@ class _SubscriptionPaymentBodyState extends State<_SubscriptionPaymentBody> {
                   ),
                   const SizedBox(height: 8),
                   Row(
-                    children: const [
+                    children: [
                       Expanded(
                         child: MarketTextInput(
                           label: 'Expiry Date',
@@ -171,7 +171,7 @@ class _SubscriptionPaymentBodyState extends State<_SubscriptionPaymentBody> {
                 ],
                 if (method == 'crypto') ...[
                   const SizedBox(height: 12),
-                  const Text(
+                  Text(
                     'Select Cryptocurrency',
                     style: TextStyle(fontWeight: FontWeight.w600),
                   ),
@@ -223,20 +223,20 @@ class _SubscriptionPaymentBodyState extends State<_SubscriptionPaymentBody> {
                                 ),
                                 child: Text(
                                   c['icon']! as String,
-                                  style: const TextStyle(fontSize: 24),
+                                  style: TextStyle(fontSize: 24),
                                 ),
                               ),
                               const SizedBox(height: 4),
                               Text(
                                 c['name']! as String,
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
                               Text(
                                 c['symbol']! as String,
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontSize: 10,
                                   color: AppColors.mutedText,
                                 ),
@@ -250,7 +250,7 @@ class _SubscriptionPaymentBodyState extends State<_SubscriptionPaymentBody> {
                 ],
                 if (method == 'bank') ...[
                   const SizedBox(height: 12),
-                  const Text(
+                  Text(
                     'Bank Transfer Details',
                     style: TextStyle(fontWeight: FontWeight.w600),
                   ),
@@ -271,7 +271,7 @@ class _SubscriptionPaymentBodyState extends State<_SubscriptionPaymentBody> {
                   ),
                 ],
                 const SizedBox(height: 12),
-                const MarketPanel(
+                MarketPanel(
                   radius: 12,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -306,13 +306,13 @@ class _SubscriptionPaymentBodyState extends State<_SubscriptionPaymentBody> {
                     children: [
                       PrimaryButton(
                         label: 'Pay ${args['price']}',
-                        icon: const Icon(Icons.lock, size: 16),
+                        icon: Icon(Icons.lock, size: 16),
                         onTap: (method != 'crypto' || crypto != null)
                             ? () => Get.offAllNamed(AppRoutes.traderDashboard)
                             : null,
                       ),
                       const SizedBox(height: 6),
-                      const Text(
+                      Text(
                         'By continuing, you agree to our Terms of Service',
                         style: TextStyle(
                           fontSize: 11,
@@ -363,23 +363,16 @@ class _SubscriptionPaymentBodyState extends State<_SubscriptionPaymentBody> {
                 children: [
                   Text(
                     title,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 13,
-                    ),
+                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
                   ),
                   Text(
                     sub,
-                    style: const TextStyle(
-                      color: AppColors.mutedText,
-                      fontSize: 11,
-                    ),
+                    style: TextStyle(color: AppColors.mutedText, fontSize: 11),
                   ),
                 ],
               ),
             ),
-            if (active)
-              const Icon(Icons.check_circle, color: AppColors.primary),
+            if (active) Icon(Icons.check_circle, color: AppColors.primary),
           ],
         ),
       ),
@@ -400,11 +393,11 @@ class _Line extends StatelessWidget {
         children: [
           Text(
             label,
-            style: const TextStyle(color: AppColors.mutedText, fontSize: 12),
+            style: TextStyle(color: AppColors.mutedText, fontSize: 12),
           ),
           Text(
             value,
-            style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 12),
+            style: TextStyle(fontWeight: FontWeight.w600, fontSize: 12),
           ),
         ],
       ),

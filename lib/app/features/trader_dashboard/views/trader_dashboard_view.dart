@@ -91,7 +91,7 @@ class TraderDashboardView extends GetView<TraderDashboardViewModel> {
               children: [
                 InkWell(
                   onTap: () => Get.toNamed(AppRoutes.traderAccount),
-                  child: const Row(
+                  child: Row(
                     children: [
                       _Avatar(),
                       SizedBox(width: 10),
@@ -117,23 +117,22 @@ class TraderDashboardView extends GetView<TraderDashboardViewModel> {
                 Row(
                   children: [
                     GestureDetector(
-                   //   onTap: () => Get.offNamed(AppRoutes.chats),
+                      //   onTap: () => Get.offNamed(AppRoutes.chats),
                       child: Icon(
                         Icons.notifications_none,
                         size: 20,
                         color: AppColors.mutedText,
                       ),
                     ),
-                    SizedBox(width: 10,),
+                    SizedBox(width: 10),
                     GestureDetector(
-                    //  onTap: () => Get.offNamed(AppRoutes.chats),
+                      //  onTap: () => Get.offNamed(AppRoutes.chats),
                       child: Icon(
                         Icons.settings,
                         size: 20,
                         color: AppColors.mutedText,
                       ),
                     ),
-                    
                   ],
                 ),
               ],
@@ -170,14 +169,14 @@ class TraderDashboardView extends GetView<TraderDashboardViewModel> {
                       const Spacer(),
                       Text(
                         s['value']! as String,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.w700,
                         ),
                       ),
                       Text(
                         s['label']! as String,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 11,
                           color: AppColors.mutedText,
                         ),
@@ -193,7 +192,7 @@ class TraderDashboardView extends GetView<TraderDashboardViewModel> {
               child: MarketPanel(
                 radius: 16,
                 color: AppColors.card,
-                child: const Row(
+                child: Row(
                   children: [
                     _Crown(),
                     SizedBox(width: 10),
@@ -236,7 +235,7 @@ class TraderDashboardView extends GetView<TraderDashboardViewModel> {
                 Expanded(
                   child: PrimaryButton(
                     label: 'Create Group',
-                    icon: const Icon(Icons.add, size: 16),
+                    icon: Icon(Icons.add, size: 16),
                     onTap: () => Get.toNamed(AppRoutes.createGroup),
                   ),
                 ),
@@ -247,7 +246,7 @@ class TraderDashboardView extends GetView<TraderDashboardViewModel> {
                     child: MarketPanel(
                       radius: 12,
                       padding: const EdgeInsets.symmetric(vertical: 14),
-                      child: const Row(
+                      child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Icon(Icons.bar_chart, color: AppColors.primary),
@@ -267,13 +266,13 @@ class TraderDashboardView extends GetView<TraderDashboardViewModel> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
+                Text(
                   'My Trading Groups',
                   style: TextStyle(fontWeight: FontWeight.w600),
                 ),
                 InkWell(
                   onTap: () => Get.toNamed(AppRoutes.createGroup),
-                  child: const Text(
+                  child: Text(
                     '+ New Group',
                     style: TextStyle(color: AppColors.accent, fontSize: 12),
                   ),
@@ -302,7 +301,7 @@ class TraderDashboardView extends GetView<TraderDashboardViewModel> {
                             ),
                             child: Text(
                               g['avatar']! as String,
-                              style: const TextStyle(fontSize: 24),
+                              style: TextStyle(fontSize: 24),
                             ),
                           ),
                           const SizedBox(width: 10),
@@ -312,13 +311,11 @@ class TraderDashboardView extends GetView<TraderDashboardViewModel> {
                               children: [
                                 Text(
                                   g['name']! as String,
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                  ),
+                                  style: TextStyle(fontWeight: FontWeight.w600),
                                 ),
                                 Text(
                                   g['members']! as String,
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontSize: 12,
                                     color: AppColors.mutedText,
                                   ),
@@ -342,7 +339,7 @@ class TraderDashboardView extends GetView<TraderDashboardViewModel> {
                                   colors: [AppColors.primary, AppColors.accent],
                                 ),
                               ),
-                              child: const Row(
+                              child: Row(
                                 children: [
                                   Icon(Icons.message, size: 14),
                                   SizedBox(width: 4),
@@ -396,13 +393,13 @@ class TraderDashboardView extends GetView<TraderDashboardViewModel> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
+                Text(
                   'Recent Activity',
                   style: TextStyle(fontWeight: FontWeight.w600),
                 ),
                 InkWell(
                   onTap: () => Get.toNamed(AppRoutes.traderInbox),
-                  child: const Text(
+                  child: Text(
                     'View All →',
                     style: TextStyle(color: AppColors.accent, fontSize: 12),
                   ),
@@ -436,14 +433,14 @@ class TraderDashboardView extends GetView<TraderDashboardViewModel> {
                           children: [
                             Text(
                               a['title']! as String,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontWeight: FontWeight.w600,
                                 fontSize: 13,
                               ),
                             ),
                             Text(
                               a['group']! as String,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 color: AppColors.mutedText,
                                 fontSize: 11,
                               ),
@@ -453,7 +450,7 @@ class TraderDashboardView extends GetView<TraderDashboardViewModel> {
                       ),
                       Text(
                         a['time']! as String,
-                        style: const TextStyle(
+                        style: TextStyle(
                           color: AppColors.mutedText,
                           fontSize: 10,
                         ),
@@ -490,7 +487,7 @@ class TraderDashboardView extends GetView<TraderDashboardViewModel> {
           ),
           Text(
             label,
-            style: const TextStyle(color: AppColors.mutedText, fontSize: 10),
+            style: TextStyle(color: AppColors.mutedText, fontSize: 10),
           ),
         ],
       ),
@@ -512,7 +509,7 @@ class _Avatar extends StatelessWidget {
           colors: [AppColors.primary, AppColors.accent],
         ),
       ),
-      child: const Text('👨‍💼', style: TextStyle(fontSize: 24)),
+      child: Text('👨‍💼', style: TextStyle(fontSize: 24)),
     );
   }
 }
@@ -530,7 +527,7 @@ class _Crown extends StatelessWidget {
           colors: [Color(0xFF059669), Color(0xFF34D399)],
         ),
       ),
-      child: const Icon(Icons.workspace_premium),
+      child: Icon(Icons.workspace_premium),
     );
   }
 }

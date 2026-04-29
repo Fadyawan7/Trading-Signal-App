@@ -153,10 +153,7 @@ class _GroupChatBodyState extends State<_GroupChatBody> {
                                 colors: [AppColors.primary, AppColors.accent],
                               ),
                             ),
-                            child: const Text(
-                              '🚀',
-                              style: TextStyle(fontSize: 16),
-                            ),
+                            child: Text('🚀', style: TextStyle(fontSize: 16)),
                           ),
                           Positioned(
                             right: 0,
@@ -175,7 +172,7 @@ class _GroupChatBodyState extends State<_GroupChatBody> {
                                   width: 2,
                                 ),
                               ),
-                              child: const Text(
+                              child: Text(
                                 '👨‍💼',
                                 style: TextStyle(fontSize: 9),
                               ),
@@ -185,7 +182,7 @@ class _GroupChatBodyState extends State<_GroupChatBody> {
                       ),
                     ),
                     const SizedBox(width: 8),
-                    const Expanded(
+                    Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -239,7 +236,7 @@ class _GroupChatBodyState extends State<_GroupChatBody> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text(
+                              Text(
                                 'Member Chat',
                                 style: TextStyle(
                                   fontSize: 12,
@@ -250,7 +247,7 @@ class _GroupChatBodyState extends State<_GroupChatBody> {
                                 isChatEnabled
                                     ? 'Members can send messages'
                                     : 'Only admins can send messages',
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontSize: 10,
                                   color: AppColors.mutedText,
                                 ),
@@ -307,7 +304,7 @@ class _GroupChatBodyState extends State<_GroupChatBody> {
                               children: [
                                 Text(
                                   m['sender'] as String,
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.w600,
                                   ),
@@ -328,7 +325,7 @@ class _GroupChatBodyState extends State<_GroupChatBody> {
                                         ],
                                       ),
                                     ),
-                                    child: const Text(
+                                    child: Text(
                                       'Trader',
                                       style: TextStyle(
                                         fontSize: 9,
@@ -340,7 +337,7 @@ class _GroupChatBodyState extends State<_GroupChatBody> {
                                 const SizedBox(width: 6),
                                 Text(
                                   m['time'] as String,
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontSize: 10,
                                     color: AppColors.mutedText,
                                   ),
@@ -358,7 +355,7 @@ class _GroupChatBodyState extends State<_GroupChatBody> {
                                 ),
                                 child: Text(
                                   m['message'] as String,
-                                  style: const TextStyle(fontSize: 13),
+                                  style: TextStyle(fontSize: 13),
                                 ),
                               )
                             else
@@ -390,55 +387,61 @@ class _GroupChatBodyState extends State<_GroupChatBody> {
                             height: 44,
                             padding: const EdgeInsets.symmetric(horizontal: 10),
                             decoration: BoxDecoration(
-                                color: AppColors.secondary,
+                              color: AppColors.secondary,
                               borderRadius: BorderRadius.circular(24),
                             ),
                             child: Row(
                               children: [
-                              //   Icon(
-                              //     Icons.sentiment_satisfied_alt,
-                              //     size: 21,
-                              //     color: AppColors.mutedText,
-                              //   ),
-                              //  const SizedBox(width: 6),
+                                //   Icon(
+                                //     Icons.sentiment_satisfied_alt,
+                                //     size: 21,
+                                //     color: AppColors.mutedText,
+                                //   ),
+                                //  const SizedBox(width: 6),
                                 Expanded(
                                   child: TextField(
-                                    
                                     controller: _chatController,
                                     onChanged: (_) => setState(() {}),
                                     onSubmitted: (_) => _sendMessage(),
                                     textInputAction: TextInputAction.send,
-                                    style: const TextStyle(fontSize: 14),
-                                    
-                                   decoration: InputDecoration(
-  hintText: 'Type a message',
-  filled: true,
-  fillColor: AppColors.secondary,
-  border: const OutlineInputBorder(
-    borderSide: BorderSide(color: Colors.transparent),
-    borderRadius: BorderRadius.only(
-      topLeft: Radius.circular(60),
-      bottomLeft: Radius.circular(60),
-    ),
-  ),
-  enabledBorder: const OutlineInputBorder(
-    borderSide: BorderSide(color: Colors.transparent),
-    borderRadius: BorderRadius.only(
-      topLeft: Radius.circular(60),
-      bottomLeft: Radius.circular(60),
-    ),
-  ),
-  focusedBorder: const OutlineInputBorder(
-    borderSide: BorderSide(color: Colors.transparent),
-    borderRadius: BorderRadius.only(
-      topLeft: Radius.circular(60),
-      bottomLeft: Radius.circular(60),
-    ),
-  ),
-  isDense: true,
-  hintStyle: const TextStyle(color: AppColors.mutedText),
-)
+                                    style: TextStyle(fontSize: 14),
 
+                                    decoration: InputDecoration(
+                                      hintText: 'Type a message',
+                                      filled: true,
+                                      fillColor: AppColors.secondary,
+                                      border: const OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                          color: Colors.transparent,
+                                        ),
+                                        borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(60),
+                                          bottomLeft: Radius.circular(60),
+                                        ),
+                                      ),
+                                      enabledBorder: const OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                          color: Colors.transparent,
+                                        ),
+                                        borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(60),
+                                          bottomLeft: Radius.circular(60),
+                                        ),
+                                      ),
+                                      focusedBorder: const OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                          color: Colors.transparent,
+                                        ),
+                                        borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(60),
+                                          bottomLeft: Radius.circular(60),
+                                        ),
+                                      ),
+                                      isDense: true,
+                                      hintStyle: TextStyle(
+                                        color: AppColors.mutedText,
+                                      ),
+                                    ),
                                   ),
                                 ),
                                 const SizedBox(width: 4),
@@ -464,7 +467,7 @@ class _GroupChatBodyState extends State<_GroupChatBody> {
                           child: Container(
                             width: 44,
                             height: 44,
-                            decoration: const BoxDecoration(
+                            decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               gradient: LinearGradient(
                                 colors: [AppColors.primary, AppColors.accent],
@@ -486,7 +489,7 @@ class _GroupChatBodyState extends State<_GroupChatBody> {
                         color: AppColors.secondary,
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child: const Row(
+                      child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Icon(
@@ -573,7 +576,7 @@ class _SignalCard extends StatelessWidget {
                       ),
                       Text(
                         message['pair'] as String,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontWeight: FontWeight.w700,
                           fontSize: 16,
                         ),
@@ -590,10 +593,7 @@ class _SignalCard extends StatelessWidget {
                 ),
                 child: Text(
                   message['leverage'] as String,
-                  style: const TextStyle(
-                    color: AppColors.primary,
-                    fontSize: 10,
-                  ),
+                  style: TextStyle(color: AppColors.primary, fontSize: 10),
                 ),
               ),
             ],
@@ -613,7 +613,7 @@ class _SignalCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
+                      Text(
                         'Take Profit',
                         style: TextStyle(
                           fontSize: 10,
@@ -624,10 +624,7 @@ class _SignalCard extends StatelessWidget {
                       ...(message['tp'] as List<dynamic>).asMap().entries.map(
                         (e) => Text(
                           'TP${e.key + 1}: ${e.value}',
-                          style: const TextStyle(
-                            fontSize: 11,
-                            color: Colors.green,
-                          ),
+                          style: TextStyle(fontSize: 11, color: Colors.green),
                         ),
                       ),
                     ],
@@ -645,7 +642,7 @@ class _SignalCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
+                      Text(
                         'Stop Loss',
                         style: TextStyle(
                           fontSize: 10,
@@ -655,7 +652,7 @@ class _SignalCard extends StatelessWidget {
                       const SizedBox(height: 4),
                       Text(
                         'SL: ${message['sl']}',
-                        style: const TextStyle(fontSize: 11, color: Colors.red),
+                        style: TextStyle(fontSize: 11, color: Colors.red),
                       ),
                     ],
                   ),
@@ -667,16 +664,13 @@ class _SignalCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
+              Text(
                 'Community Feedback',
                 style: TextStyle(fontSize: 10, color: AppColors.mutedText),
               ),
               Text(
                 '$pct% Success',
-                style: const TextStyle(
-                  fontSize: 10,
-                  fontWeight: FontWeight.w600,
-                ),
+                style: TextStyle(fontSize: 10, fontWeight: FontWeight.w600),
               ),
             ],
           ),
@@ -728,12 +722,12 @@ class _SignalCard extends StatelessWidget {
         children: [
           Text(
             label,
-            style: const TextStyle(fontSize: 10, color: AppColors.mutedText),
+            style: TextStyle(fontSize: 10, color: AppColors.mutedText),
           ),
           const SizedBox(height: 2),
           Text(
             value,
-            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+            style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
           ),
         ],
       ),

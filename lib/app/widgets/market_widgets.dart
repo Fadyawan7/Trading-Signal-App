@@ -49,7 +49,7 @@ class SectionTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       text,
-      style: const TextStyle(
+      style: TextStyle(
         color: AppColors.text,
         fontWeight: FontWeight.w700,
         fontSize: 18,

@@ -73,7 +73,9 @@ class _OtpBodyState extends State<_OtpBody> {
                     builder: (context, constraints) {
                       return SingleChildScrollView(
                         child: ConstrainedBox(
-                          constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                          constraints: BoxConstraints(
+                            minHeight: constraints.maxHeight,
+                          ),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -97,14 +99,14 @@ class _OtpBodyState extends State<_OtpBody> {
                                     ),
                                   ],
                                 ),
-                                child: const Icon(
+                                child: Icon(
                                   Icons.shield_outlined,
                                   size: 56,
                                   color: Colors.white,
                                 ),
                               ),
                               const SizedBox(height: 22),
-                              const Text(
+                              Text(
                                 'Verify Your Number',
                                 style: TextStyle(
                                   fontSize: 30,
@@ -112,14 +114,15 @@ class _OtpBodyState extends State<_OtpBody> {
                                 ),
                               ),
                               const SizedBox(height: 8),
-                              const Text(
+                              Text(
                                 'Enter the 6-digit code sent to\n+92 300 1234567',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(color: AppColors.mutedText),
                               ),
                               const SizedBox(height: 24),
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: List.generate(6, (index) {
                                   return SizedBox(
                                     width: 48,
@@ -129,7 +132,7 @@ class _OtpBodyState extends State<_OtpBody> {
                                       textAlign: TextAlign.center,
                                       keyboardType: TextInputType.number,
                                       maxLength: 1,
-                                      style: const TextStyle(
+                                      style: TextStyle(
                                         fontSize: 24,
                                         fontWeight: FontWeight.w600,
                                       ),
@@ -137,24 +140,31 @@ class _OtpBodyState extends State<_OtpBody> {
                                         counterText: '',
                                         fillColor: AppColors.card,
                                         filled: true,
-                                        contentPadding: const EdgeInsets.symmetric(
-                                          vertical: 14,
-                                        ),
+                                        contentPadding:
+                                            const EdgeInsets.symmetric(
+                                              vertical: 14,
+                                            ),
                                         border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(12),
-                                          borderSide: const BorderSide(
+                                          borderRadius: BorderRadius.circular(
+                                            12,
+                                          ),
+                                          borderSide: BorderSide(
                                             color: AppColors.border,
                                           ),
                                         ),
                                         enabledBorder: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(12),
-                                          borderSide: const BorderSide(
+                                          borderRadius: BorderRadius.circular(
+                                            12,
+                                          ),
+                                          borderSide: BorderSide(
                                             color: AppColors.border,
                                           ),
                                         ),
                                         focusedBorder: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(12),
-                                          borderSide: const BorderSide(
+                                          borderRadius: BorderRadius.circular(
+                                            12,
+                                          ),
+                                          borderSide: BorderSide(
                                             color: AppColors.primary,
                                           ),
                                         ),
@@ -176,7 +186,7 @@ class _OtpBodyState extends State<_OtpBody> {
                               Wrap(
                                 alignment: WrapAlignment.center,
                                 children: [
-                                  const Text(
+                                  Text(
                                     'Didn\'t receive code? ',
                                     style: TextStyle(
                                       fontSize: 13,
@@ -190,7 +200,7 @@ class _OtpBodyState extends State<_OtpBody> {
                                       }
                                       setState(() {});
                                     },
-                                    child: const Text(
+                                    child: Text(
                                       'Resend',
                                       style: TextStyle(
                                         color: AppColors.primary,

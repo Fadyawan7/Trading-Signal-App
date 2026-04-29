@@ -102,7 +102,7 @@ class _SubscriptionBodyState extends State<_SubscriptionBody> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     iconSquare(icon: Icons.arrow_back, onTap: Get.back),
-                    const Text(
+                    Text(
                       'Choose Your Plan',
                       style: TextStyle(fontWeight: FontWeight.w600),
                     ),
@@ -114,7 +114,7 @@ class _SubscriptionBodyState extends State<_SubscriptionBody> {
                   radius: 16,
                   color: AppColors.primary.withValues(alpha: 0.1),
                   borderColor: AppColors.primary.withValues(alpha: 0.2),
-                  child: const Row(
+                  child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Icon(Icons.shield, color: AppColors.primary),
@@ -200,7 +200,7 @@ class _SubscriptionBodyState extends State<_SubscriptionBody> {
                                       ],
                                     ),
                                   ),
-                                  child: const Text(
+                                  child: Text(
                                     'Recommended',
                                     style: TextStyle(
                                       fontSize: 10,
@@ -230,14 +230,14 @@ class _SubscriptionBodyState extends State<_SubscriptionBody> {
                                     children: [
                                       Text(
                                         p['name']! as String,
-                                        style: const TextStyle(
+                                        style: TextStyle(
                                           fontSize: 20,
                                           fontWeight: FontWeight.w700,
                                         ),
                                       ),
                                       Text(
                                         'For ${(p['name']! as String).toLowerCase()} traders',
-                                        style: const TextStyle(
+                                        style: TextStyle(
                                           fontSize: 11,
                                           color: AppColors.mutedText,
                                         ),
@@ -246,7 +246,7 @@ class _SubscriptionBodyState extends State<_SubscriptionBody> {
                                   ),
                                 ),
                                 if (selected)
-                                  const Icon(
+                                  Icon(
                                     Icons.check_circle,
                                     color: AppColors.primary,
                                   ),
@@ -255,14 +255,14 @@ class _SubscriptionBodyState extends State<_SubscriptionBody> {
                             const SizedBox(height: 8),
                             Text(
                               price! as String,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 30,
                                 fontWeight: FontWeight.w700,
                               ),
                             ),
                             Text(
                               '/${billing == 'monthly' ? 'month' : 'year'}',
-                              style: const TextStyle(
+                              style: TextStyle(
                                 color: AppColors.mutedText,
                                 fontSize: 12,
                               ),
@@ -302,13 +302,13 @@ class _SubscriptionBodyState extends State<_SubscriptionBody> {
                                           colors: p['colors']! as List<Color>,
                                         ),
                                       ),
-                                      child: const Icon(Icons.check, size: 12),
+                                      child: Icon(Icons.check, size: 12),
                                     ),
                                     const SizedBox(width: 6),
                                     Expanded(
                                       child: Text(
                                         f,
-                                        style: const TextStyle(fontSize: 12),
+                                        style: TextStyle(fontSize: 12),
                                       ),
                                     ),
                                   ],
@@ -340,7 +340,7 @@ class _SubscriptionBodyState extends State<_SubscriptionBody> {
                       PrimaryButton(
                         label:
                             'Subscribe to ${plans.firstWhere((p) => p['id'] == selectedPlan)['name']}',
-                        icon: const Icon(Icons.trending_up, size: 16),
+                        icon: Icon(Icons.trending_up, size: 16),
                         onTap: () {
                           final p = plans.firstWhere(
                             (x) => x['id'] == selectedPlan,
@@ -358,7 +358,7 @@ class _SubscriptionBodyState extends State<_SubscriptionBody> {
                         },
                       ),
                       const SizedBox(height: 6),
-                      const Text(
+                      Text(
                         'Cancel anytime • 30-day money back guarantee',
                         style: TextStyle(
                           fontSize: 11,
@@ -418,16 +418,13 @@ class _SubscriptionBodyState extends State<_SubscriptionBody> {
               const SizedBox(width: 4),
               Text(
                 label,
-                style: const TextStyle(
-                  fontSize: 10,
-                  color: AppColors.mutedText,
-                ),
+                style: TextStyle(fontSize: 10, color: AppColors.mutedText),
               ),
             ],
           ),
           Text(
             value,
-            style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700),
+            style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700),
           ),
         ],
       ),

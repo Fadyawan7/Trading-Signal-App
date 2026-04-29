@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/app/routes/app_routes.dart';
 import 'package:get/get.dart';
 
 import '../../../theme/app_colors.dart';
@@ -50,26 +49,20 @@ class TraderInboxView extends GetView<TraderInboxViewModel> {
     ];
 
     return Scaffold(
- appBar: AppBar(
+      appBar: AppBar(
         title: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Notifications',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      Text(
-                        'Stay updated with your trading groups',
-                        style: TextStyle(
-                          color: AppColors.mutedText,
-                          fontSize: 10,
-                        ),
-                      ),
-                    ],
-                  ),
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              'Notifications',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+            ),
+            Text(
+              'Stay updated with your trading groups',
+              style: TextStyle(color: AppColors.mutedText, fontSize: 10),
+            ),
+          ],
+        ),
         backgroundColor: AppColors.background,
         centerTitle: true,
         surfaceTintColor: AppColors.background,
@@ -86,47 +79,46 @@ class TraderInboxView extends GetView<TraderInboxViewModel> {
         ),
         actions: [
           GestureDetector(
-            onTap: () {
-            },
+            onTap: () {},
             child: Stack(
-                  children: [
-                    const Icon(Icons.notifications, size: 18),
-                    Positioned(
-                      right: -2,
-                      top: -2,
-                      child: Container(
-                        width: 12,
-                        height: 12,
-                        alignment: Alignment.center,
-                        decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: AppColors.primary,
-                        ),
-                        child: const Text(
-                          '3',
-                          style: TextStyle(
-                            fontSize: 7,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
+              children: [
+                Icon(Icons.notifications, size: 18),
+                Positioned(
+                  right: -2,
+                  top: -2,
+                  child: Container(
+                    width: 12,
+                    height: 12,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: AppColors.primary,
+                    ),
+                    child: Text(
+                      '3',
+                      style: TextStyle(
+                        fontSize: 7,
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
-                  ],
-                ),),
+                  ),
+                ),
+              ],
+            ),
+          ),
           const SizedBox(width: 20),
         ],
-        
-      ),      body: SafeArea(
+      ),
+      body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
           children: [
-           
             Row(
               children: [
                 Expanded(
                   child: PrimaryButton(
                     label: 'Mark All Read',
-                    icon: const Icon(Icons.check, size: 14),
+                    icon: Icon(Icons.check, size: 14),
                     onTap: () {},
                     padding: const EdgeInsets.symmetric(vertical: 10),
                   ),
@@ -138,7 +130,7 @@ class TraderInboxView extends GetView<TraderInboxViewModel> {
                     child: MarketPanel(
                       radius: 12,
                       padding: const EdgeInsets.symmetric(vertical: 10),
-                      child: const Row(
+                      child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Icon(Icons.clear, size: 14),
@@ -193,7 +185,7 @@ class TraderInboxView extends GetView<TraderInboxViewModel> {
                                 Expanded(
                                   child: Text(
                                     n['title']! as String,
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                       fontWeight: FontWeight.w600,
                                       fontSize: 13,
                                     ),
@@ -203,7 +195,7 @@ class TraderInboxView extends GetView<TraderInboxViewModel> {
                                   Container(
                                     width: 8,
                                     height: 8,
-                                    decoration: const BoxDecoration(
+                                    decoration: BoxDecoration(
                                       shape: BoxShape.circle,
                                       color: AppColors.primary,
                                     ),
@@ -213,7 +205,7 @@ class TraderInboxView extends GetView<TraderInboxViewModel> {
                             const SizedBox(height: 3),
                             Text(
                               n['message']! as String,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 12,
                                 color: AppColors.mutedText,
                               ),
@@ -221,7 +213,7 @@ class TraderInboxView extends GetView<TraderInboxViewModel> {
                             const SizedBox(height: 4),
                             Text(
                               n['time']! as String,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 10,
                                 color: AppColors.mutedText,
                               ),

@@ -65,22 +65,22 @@ class MarketPageContent extends StatelessWidget {
         children: [
           Text(
             subtitle,
-            style: const TextStyle(color: AppColors.mutedText, fontSize: 14),
+            style: TextStyle(color: AppColors.mutedText, fontSize: 14),
           ),
           const SizedBox(height: 16),
           if (showSearch && cta != 'Open Group') ...[
             TextField(
               decoration: InputDecoration(
                 hintText: 'Search trading groups, traders, symbols',
-                prefixIcon: const Icon(Icons.search_rounded),
-                suffixIcon: const Padding(
+                prefixIcon: Icon(Icons.search_rounded),
+                suffixIcon: Padding(
                   padding: EdgeInsets.all(6),
                   child: _SearchFilterPill(),
                 ),
               ),
             ),
             const SizedBox(height: 14),
-            const Wrap(
+            Wrap(
               spacing: 8,
               children: [
                 _Tag(text: 'Crypto'),
@@ -113,7 +113,7 @@ class _Tag extends StatelessWidget {
         color: AppColors.secondary,
         borderRadius: BorderRadius.circular(999),
       ),
-      child: Text(text, style: const TextStyle(fontWeight: FontWeight.w600)),
+      child: Text(text, style: TextStyle(fontWeight: FontWeight.w600)),
     );
   }
 }
@@ -130,7 +130,7 @@ class _SearchFilterPill extends StatelessWidget {
           colors: [AppColors.primary, AppColors.accent],
         ),
       ),
-      child: const Icon(Icons.tune_rounded, size: 18, color: Colors.white),
+      child: Icon(Icons.tune_rounded, size: 18, color: Colors.white),
     );
   }
 }
@@ -165,25 +165,22 @@ class _GroupCard extends StatelessWidget {
               Expanded(
                 child: Text(
                   title,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w700,
-                    fontSize: 16,
-                  ),
+                  style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16),
                 ),
               ),
-              const Icon(Icons.star_rounded, color: Colors.amber),
+              Icon(Icons.star_rounded, color: Colors.amber),
             ],
           ),
           const SizedBox(height: 10),
           Text(
             stats,
-            style: const TextStyle(
+            style: TextStyle(
               color: AppColors.primary,
               fontWeight: FontWeight.w600,
             ),
           ),
           const SizedBox(height: 6),
-          Text(description, style: const TextStyle(color: AppColors.mutedText)),
+          Text(description, style: TextStyle(color: AppColors.mutedText)),
         ],
       ),
     );
@@ -200,7 +197,7 @@ class _Benefit extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Padding(
+        Padding(
           padding: EdgeInsets.only(top: 2),
           child: Icon(
             Icons.check_circle_rounded,
@@ -210,7 +207,7 @@ class _Benefit extends StatelessWidget {
         ),
         const SizedBox(width: 8),
         Expanded(
-          child: Text(text, style: const TextStyle(color: AppColors.mutedText)),
+          child: Text(text, style: TextStyle(color: AppColors.mutedText)),
         ),
       ],
     );
@@ -222,7 +219,7 @@ class _DefaultFeed extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SectionTitle('Featured Groups'),
@@ -307,7 +304,7 @@ class _ExploreList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    return Column(
       children: [
         TextField(
           decoration: InputDecoration(
@@ -341,7 +338,7 @@ class _GroupDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _GroupCard(
@@ -374,7 +371,7 @@ class _PaymentForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    return Column(
       children: [
         MarketCard(
           child: Row(
@@ -411,7 +408,7 @@ class _ChatsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    return Column(
       children: [
         _ChatTile(
           name: 'Crypto Elite Signals',
@@ -437,7 +434,7 @@ class _GroupChat extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    return Column(
       children: [
         _Bubble(
           text: 'Buy EURUSD at 1.0850, SL 1.0820, TP 1.0920',
@@ -466,13 +463,13 @@ class _TraderProfile extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 8),
-        const Text(
+        Text(
           'Ahmed Khan',
           style: TextStyle(fontWeight: FontWeight.w700, fontSize: 20),
         ),
         const SizedBox(height: 12),
         Row(
-          children: const [
+          children: [
             Expanded(
               child: _StatBox(label: 'Win Rate', value: '87%'),
             ),
@@ -496,7 +493,7 @@ class _CreateGroupForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    return Column(
       children: [
         TextField(decoration: InputDecoration(hintText: 'Group name')),
         SizedBox(height: 10),
@@ -516,7 +513,7 @@ class _ApplyTraderForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    return Column(
       children: [
         TextField(
           decoration: InputDecoration(hintText: 'Trading experience (years)'),
@@ -545,7 +542,7 @@ class _SettingsBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: const [
+      children: [
         _SettingTile(title: 'Push Notifications', value: true),
         SizedBox(height: 8),
         _SettingTile(title: 'Trade Alerts', value: true),
@@ -561,7 +558,7 @@ class _TraderInbox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    return Column(
       children: [
         _ChatTile(
           name: 'User Request',
@@ -579,7 +576,7 @@ class _TraderAccount extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    return Column(
       children: [
         MarketCard(
           child: Column(
@@ -611,7 +608,7 @@ class _EditProfileForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    return Column(
       children: [
         TextField(decoration: InputDecoration(hintText: 'Full name')),
         SizedBox(height: 10),
@@ -630,7 +627,7 @@ class _SubscriptionPlans extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    return Column(
       children: [
         _PlanCard(
           name: 'Starter',
@@ -674,14 +671,11 @@ class _ChatTile extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(name, style: const TextStyle(fontWeight: FontWeight.w700)),
+                Text(name, style: TextStyle(fontWeight: FontWeight.w700)),
                 const SizedBox(height: 2),
                 Text(
                   message,
-                  style: const TextStyle(
-                    color: AppColors.mutedText,
-                    fontSize: 12,
-                  ),
+                  style: TextStyle(color: AppColors.mutedText, fontSize: 12),
                 ),
               ],
             ),
@@ -737,7 +731,7 @@ class _StatBox extends StatelessWidget {
         children: [
           Text(
             value,
-            style: const TextStyle(
+            style: TextStyle(
               fontWeight: FontWeight.w700,
               color: AppColors.primary,
             ),
@@ -745,7 +739,7 @@ class _StatBox extends StatelessWidget {
           const SizedBox(height: 4),
           Text(
             label,
-            style: const TextStyle(fontSize: 11, color: AppColors.mutedText),
+            style: TextStyle(fontSize: 11, color: AppColors.mutedText),
           ),
         ],
       ),
@@ -765,10 +759,7 @@ class _SettingTile extends StatelessWidget {
       child: Row(
         children: [
           Expanded(
-            child: Text(
-              title,
-              style: const TextStyle(fontWeight: FontWeight.w600),
-            ),
+            child: Text(title, style: TextStyle(fontWeight: FontWeight.w600)),
           ),
           IgnorePointer(
             child: Switch(value: value, onChanged: (_) {}),
@@ -799,14 +790,11 @@ class _PlanCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(name, style: const TextStyle(fontWeight: FontWeight.w700)),
+                Text(name, style: TextStyle(fontWeight: FontWeight.w700)),
                 const SizedBox(height: 4),
                 Text(
                   features,
-                  style: const TextStyle(
-                    color: AppColors.mutedText,
-                    fontSize: 12,
-                  ),
+                  style: TextStyle(color: AppColors.mutedText, fontSize: 12),
                 ),
               ],
             ),
@@ -814,7 +802,7 @@ class _PlanCard extends StatelessWidget {
           const SizedBox(width: 10),
           Text(
             price,
-            style: const TextStyle(
+            style: TextStyle(
               color: AppColors.primary,
               fontWeight: FontWeight.w700,
             ),

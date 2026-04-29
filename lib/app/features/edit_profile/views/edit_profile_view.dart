@@ -66,9 +66,8 @@ class _EditProfileBodyState extends State<_EditProfileBody> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       appBar: AppBar(
-        title: const Text('Edit Profile',),
+        title: Text('Edit Profile'),
         backgroundColor: AppColors.background,
         centerTitle: true,
         surfaceTintColor: AppColors.background,
@@ -87,11 +86,11 @@ class _EditProfileBodyState extends State<_EditProfileBody> {
           Icon(Icons.save, size: 20, color: AppColors.text),
           SizedBox(width: 20),
         ],
-      ),      body: SafeArea(
+      ),
+      body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
           children: [
-           
             Column(
               children: [
                 Stack(
@@ -106,7 +105,7 @@ class _EditProfileBodyState extends State<_EditProfileBody> {
                           colors: [AppColors.primary, AppColors.accent],
                         ),
                       ),
-                      child: Text(avatar, style: const TextStyle(fontSize: 52)),
+                      child: Text(avatar, style: TextStyle(fontSize: 52)),
                     ),
                     Positioned(
                       right: 0,
@@ -121,13 +120,13 @@ class _EditProfileBodyState extends State<_EditProfileBody> {
                           ),
                           border: Border.all(color: AppColors.card, width: 3),
                         ),
-                        child: const Icon(Icons.camera_alt, size: 18),
+                        child: Icon(Icons.camera_alt, size: 18),
                       ),
                     ),
                   ],
                 ),
                 const SizedBox(height: 8),
-                const Text(
+                Text(
                   'Choose your avatar',
                   style: TextStyle(color: AppColors.mutedText, fontSize: 12),
                 ),
@@ -162,7 +161,7 @@ class _EditProfileBodyState extends State<_EditProfileBody> {
                         color: selected ? Colors.transparent : AppColors.border,
                       ),
                     ),
-                    child: Text(a, style: const TextStyle(fontSize: 22)),
+                    child: Text(a, style: TextStyle(fontSize: 22)),
                   ),
                 );
               },
@@ -172,34 +171,34 @@ class _EditProfileBodyState extends State<_EditProfileBody> {
               label: 'Full Name',
               hint: 'Enter your full name',
               controller: name,
-              prefix: const Icon(Icons.person_outline),
+              prefix: Icon(Icons.person_outline),
             ),
             const SizedBox(height: 10),
             MarketTextInput(
               label: 'Email Address',
               hint: 'Enter your email',
               controller: email,
-              prefix: const Icon(Icons.mail_outline),
+              prefix: Icon(Icons.mail_outline),
             ),
             const SizedBox(height: 10),
             MarketTextInput(
               label: 'Phone Number',
               hint: 'Enter your phone number',
               controller: phone,
-              prefix: const Icon(Icons.phone_outlined),
+              prefix: Icon(Icons.phone_outlined),
             ),
             const SizedBox(height: 10),
             MarketTextInput(
               label: 'Bio',
               hint: 'Tell us about yourself',
               controller: bio,
-              prefix: const Icon(Icons.message_outlined),
+              prefix: Icon(Icons.message_outlined),
               maxLines: 4,
             ),
             const SizedBox(height: 4),
             Text(
               '${bio.text.length}/200 characters',
-              style: const TextStyle(fontSize: 11, color: AppColors.mutedText),
+              style: TextStyle(fontSize: 11, color: AppColors.mutedText),
             ),
             const SizedBox(height: 14),
             MarketPanel(
@@ -207,7 +206,7 @@ class _EditProfileBodyState extends State<_EditProfileBody> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
+                  Text(
                     'Account Information',
                     style: TextStyle(fontWeight: FontWeight.w600),
                   ),
@@ -216,7 +215,7 @@ class _EditProfileBodyState extends State<_EditProfileBody> {
                   const SizedBox(height: 8),
                   Row(
                     children: [
-                      const Expanded(
+                      Expanded(
                         child: _InfoRow(
                           label: 'Account Status',
                           value: 'Active User',
@@ -234,7 +233,7 @@ class _EditProfileBodyState extends State<_EditProfileBody> {
                             color: Colors.green.withValues(alpha: 0.2),
                           ),
                         ),
-                        child: const Text(
+                        child: Text(
                           'Verified ✓',
                           style: TextStyle(
                             color: Colors.green,
@@ -251,7 +250,7 @@ class _EditProfileBodyState extends State<_EditProfileBody> {
             const SizedBox(height: 14),
             PrimaryButton(
               label: 'Save Changes',
-              icon: const Icon(Icons.save, size: 16),
+              icon: Icon(Icons.save, size: 16),
               onTap: save,
             ),
             const SizedBox(height: 10),
@@ -260,7 +259,7 @@ class _EditProfileBodyState extends State<_EditProfileBody> {
               child: MarketPanel(
                 radius: 12,
                 padding: const EdgeInsets.all(14),
-                child: const Center(
+                child: Center(
                   child: Text(
                     'Cancel',
                     style: TextStyle(fontWeight: FontWeight.w600),
@@ -287,14 +286,11 @@ class _InfoRow extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          label,
-          style: const TextStyle(fontSize: 12, color: AppColors.mutedText),
-        ),
+        Text(label, style: TextStyle(fontSize: 12, color: AppColors.mutedText)),
         const SizedBox(height: 2),
         Text(
           value,
-          style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+          style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
         ),
       ],
     );

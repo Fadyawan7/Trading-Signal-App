@@ -52,24 +52,18 @@ class _CreateGroupBodyState extends State<_CreateGroupBody> {
     return Scaffold(
       appBar: AppBar(
         title: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Create Trading Group',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      Text(
-                        'Build your trading community',
-                        style: TextStyle(
-                          color: AppColors.mutedText,
-                          fontSize: 12,
-                        ),
-                      ),
-                    ],
-                  ),
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Create Trading Group',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+            ),
+            Text(
+              'Build your trading community',
+              style: TextStyle(color: AppColors.mutedText, fontSize: 12),
+            ),
+          ],
+        ),
         backgroundColor: AppColors.background,
         centerTitle: true,
         surfaceTintColor: AppColors.background,
@@ -84,15 +78,12 @@ class _CreateGroupBodyState extends State<_CreateGroupBody> {
             color: AppColors.text,
           ),
         ),
-        
       ),
-        backgroundColor: AppColors.background,
+      backgroundColor: AppColors.background,
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
           children: [
-        
-        
             const SizedBox(height: 10),
             Row(
               children: [
@@ -128,10 +119,7 @@ class _CreateGroupBodyState extends State<_CreateGroupBody> {
               ],
             ),
             const SizedBox(height: 16),
-            const Text(
-              'Group Icon',
-              style: TextStyle(fontWeight: FontWeight.w600),
-            ),
+            Text('Group Icon', style: TextStyle(fontWeight: FontWeight.w600)),
             const SizedBox(height: 8),
             Container(
               width: 96,
@@ -141,7 +129,7 @@ class _CreateGroupBodyState extends State<_CreateGroupBody> {
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(color: AppColors.border, width: 2),
               ),
-              child: const Column(
+              child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(Icons.upload, color: AppColors.mutedText),
@@ -154,7 +142,7 @@ class _CreateGroupBodyState extends State<_CreateGroupBody> {
               ),
             ),
             const SizedBox(height: 4),
-            const Text(
+            Text(
               'Recommended: 512x512px, PNG or JPG',
               style: TextStyle(fontSize: 11, color: AppColors.mutedText),
             ),
@@ -164,10 +152,7 @@ class _CreateGroupBodyState extends State<_CreateGroupBody> {
               hint: 'e.g., Crypto Elite Signals',
             ),
             const SizedBox(height: 12),
-            const Text(
-              'Category *',
-              style: TextStyle(fontWeight: FontWeight.w600),
-            ),
+            Text('Category *', style: TextStyle(fontWeight: FontWeight.w600)),
             const SizedBox(height: 8),
             GridView.builder(
               shrinkWrap: true,
@@ -208,14 +193,14 @@ class _CreateGroupBodyState extends State<_CreateGroupBody> {
                           ),
                           child: Text(
                             c['icon']! as String,
-                            style: const TextStyle(fontSize: 20),
+                            style: TextStyle(fontSize: 20),
                           ),
                         ),
                         const SizedBox(height: 6),
                         Text(
                           c['name']! as String,
                           textAlign: TextAlign.center,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 11,
                             fontWeight: FontWeight.w600,
                           ),
@@ -227,10 +212,7 @@ class _CreateGroupBodyState extends State<_CreateGroupBody> {
               },
             ),
             const SizedBox(height: 12),
-            const Text(
-              'Pricing *',
-              style: TextStyle(fontWeight: FontWeight.w600),
-            ),
+            Text('Pricing *', style: TextStyle(fontWeight: FontWeight.w600)),
             const SizedBox(height: 8),
             Row(
               children: [
@@ -262,7 +244,7 @@ class _CreateGroupBodyState extends State<_CreateGroupBody> {
               maxLines: 5,
             ),
             const SizedBox(height: 12),
-            const Text(
+            Text(
               'Group Features *',
               style: TextStyle(fontWeight: FontWeight.w600),
             ),
@@ -302,13 +284,11 @@ class _CreateGroupBodyState extends State<_CreateGroupBody> {
                                   : AppColors.border,
                             ),
                           ),
-                          child: active
-                              ? const Icon(Icons.check, size: 14)
-                              : null,
+                          child: active ? Icon(Icons.check, size: 14) : null,
                         ),
                         const SizedBox(width: 8),
                         Expanded(
-                          child: Text(f, style: const TextStyle(fontSize: 13)),
+                          child: Text(f, style: TextStyle(fontSize: 13)),
                         ),
                       ],
                     ),
@@ -319,7 +299,7 @@ class _CreateGroupBodyState extends State<_CreateGroupBody> {
             const SizedBox(height: 12),
             MarketPanel(
               radius: 14,
-              child: const Column(
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
@@ -337,7 +317,7 @@ class _CreateGroupBodyState extends State<_CreateGroupBody> {
             const SizedBox(height: 12),
             PrimaryButton(
               label: 'Create Trading Group',
-              icon: const Icon(Icons.arrow_forward, size: 16),
+              icon: Icon(Icons.arrow_forward, size: 16),
               onTap: () => Get.offNamed(AppRoutes.traderDashboard),
             ),
           ],
@@ -362,12 +342,12 @@ class _CreateGroupBodyState extends State<_CreateGroupBody> {
         ),
         child: Column(
           children: [
-            Text(label, style: const TextStyle(fontWeight: FontWeight.w700)),
+            Text(label, style: TextStyle(fontWeight: FontWeight.w700)),
             const SizedBox(height: 2),
             Text(
               sub,
               textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 11, color: AppColors.mutedText),
+              style: TextStyle(fontSize: 11, color: AppColors.mutedText),
             ),
           ],
         ),

@@ -27,18 +27,20 @@ class MarketScaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(title, style: const TextStyle(fontWeight: FontWeight.w700)),
+        title: Text(title, style: TextStyle(fontWeight: FontWeight.w700)),
         leading: showBack
             ? IconButton(
                 onPressed: () => Get.back(),
-                icon: const Icon(Icons.arrow_back_ios_new_rounded),
+                icon: Icon(Icons.arrow_back_ios_new_rounded),
               )
             : null,
         actions: actions,
       ),
       body: Center(
         child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: AppConstants.mobileFrameWidth),
+          constraints: const BoxConstraints(
+            maxWidth: AppConstants.mobileFrameWidth,
+          ),
           child: body,
         ),
       ),

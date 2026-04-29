@@ -57,7 +57,7 @@ class _TraderEditBodyState extends State<_TraderEditBody> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Edit Trader Profile',),
+        title: Text('Edit Trader Profile'),
         backgroundColor: AppColors.background,
         centerTitle: true,
         surfaceTintColor: AppColors.background,
@@ -82,7 +82,6 @@ class _TraderEditBodyState extends State<_TraderEditBody> {
         child: ListView(
           padding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
           children: [
-           
             const SizedBox(height: 12),
             Column(
               children: [
@@ -98,7 +97,7 @@ class _TraderEditBodyState extends State<_TraderEditBody> {
                           colors: [AppColors.primary, AppColors.accent],
                         ),
                       ),
-                      child: Text(avatar, style: const TextStyle(fontSize: 52)),
+                      child: Text(avatar, style: TextStyle(fontSize: 52)),
                     ),
                     Positioned(
                       right: 0,
@@ -113,7 +112,7 @@ class _TraderEditBodyState extends State<_TraderEditBody> {
                           ),
                           border: Border.all(color: AppColors.card, width: 3),
                         ),
-                        child: const Icon(Icons.camera_alt, size: 18),
+                        child: Icon(Icons.camera_alt, size: 18),
                       ),
                     ),
                   ],
@@ -131,7 +130,7 @@ class _TraderEditBodyState extends State<_TraderEditBody> {
                       color: Colors.green.withValues(alpha: 0.2),
                     ),
                   ),
-                  child: const Row(
+                  child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       CircleAvatar(radius: 3, backgroundColor: Colors.green),
@@ -178,13 +177,13 @@ class _TraderEditBodyState extends State<_TraderEditBody> {
                         color: active ? Colors.transparent : AppColors.border,
                       ),
                     ),
-                    child: Text(a, style: const TextStyle(fontSize: 22)),
+                    child: Text(a, style: TextStyle(fontSize: 22)),
                   ),
                 );
               },
             ),
             const SizedBox(height: 12),
-            const Text(
+            Text(
               'Personal Information',
               style: TextStyle(fontWeight: FontWeight.w600),
             ),
@@ -207,7 +206,7 @@ class _TraderEditBodyState extends State<_TraderEditBody> {
               maxLines: 3,
             ),
             const SizedBox(height: 12),
-            const Text(
+            Text(
               'Trading Experience',
               style: TextStyle(fontWeight: FontWeight.w600),
             ),
@@ -237,13 +236,13 @@ class _TraderEditBodyState extends State<_TraderEditBody> {
               hint: 'Crypto, Forex',
             ),
             const SizedBox(height: 12),
-            const Text(
+            Text(
               'Performance Stats',
               style: TextStyle(fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 8),
             Row(
-              children: const [
+              children: [
                 Expanded(
                   child: MarketTextInput(
                     label: 'Average ROI (%)',
@@ -268,10 +267,7 @@ class _TraderEditBodyState extends State<_TraderEditBody> {
               maxLines: 4,
             ),
             const SizedBox(height: 12),
-            const Text(
-              'Social Links',
-              style: TextStyle(fontWeight: FontWeight.w600),
-            ),
+            Text('Social Links', style: TextStyle(fontWeight: FontWeight.w600)),
             const SizedBox(height: 8),
             const MarketTextInput(label: 'Twitter/X', hint: '@johntrader'),
             const SizedBox(height: 8),
@@ -279,7 +275,7 @@ class _TraderEditBodyState extends State<_TraderEditBody> {
             const SizedBox(height: 12),
             MarketPanel(
               radius: 14,
-              child: const Column(
+              child: Column(
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -307,7 +303,7 @@ class _TraderEditBodyState extends State<_TraderEditBody> {
             const SizedBox(height: 12),
             PrimaryButton(
               label: 'Save Changes',
-              icon: const Icon(Icons.save, size: 16),
+              icon: Icon(Icons.save, size: 16),
               onTap: save,
             ),
             const SizedBox(height: 8),
@@ -352,10 +348,7 @@ class _StatItem extends StatelessWidget {
             fontWeight: FontWeight.w700,
           ),
         ),
-        Text(
-          label,
-          style: const TextStyle(color: AppColors.mutedText, fontSize: 11),
-        ),
+        Text(label, style: TextStyle(color: AppColors.mutedText, fontSize: 11)),
       ],
     );
   }

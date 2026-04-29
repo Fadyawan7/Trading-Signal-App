@@ -45,12 +45,12 @@ class _ApplyTraderBodyState extends State<_ApplyTraderBody> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 GestureDetector(
-                  onTap: (){
-                     Get.back();
-                     print('sss');
+                  onTap: () {
+                    Get.back();
                   },
-                  child: Icon( Icons.arrow_back_ios_new, )),
-                
+                  child: Icon(Icons.arrow_back_ios_new),
+                ),
+
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -70,8 +70,8 @@ class _ApplyTraderBodyState extends State<_ApplyTraderBody> {
                     ),
                   ],
                 ),
-           
-           SizedBox.shrink()
+
+                SizedBox.shrink(),
               ],
             ),
             const SizedBox(height: 12),
@@ -79,7 +79,7 @@ class _ApplyTraderBodyState extends State<_ApplyTraderBody> {
               radius: 14,
               color: AppColors.primary.withValues(alpha: 0.10),
               borderColor: AppColors.primary.withValues(alpha: 0.22),
-              child: const Row(
+              child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Icon(Icons.shield, color: AppColors.primary),
@@ -110,7 +110,7 @@ class _ApplyTraderBodyState extends State<_ApplyTraderBody> {
               ),
             ),
             const SizedBox(height: 12),
-            const Text(
+            Text(
               'Personal Information',
               style: TextStyle(fontWeight: FontWeight.w600),
             ),
@@ -120,7 +120,7 @@ class _ApplyTraderBodyState extends State<_ApplyTraderBody> {
               hint: 'Enter your full name',
             ),
             const SizedBox(height: 8),
-            const Text(
+            Text(
               'Trading Experience',
               style: TextStyle(fontWeight: FontWeight.w500),
             ),
@@ -135,7 +135,7 @@ class _ApplyTraderBodyState extends State<_ApplyTraderBody> {
               child: DropdownButtonHideUnderline(
                 child: DropdownButton<String>(
                   value: experience.isEmpty ? null : experience,
-                  hint: const Text(
+                  hint: Text(
                     'Select your experience level',
                     style: TextStyle(color: AppColors.mutedText),
                   ),
@@ -153,7 +153,7 @@ class _ApplyTraderBodyState extends State<_ApplyTraderBody> {
               hint: 'e.g., Crypto, Forex, Stocks',
             ),
             const SizedBox(height: 12),
-            const Text(
+            Text(
               'Trading Profile',
               style: TextStyle(fontWeight: FontWeight.w600),
             ),
@@ -168,7 +168,7 @@ class _ApplyTraderBodyState extends State<_ApplyTraderBody> {
               maxLines: 4,
             ),
             const SizedBox(height: 12),
-            const Text(
+            Text(
               'Verification Documents',
               style: TextStyle(fontWeight: FontWeight.w600),
             ),
@@ -185,7 +185,7 @@ class _ApplyTraderBodyState extends State<_ApplyTraderBody> {
               'PNG, JPG (Max 5MB)',
             ),
             const SizedBox(height: 12),
-            const Text(
+            Text(
               'Social Links (Optional)',
               style: TextStyle(fontWeight: FontWeight.w600),
             ),
@@ -214,7 +214,7 @@ class _ApplyTraderBodyState extends State<_ApplyTraderBody> {
                       value: terms,
                       onChanged: (v) => setState(() => terms = v ?? false),
                     ),
-                    const Expanded(
+                    Expanded(
                       child: Padding(
                         padding: EdgeInsets.only(top: 8),
                         child: Text(
@@ -233,7 +233,7 @@ class _ApplyTraderBodyState extends State<_ApplyTraderBody> {
               onTap: () => Get.toNamed(AppRoutes.traderSubscription),
             ),
             const SizedBox(height: 4),
-            const Text(
+            Text(
               'Choose your plan to complete trader registration',
               textAlign: TextAlign.center,
               style: TextStyle(color: AppColors.mutedText, fontSize: 11),
@@ -248,7 +248,7 @@ class _ApplyTraderBodyState extends State<_ApplyTraderBody> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(title, style: const TextStyle(fontWeight: FontWeight.w500)),
+        Text(title, style: TextStyle(fontWeight: FontWeight.w500)),
         const SizedBox(height: 6),
         Container(
           width: double.infinity,
@@ -260,15 +260,12 @@ class _ApplyTraderBodyState extends State<_ApplyTraderBody> {
           ),
           child: Column(
             children: [
-              const Icon(Icons.upload, color: AppColors.mutedText),
+              Icon(Icons.upload, color: AppColors.mutedText),
               const SizedBox(height: 4),
-              Text(line1, style: const TextStyle(fontSize: 12)),
+              Text(line1, style: TextStyle(fontSize: 12)),
               Text(
                 line2,
-                style: const TextStyle(
-                  fontSize: 10,
-                  color: AppColors.mutedText,
-                ),
+                style: TextStyle(fontSize: 10, color: AppColors.mutedText),
               ),
             ],
           ),

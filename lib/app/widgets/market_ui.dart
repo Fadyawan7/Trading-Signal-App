@@ -100,7 +100,7 @@ class PrimaryButton extends StatelessWidget {
           children: [
             Text(
               label,
-              style: const TextStyle(
+              style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.w600,
               ),
@@ -122,9 +122,9 @@ class SecondaryButton extends StatelessWidget {
     this.padding = const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
     this.fullWidth = true,
     this.borderRadius = 14,
-    this.textColor = AppColors.text,
-    this.borderColor = AppColors.border,
-    this.backgroundColor = AppColors.card,
+    this.textColor,
+    this.borderColor,
+    this.backgroundColor,
   });
 
   final String label;
@@ -133,9 +133,9 @@ class SecondaryButton extends StatelessWidget {
   final EdgeInsetsGeometry padding;
   final bool fullWidth;
   final double borderRadius;
-  final Color textColor;
-  final Color borderColor;
-  final Color backgroundColor;
+  final Color? textColor;
+  final Color? borderColor;
+  final Color? backgroundColor;
 
   @override
   Widget build(BuildContext context) {
@@ -146,16 +146,19 @@ class SecondaryButton extends StatelessWidget {
         width: fullWidth ? double.infinity : null,
         padding: padding,
         decoration: BoxDecoration(
-          color: backgroundColor,
+          color: backgroundColor ?? AppColors.card,
           borderRadius: BorderRadius.circular(borderRadius),
-          border: Border.all(color: borderColor),
+          border: Border.all(color: borderColor ?? AppColors.border),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
               label,
-              style: TextStyle(color: textColor, fontWeight: FontWeight.w600),
+              style: TextStyle(
+                color: textColor ?? AppColors.text,
+                fontWeight: FontWeight.w600,
+              ),
             ),
             if (icon != null) ...[const SizedBox(width: 8), icon!],
           ],
@@ -212,7 +215,7 @@ class MarketTextInput extends StatelessWidget {
         if (label != null) ...[
           Text(
             label!,
-            style: const TextStyle(
+            style: TextStyle(
               color: AppColors.mutedText,
               fontWeight: FontWeight.w600,
             ),
@@ -233,7 +236,7 @@ class MarketTextInput extends StatelessWidget {
                 : Padding(
                     padding: const EdgeInsets.only(left: 10, right: 6),
                     child: IconTheme(
-                      data: const IconThemeData(color: AppColors.mutedText),
+                      data: IconThemeData(color: AppColors.mutedText),
                       child: prefix!,
                     ),
                   ),
@@ -317,7 +320,7 @@ class MarketTopBar extends StatelessWidget {
           Expanded(
             child: Text(
               title,
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
             ),
           ),
           trailing ?? const SizedBox(width: 40),

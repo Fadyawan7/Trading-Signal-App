@@ -31,7 +31,7 @@ class ForgotPasswordView extends GetView<ForgotPasswordViewModel> {
                   prefix: Icon(Icons.mail_outline),
                 ),
                 const SizedBox(height: 14),
-                const Text(
+                Text(
                   'We will send a password reset link to your email address.',
                   style: TextStyle(color: AppColors.mutedText),
                   textAlign: TextAlign.center,
@@ -39,11 +39,7 @@ class ForgotPasswordView extends GetView<ForgotPasswordViewModel> {
                 const SizedBox(height: 22),
                 PrimaryButton(
                   label: 'Send Reset Link',
-                  icon: const Icon(
-                    Icons.send_rounded,
-                    size: 18,
-                    color: Colors.white,
-                  ),
+                  icon: Icon(Icons.send_rounded, size: 18, color: Colors.white),
                   onTap: () {
                     Get.snackbar(
                       'Reset Link Sent',
@@ -71,7 +67,7 @@ class _Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    return Column(
       children: [
         _LogoBox(),
         SizedBox(height: 12),
@@ -112,11 +108,7 @@ class _LogoBox extends StatelessWidget {
           ),
         ],
       ),
-      child: const Icon(
-        Icons.lock_reset_rounded,
-        size: 52,
-        color: Colors.white,
-      ),
+      child: Icon(Icons.lock_reset_rounded, size: 52, color: Colors.white),
     );
   }
 }
@@ -129,22 +121,22 @@ class _ForgotBackground extends StatelessWidget {
     return Stack(
       children: [
         Positioned.fill(child: CustomPaint(painter: _GridPainter())),
-        const Positioned(
+        Positioned(
           top: 60,
           left: 30,
           child: _Orb(size: 220, c1: AppColors.primary, c2: AppColors.accent),
         ),
-        const Positioned(
+        Positioned(
           bottom: 90,
           right: 10,
           child: _Orb(size: 250, c1: AppColors.accent, c2: AppColors.primary),
         ),
-        const Positioned(
+        Positioned(
           top: 170,
           left: 200,
           child: _Orb(size: 140, c1: Color(0xFF059669), c2: Color(0xFF10B981)),
         ),
-        const Positioned(
+        Positioned(
           top: 140,
           left: 70,
           child: Text(
@@ -152,7 +144,7 @@ class _ForgotBackground extends StatelessWidget {
             style: TextStyle(fontSize: 46, color: Colors.white10),
           ),
         ),
-        const Positioned(
+        Positioned(
           top: 220,
           right: 60,
           child: Text(
@@ -160,7 +152,7 @@ class _ForgotBackground extends StatelessWidget {
             style: TextStyle(fontSize: 42, color: Colors.white10),
           ),
         ),
-        const Positioned(
+        Positioned(
           bottom: 210,
           left: 110,
           child: Text(

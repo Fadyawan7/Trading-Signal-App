@@ -93,18 +93,15 @@ class ExploreView extends GetView<ExploreViewModel> {
               ),
               child: Column(
                 children: [
-                   const Text(
-                        'Explore Groups',
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
+                  Text(
+                    'Explore Groups',
+                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
+                  ),
                   const SizedBox(height: 20),
                   TextField(
                     decoration: InputDecoration(
                       hintText: 'Search groups by name or trader...',
-                      prefixIcon: const Icon(Icons.search),
+                      prefixIcon: Icon(Icons.search),
                       suffixIcon: Padding(
                         padding: const EdgeInsets.all(6),
                         child: Container(
@@ -114,7 +111,7 @@ class ExploreView extends GetView<ExploreViewModel> {
                               colors: [AppColors.primary, AppColors.accent],
                             ),
                           ),
-                          child: const Icon(
+                          child: Icon(
                             Icons.tune_rounded,
                             size: 18,
                             color: Colors.white,
@@ -142,7 +139,7 @@ class ExploreView extends GetView<ExploreViewModel> {
             ),
             Expanded(
               child: ListView.builder(
-              padding: const EdgeInsets.fromLTRB(12, 18, 12, 8),
+                padding: const EdgeInsets.fromLTRB(12, 18, 12, 8),
                 itemCount: groups.length,
                 itemBuilder: (_, i) {
                   final g = groups[i];
@@ -176,7 +173,7 @@ class ExploreView extends GetView<ExploreViewModel> {
                                   ),
                                   child: Text(
                                     g['avatar']! as String,
-                                    style: const TextStyle(fontSize: 30),
+                                    style: TextStyle(fontSize: 30),
                                   ),
                                 ),
                                 const SizedBox(width: 10),
@@ -190,14 +187,14 @@ class ExploreView extends GetView<ExploreViewModel> {
                                           Expanded(
                                             child: Text(
                                               g['name']! as String,
-                                              style: const TextStyle(
+                                              style: TextStyle(
                                                 fontWeight: FontWeight.w600,
                                               ),
                                               overflow: TextOverflow.ellipsis,
                                             ),
                                           ),
                                           const SizedBox(width: 4),
-                                          const Icon(
+                                          Icon(
                                             Icons.verified,
                                             size: 16,
                                             color: AppColors.primary,
@@ -207,7 +204,7 @@ class ExploreView extends GetView<ExploreViewModel> {
                                       const SizedBox(height: 3),
                                       Text(
                                         'by ${g['trader']}',
-                                        style: const TextStyle(
+                                        style: TextStyle(
                                           color: AppColors.mutedText,
                                           fontSize: 12,
                                         ),
@@ -228,7 +225,7 @@ class ExploreView extends GetView<ExploreViewModel> {
                                         ),
                                         child: Text(
                                           g['category']! as String,
-                                          style: const TextStyle(
+                                          style: TextStyle(
                                             color: AppColors.primary,
                                             fontSize: 11,
                                             fontWeight: FontWeight.w600,
@@ -244,7 +241,7 @@ class ExploreView extends GetView<ExploreViewModel> {
                                     Row(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        const Icon(
+                                        Icon(
                                           Icons.star,
                                           size: 14,
                                           color: Colors.amber,
@@ -252,7 +249,7 @@ class ExploreView extends GetView<ExploreViewModel> {
                                         const SizedBox(width: 2),
                                         Text(
                                           g['rating']! as String,
-                                          style: const TextStyle(
+                                          style: TextStyle(
                                             fontWeight: FontWeight.w600,
                                           ),
                                         ),
@@ -261,7 +258,7 @@ class ExploreView extends GetView<ExploreViewModel> {
                                     const SizedBox(height: 4),
                                     Text(
                                       g['roi']! as String,
-                                      style: const TextStyle(
+                                      style: TextStyle(
                                         color: Colors.green,
                                         fontWeight: FontWeight.w600,
                                       ),
@@ -271,7 +268,7 @@ class ExploreView extends GetView<ExploreViewModel> {
                               ],
                             ),
                             const SizedBox(height: 10),
-                            const Divider(color: AppColors.border),
+                            Divider(color: AppColors.border),
                             Row(
                               children: [
                                 Expanded(
@@ -301,7 +298,7 @@ class ExploreView extends GetView<ExploreViewModel> {
                                       ],
                                     ),
                                   ),
-                                  child: const Text(
+                                  child: Text(
                                     'View Details',
                                     style: TextStyle(
                                       fontSize: 12,
@@ -341,10 +338,7 @@ class _InfoCell extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text(
-          label,
-          style: const TextStyle(fontSize: 11, color: AppColors.mutedText),
-        ),
+        Text(label, style: TextStyle(fontSize: 11, color: AppColors.mutedText)),
         const SizedBox(height: 2),
         Text(
           value,

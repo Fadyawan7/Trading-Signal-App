@@ -79,10 +79,10 @@ class ChatsListView extends GetView<ChatsListViewModel> {
               ),
               child: Column(
                 children: [
-                   const Text(
-                        'Messages',
-                        style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
-                      ),
+                  Text(
+                    'Messages',
+                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
+                  ),
                   const SizedBox(height: 20),
                   const MarketTextInput(
                     hint: 'Search chats...',
@@ -93,7 +93,7 @@ class ChatsListView extends GetView<ChatsListViewModel> {
             ),
             Expanded(
               child: ListView.builder(
-              padding: const EdgeInsets.fromLTRB(12, 18, 12, 8),
+                padding: const EdgeInsets.fromLTRB(12, 18, 12, 8),
                 itemCount: chats.length,
                 itemBuilder: (_, i) {
                   final c = chats[i];
@@ -140,12 +140,15 @@ class ChatsListView extends GetView<ChatsListViewModel> {
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(12),
                                       gradient: const LinearGradient(
-                                        colors: [AppColors.primary, AppColors.accent],
+                                        colors: [
+                                          AppColors.primary,
+                                          AppColors.accent,
+                                        ],
                                       ),
                                     ),
                                     child: Text(
                                       c['groupAvatar']! as String,
-                                      style: const TextStyle(fontSize: 22),
+                                      style: TextStyle(fontSize: 22),
                                     ),
                                   ),
                                   Positioned(
@@ -158,7 +161,10 @@ class ChatsListView extends GetView<ChatsListViewModel> {
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(6),
                                         gradient: const LinearGradient(
-                                          colors: [AppColors.accent, AppColors.primary],
+                                          colors: [
+                                            AppColors.accent,
+                                            AppColors.primary,
+                                          ],
                                         ),
                                         border: Border.all(
                                           color: AppColors.card,
@@ -167,7 +173,7 @@ class ChatsListView extends GetView<ChatsListViewModel> {
                                       ),
                                       child: Text(
                                         c['traderAvatar']! as String,
-                                        style: const TextStyle(fontSize: 10),
+                                        style: TextStyle(fontSize: 10),
                                       ),
                                     ),
                                   ),
@@ -186,7 +192,7 @@ class ChatsListView extends GetView<ChatsListViewModel> {
                                           c['groupName']! as String,
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
-                                          style: const TextStyle(
+                                          style: TextStyle(
                                             fontWeight: FontWeight.w600,
                                             fontSize: 13,
                                           ),
@@ -202,9 +208,11 @@ class ChatsListView extends GetView<ChatsListViewModel> {
                                             color: AppColors.primary.withValues(
                                               alpha: 0.20,
                                             ),
-                                            borderRadius: BorderRadius.circular(5),
+                                            borderRadius: BorderRadius.circular(
+                                              5,
+                                            ),
                                           ),
-                                          child: const Text(
+                                          child: Text(
                                             'Official',
                                             style: TextStyle(
                                               fontSize: 10,
@@ -216,7 +224,7 @@ class ChatsListView extends GetView<ChatsListViewModel> {
                                       const SizedBox(width: 6),
                                       Text(
                                         c['time']! as String,
-                                        style: const TextStyle(
+                                        style: TextStyle(
                                           fontSize: 10,
                                           color: AppColors.mutedText,
                                         ),
@@ -231,7 +239,7 @@ class ChatsListView extends GetView<ChatsListViewModel> {
                                           c['lastMessage']! as String,
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
-                                          style: const TextStyle(
+                                          style: TextStyle(
                                             fontSize: 12,
                                             color: AppColors.mutedText,
                                           ),
@@ -247,13 +255,13 @@ class ChatsListView extends GetView<ChatsListViewModel> {
                                           padding: const EdgeInsets.symmetric(
                                             horizontal: 5,
                                           ),
-                                          decoration: const BoxDecoration(
+                                          decoration: BoxDecoration(
                                             color: AppColors.primary,
                                             shape: BoxShape.circle,
                                           ),
                                           child: Text(
                                             '$unread',
-                                            style: const TextStyle(
+                                            style: TextStyle(
                                               fontSize: 10,
                                               fontWeight: FontWeight.w600,
                                             ),

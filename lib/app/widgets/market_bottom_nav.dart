@@ -49,7 +49,7 @@ class MarketBottomNav extends StatelessWidget {
                 topLeft: Radius.circular(24),
                 topRight: Radius.circular(24),
               ),
-              border: const Border(
+              border: Border(
                 top: BorderSide(color: AppColors.primary, width: 0.4),
                 left: BorderSide(color: AppColors.primary, width: 0.4),
                 right: BorderSide(color: AppColors.primary, width: 0.4),

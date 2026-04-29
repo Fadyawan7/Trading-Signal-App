@@ -39,7 +39,7 @@ class LoginView extends GetView<LoginViewModel> {
                   alignment: Alignment.centerRight,
                   child: TextButton(
                     onPressed: () => Get.toNamed(AppRoutes.forgotPassword),
-                    child: const Text(
+                    child: Text(
                       'Forgot Password?',
                       style: TextStyle(color: AppColors.accent),
                     ),
@@ -48,7 +48,7 @@ class LoginView extends GetView<LoginViewModel> {
                 const SizedBox(height: 6),
                 PrimaryButton(
                   label: 'Sign In',
-                  icon: const Icon(
+                  icon: Icon(
                     Icons.arrow_forward,
                     size: 18,
                     color: Colors.white,
@@ -57,7 +57,7 @@ class LoginView extends GetView<LoginViewModel> {
                 ),
                 const SizedBox(height: 26),
                 Row(
-                  children: const [
+                  children: [
                     Expanded(child: Divider(color: AppColors.border)),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 10),
@@ -71,7 +71,7 @@ class LoginView extends GetView<LoginViewModel> {
                 ),
                 const SizedBox(height: 16),
                 Row(
-                  children: const [
+                  children: [
                     Expanded(
                       child: _SocialButton(label: 'Google', icon: 'G'),
                     ),
@@ -85,13 +85,13 @@ class LoginView extends GetView<LoginViewModel> {
                 Wrap(
                   alignment: WrapAlignment.center,
                   children: [
-                    const Text(
+                    Text(
                       'Don\'t have an account? ',
                       style: TextStyle(color: AppColors.mutedText),
                     ),
                     InkWell(
                       onTap: () => Get.toNamed(AppRoutes.register),
-                      child: const Text(
+                      child: Text(
                         'Sign Up',
                         style: TextStyle(
                           color: AppColors.accent,
@@ -115,7 +115,7 @@ class _LogoHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    return Column(
       children: [
         _LogoBox(),
         SizedBox(height: 12),
@@ -156,11 +156,7 @@ class _LogoBox extends StatelessWidget {
           ),
         ],
       ),
-      child: const Icon(
-        Icons.trending_up_rounded,
-        size: 52,
-        color: Colors.white,
-      ),
+      child: Icon(Icons.trending_up_rounded, size: 52, color: Colors.white),
     );
   }
 }
@@ -173,22 +169,22 @@ class _LoginBackground extends StatelessWidget {
     return Stack(
       children: [
         Positioned.fill(child: CustomPaint(painter: _GridPainter())),
-        const Positioned(
+        Positioned(
           top: 60,
           left: 30,
           child: _Orb(size: 220, c1: AppColors.primary, c2: AppColors.accent),
         ),
-        const Positioned(
+        Positioned(
           bottom: 90,
           right: 10,
           child: _Orb(size: 250, c1: AppColors.accent, c2: AppColors.primary),
         ),
-        const Positioned(
+        Positioned(
           top: 170,
           left: 200,
           child: _Orb(size: 140, c1: Color(0xFF059669), c2: Color(0xFF10B981)),
         ),
-        const Positioned(
+        Positioned(
           top: 140,
           left: 70,
           child: Text(
@@ -196,7 +192,7 @@ class _LoginBackground extends StatelessWidget {
             style: TextStyle(fontSize: 46, color: Colors.white10),
           ),
         ),
-        const Positioned(
+        Positioned(
           top: 220,
           right: 60,
           child: Text(
@@ -204,7 +200,7 @@ class _LoginBackground extends StatelessWidget {
             style: TextStyle(fontSize: 42, color: Colors.white10),
           ),
         ),
-        const Positioned(
+        Positioned(
           bottom: 210,
           left: 110,
           child: Text(
@@ -277,7 +273,7 @@ class _SocialButton extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(icon, style: const TextStyle(fontWeight: FontWeight.w700)),
+            Text(icon, style: TextStyle(fontWeight: FontWeight.w700)),
             const SizedBox(width: 8),
             Text(label),
           ],

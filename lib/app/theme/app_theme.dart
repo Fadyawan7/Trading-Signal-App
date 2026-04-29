@@ -81,15 +81,15 @@ class AppTheme {
         ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(color: Color(0x4010B981)),
+          borderSide: BorderSide(color: Color(0x4010B981)),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(color: Color(0x4010B981)),
+          borderSide: BorderSide(color: Color(0x4010B981)),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(color: AppColors.primary, width: 1.4),
+          borderSide: BorderSide(color: AppColors.emerald500, width: 1.4),
         ),
       ),
       textSelectionTheme: const TextSelectionThemeData(
@@ -108,9 +108,9 @@ class AppTheme {
     final scheme = ColorScheme.dark(
       primary: AppColors.primary,
       secondary: AppColors.accent,
-      surface: AppColors.card,
-      onSurface: AppColors.text,
-      outline: AppColors.border,
+      surface: const Color(0xFF0F172A),
+      onSurface: Colors.white,
+      outline: const Color(0x3310B981),
       error: AppColors.error,
     );
 
@@ -141,40 +141,40 @@ class AppTheme {
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.dark,
-      scaffoldBackgroundColor: AppColors.background,
+      scaffoldBackgroundColor: const Color(0xFF0A0F1E),
       colorScheme: scheme,
       textTheme: textTheme,
       appBarTheme: const AppBarTheme(
         backgroundColor: Colors.transparent,
-        foregroundColor: AppColors.text,
+        foregroundColor: Colors.white,
         elevation: 0,
         centerTitle: false,
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: AppColors.inputBackground,
+        fillColor: const Color(0xFF0F172A),
         hintStyle: GoogleFonts.plusJakartaSans(
-          color: AppColors.mutedText,
+          color: const Color(0xFF9CA3AF),
           fontSize: 13,
           fontWeight: FontWeight.w500,
         ),
-        prefixIconColor: AppColors.mutedText,
-        suffixIconColor: AppColors.mutedText,
+        prefixIconColor: const Color(0xFF9CA3AF),
+        suffixIconColor: const Color(0xFF9CA3AF),
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 16,
           vertical: 15,
         ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(color: AppColors.border),
+          borderSide: BorderSide(color: Color(0x3310B981)),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(color: AppColors.border),
+          borderSide: BorderSide(color: Color(0x3310B981)),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(color: AppColors.primary, width: 1.4),
+          borderSide: BorderSide(color: AppColors.emerald500, width: 1.4),
         ),
       ),
       textSelectionTheme: const TextSelectionThemeData(
@@ -183,7 +183,7 @@ class AppTheme {
         selectionHandleColor: AppColors.primary,
       ),
       cardTheme: CardThemeData(
-        color: AppColors.card,
+        color: const Color(0xFF0F172A),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
     );

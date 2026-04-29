@@ -74,7 +74,7 @@ class _TraderAccountBodyState extends State<_TraderAccountBody> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Trader Profile',),
+        title: Text('Trader Profile'),
         backgroundColor: AppColors.background,
         centerTitle: true,
         surfaceTintColor: AppColors.background,
@@ -92,20 +92,19 @@ class _TraderAccountBodyState extends State<_TraderAccountBody> {
         actions: [
           GestureDetector(
             onTap: () {
-Get.toNamed(AppRoutes.traderEditProfile);
+              Get.toNamed(AppRoutes.traderEditProfile);
             },
-            child: Icon(Icons.edit, size: 18, color: AppColors.text)),
+            child: Icon(Icons.edit, size: 18, color: AppColors.text),
+          ),
           const SizedBox(width: 20),
         ],
-        
       ),
       backgroundColor: AppColors.background,
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
           children: [
-         
-            const Row(
+            Row(
               children: [
                 _HeadAvatar(),
                 SizedBox(width: 10),
@@ -139,7 +138,7 @@ Get.toNamed(AppRoutes.traderEditProfile);
               borderColor: AppColors.primary.withValues(alpha: 0.2),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
+                children: [
                   Text(
                     'Total Earnings',
                     style: TextStyle(color: AppColors.mutedText, fontSize: 12),
@@ -195,10 +194,10 @@ Get.toNamed(AppRoutes.traderEditProfile);
                           colors: [Color(0xFF059669), Color(0xFF34D399)],
                         ),
                       ),
-                      child: const Icon(Icons.workspace_premium),
+                      child: Icon(Icons.workspace_premium),
                     ),
                     const SizedBox(width: 8),
-                    const Expanded(
+                    Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -216,7 +215,7 @@ Get.toNamed(AppRoutes.traderEditProfile);
                         ],
                       ),
                     ),
-                    const Text(
+                    Text(
                       'Upgrade',
                       style: TextStyle(
                         color: AppColors.primary,
@@ -233,7 +232,7 @@ Get.toNamed(AppRoutes.traderEditProfile);
                 Expanded(
                   child: PrimaryButton(
                     label: 'Withdraw',
-                    icon: const Icon(Icons.account_balance_wallet, size: 14),
+                    icon: Icon(Icons.account_balance_wallet, size: 14),
                     onTap: () => setState(() => showWithdraw = !showWithdraw),
                     padding: const EdgeInsets.symmetric(vertical: 10),
                   ),
@@ -284,7 +283,7 @@ Get.toNamed(AppRoutes.traderEditProfile);
             ),
             if (showWithdraw) ...[
               const SizedBox(height: 12),
-              const Text(
+              Text(
                 'Select Crypto Method',
                 style: TextStyle(fontWeight: FontWeight.w600),
               ),
@@ -329,23 +328,20 @@ Get.toNamed(AppRoutes.traderEditProfile);
                             ),
                             child: Text(
                               c['icon']! as String,
-                              style: const TextStyle(fontSize: 24),
+                              style: TextStyle(fontSize: 24),
                             ),
                           ),
                           const SizedBox(height: 4),
                           Text(
                             c['name']! as String,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
                           Text(
                             'Fee: ${c['fee']}',
-                            style: const TextStyle(
-                              fontSize: 10,
-                              color: Colors.green,
-                            ),
+                            style: TextStyle(fontSize: 10, color: Colors.green),
                           ),
                         ],
                       ),
@@ -371,12 +367,12 @@ Get.toNamed(AppRoutes.traderEditProfile);
               ],
             ],
             const SizedBox(height: 12),
-            const Text(
+            Text(
               'Performance Stats',
               style: TextStyle(fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 8),
-            const Row(
+            Row(
               children: [
                 Expanded(
                   child: _Stat(
@@ -407,7 +403,7 @@ Get.toNamed(AppRoutes.traderEditProfile);
               ],
             ),
             const SizedBox(height: 10),
-            const Text(
+            Text(
               'Recent Withdrawals',
               style: TextStyle(fontWeight: FontWeight.w600),
             ),
@@ -432,10 +428,7 @@ Get.toNamed(AppRoutes.traderEditProfile);
                             colors: [AppColors.primary, AppColors.accent],
                           ),
                         ),
-                        child: const Icon(
-                          Icons.account_balance_wallet,
-                          size: 18,
-                        ),
+                        child: Icon(Icons.account_balance_wallet, size: 18),
                       ),
                       const SizedBox(width: 8),
                       Expanded(
@@ -444,13 +437,11 @@ Get.toNamed(AppRoutes.traderEditProfile);
                           children: [
                             Text(
                               t['amount']! as String,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w700,
-                              ),
+                              style: TextStyle(fontWeight: FontWeight.w700),
                             ),
                             Text(
                               t['date']! as String,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 11,
                                 color: AppColors.mutedText,
                               ),
@@ -470,7 +461,7 @@ Get.toNamed(AppRoutes.traderEditProfile);
                               color: Colors.green.withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(999),
                             ),
-                            child: const Text(
+                            child: Text(
                               'completed',
                               style: TextStyle(
                                 fontSize: 10,
@@ -480,7 +471,7 @@ Get.toNamed(AppRoutes.traderEditProfile);
                           ),
                           Text(
                             t['method']! as String,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 10,
                               color: AppColors.mutedText,
                             ),
@@ -513,7 +504,7 @@ class _HeadAvatar extends StatelessWidget {
           colors: [AppColors.primary, AppColors.accent],
         ),
       ),
-      child: const Text('👨‍💼', style: TextStyle(fontSize: 36)),
+      child: Text('👨‍💼', style: TextStyle(fontSize: 36)),
     );
   }
 }
@@ -528,7 +519,7 @@ class _Verified extends StatelessWidget {
         color: Colors.green.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(999),
       ),
-      child: const Text(
+      child: Text(
         'Verified ✓',
         style: TextStyle(
           color: Colors.green,
@@ -555,10 +546,10 @@ class _Small extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(value, style: const TextStyle(fontWeight: FontWeight.w700)),
+          Text(value, style: TextStyle(fontWeight: FontWeight.w700)),
           Text(
             label,
-            style: const TextStyle(fontSize: 10, color: AppColors.mutedText),
+            style: TextStyle(fontSize: 10, color: AppColors.mutedText),
           ),
         ],
       ),
@@ -586,10 +577,10 @@ class _Stat extends StatelessWidget {
         children: [
           Icon(icon, color: color),
           const SizedBox(height: 4),
-          Text(value, style: const TextStyle(fontWeight: FontWeight.w700)),
+          Text(value, style: TextStyle(fontWeight: FontWeight.w700)),
           Text(
             label,
-            style: const TextStyle(color: AppColors.mutedText, fontSize: 10),
+            style: TextStyle(color: AppColors.mutedText, fontSize: 10),
           ),
         ],
       ),

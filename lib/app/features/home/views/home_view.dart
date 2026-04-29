@@ -60,14 +60,14 @@ class HomeView extends GetView<HomeViewModel> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-          padding: const EdgeInsets.fromLTRB(8, 12, 8, 12),
+                padding: const EdgeInsets.fromLTRB(8, 12, 8, 12),
 
                 child: Row(
                   children: [
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
+                        children: [
                           Text(
                             'Welcome back,',
                             style: TextStyle(
@@ -92,7 +92,7 @@ class HomeView extends GetView<HomeViewModel> {
                           width: 42,
                           height: 42,
 
-                          child: const Icon(Icons.notifications_none_rounded),
+                          child: Icon(Icons.notifications_none_rounded),
                         ),
                         Positioned(
                           right: 8,
@@ -100,7 +100,7 @@ class HomeView extends GetView<HomeViewModel> {
                           child: Container(
                             width: 8,
                             height: 8,
-                            decoration: const BoxDecoration(
+                            decoration: BoxDecoration(
                               color: Colors.red,
                               shape: BoxShape.circle,
                             ),
@@ -119,7 +119,7 @@ class HomeView extends GetView<HomeViewModel> {
                     //         colors: [AppColors.primary, AppColors.accent],
                     //       ),
                     //     ),
-                    //     child: const Center(child: Text('👤')),
+                    //     child: Center(child: Text('👤')),
                     //   ),
                     // ),
                   ],
@@ -129,7 +129,7 @@ class HomeView extends GetView<HomeViewModel> {
               TextField(
                 decoration: InputDecoration(
                   hintText: 'Search trading groups...',
-                  prefixIcon: const Icon(Icons.search_rounded),
+                  prefixIcon: Icon(Icons.search_rounded),
                   suffixIcon: Padding(
                     padding: const EdgeInsets.all(6),
                     child: Container(
@@ -139,7 +139,7 @@ class HomeView extends GetView<HomeViewModel> {
                           colors: [AppColors.primary, AppColors.accent],
                         ),
                       ),
-                      child: const Icon(
+                      child: Icon(
                         Icons.tune_rounded,
                         size: 18,
                         color: Colors.white,
@@ -172,7 +172,7 @@ class HomeView extends GetView<HomeViewModel> {
                         color: Colors.white24,
                         borderRadius: BorderRadius.circular(999),
                       ),
-                      child: const Text(
+                      child: Text(
                         'Featured',
                         style: TextStyle(
                           fontSize: 12,
@@ -181,7 +181,7 @@ class HomeView extends GetView<HomeViewModel> {
                       ),
                     ),
                     const SizedBox(height: 10),
-                    const Text(
+                    Text(
                       'Join Trusted Trading Groups',
                       style: TextStyle(
                         fontSize: 22,
@@ -189,7 +189,7 @@ class HomeView extends GetView<HomeViewModel> {
                       ),
                     ),
                     const SizedBox(height: 6),
-                    const Text(
+                    Text(
                       'Connect with verified traders and receive real-time signals',
                       style: TextStyle(color: Colors.white70),
                     ),
@@ -226,7 +226,7 @@ class HomeView extends GetView<HomeViewModel> {
                 ),
               ),
               const SizedBox(height: 20),
-              const Text(
+              Text(
                 'Categories',
                 style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18),
               ),
@@ -264,14 +264,14 @@ class HomeView extends GetView<HomeViewModel> {
                           child: Center(
                             child: Text(
                               c['icon']!,
-                              style: const TextStyle(fontSize: 24),
+                              style: TextStyle(fontSize: 24),
                             ),
                           ),
                         ),
                         const SizedBox(height: 8),
                         Text(
                           c['name']!,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w600,
                           ),
@@ -282,7 +282,7 @@ class HomeView extends GetView<HomeViewModel> {
                 },
               ),
               const SizedBox(height: 20),
-              const Text(
+              Text(
                 'Top Trading Groups',
                 style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18),
               ),
@@ -308,7 +308,7 @@ class HomeView extends GetView<HomeViewModel> {
                               child: Center(
                                 child: Text(
                                   group['avatar']!,
-                                  style: const TextStyle(fontSize: 25),
+                                  style: TextStyle(fontSize: 25),
                                 ),
                               ),
                             ),
@@ -319,14 +319,14 @@ class HomeView extends GetView<HomeViewModel> {
                                 children: [
                                   Text(
                                     group['name']!,
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                       fontWeight: FontWeight.w700,
                                     ),
                                   ),
                                   const SizedBox(height: 2),
                                   Text(
                                     'by ${group['trader']}',
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                       color: AppColors.mutedText,
                                       fontSize: 12,
                                     ),
@@ -367,7 +367,7 @@ class HomeView extends GetView<HomeViewModel> {
                           children: [
                             Text(
                               group['price']!,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 color: AppColors.primary,
                                 fontWeight: FontWeight.w700,
                                 fontSize: 18,
@@ -386,7 +386,7 @@ class HomeView extends GetView<HomeViewModel> {
                                   colors: [AppColors.primary, AppColors.accent],
                                 ),
                               ),
-                              child: const Text(
+                              child: Text(
                                 'Join Now',
                                 style: TextStyle(fontWeight: FontWeight.w700),
                               ),
@@ -429,7 +429,7 @@ class _MiniStat extends StatelessWidget {
         children: [
           Text(
             title,
-            style: const TextStyle(color: AppColors.mutedText, fontSize: 11),
+            style: TextStyle(color: AppColors.mutedText, fontSize: 11),
           ),
           const SizedBox(height: 2),
           Text(

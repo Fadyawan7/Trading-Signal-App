@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 
 import '../../../routes/app_routes.dart';
 import '../../../theme/app_colors.dart';
-import '../../../widgets/market_ui.dart';
 import '../viewmodel/trader_subscription_view_model.dart';
 
 class TraderSubscriptionView extends GetView<TraderSubscriptionViewModel> {
@@ -26,7 +25,7 @@ class _SubscriptionBodyState extends State<_SubscriptionBody> {
   String? selectedPlan;
   String billing = 'monthly';
 
-  final plans = const [
+  final List<Map<String, dynamic>> plans = [
     {
       'id': 'basic',
       'name': 'Basic',
@@ -42,8 +41,9 @@ class _SubscriptionBodyState extends State<_SubscriptionBody> {
         'Monthly Reports',
       ],
       'recommended': false,
-      'icon': Icons.flash_on,
-      'colors': [Color(0xFF34D399), Color(0xFF10B981)],
+      'isPremium': false,
+      'icon': Icons.bolt_rounded,
+      'color': const Color(0xFF14B8A6),
     },
     {
       'id': 'pro',
@@ -62,8 +62,9 @@ class _SubscriptionBodyState extends State<_SubscriptionBody> {
         'API Access',
       ],
       'recommended': true,
-      'icon': Icons.workspace_premium,
-      'colors': [Color(0xFF059669), Color(0xFF34D399)],
+      'isPremium': false,
+      'icon': Icons.workspace_premium_rounded,
+      'color': const Color(0xFF14B8A6),
     },
     {
       'id': 'premium',
@@ -81,291 +82,187 @@ class _SubscriptionBodyState extends State<_SubscriptionBody> {
         'Full Customization',
         'API Access',
         'Dedicated Account Manager',
+        'Early Access to Features',
       ],
       'recommended': false,
-      'icon': Icons.rocket_launch,
-      'colors': [Color(0xFFF59E0B), Color(0xFFEAB308)],
+      'isPremium': true,
+      'icon': Icons.rocket_launch_rounded,
+      'color': const Color(0xFFF59E0B),
     },
   ];
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      body: SafeArea(
-        child: Stack(
-          children: [
-            ListView(
-              padding: const EdgeInsets.fromLTRB(24, 16, 24, 130),
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Obx(() {
+      final bgColor = AppColors.background;
+      return Scaffold(
+        backgroundColor: bgColor,
+        body: SafeArea(
+          child: Column(
+            children: [
+              _Header(),
+              Expanded(
+                child: ListView(
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                   children: [
-                    iconSquare(icon: Icons.arrow_back, onTap: Get.back),
-                    Text(
-                      'Choose Your Plan',
-                      style: TextStyle(fontWeight: FontWeight.w600),
+                    _IntroCard(),
+                    const SizedBox(height: 24),
+                    _BillingToggle(
+                      current: billing,
+                      onChanged: (v) => setState(() => billing = v),
                     ),
-                    const SizedBox(width: 40),
+                    const SizedBox(height: 24),
+                    ...plans.map((p) => _PlanCard(
+                          plan: p,
+                          billing: billing,
+                          isSelected: selectedPlan == p['id'],
+                          onSelect: () => setState(() => selectedPlan = p['id'] as String),
+                        )),
+                    const SizedBox(height: 30),
                   ],
                 ),
-                const SizedBox(height: 12),
-                MarketPanel(
-                  radius: 16,
-                  color: AppColors.primary.withValues(alpha: 0.1),
-                  borderColor: AppColors.primary.withValues(alpha: 0.2),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Icon(Icons.shield, color: AppColors.primary),
-                      SizedBox(width: 8),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Start Your Trading Journey',
-                              style: TextStyle(fontWeight: FontWeight.w600),
-                            ),
-                            SizedBox(height: 4),
-                            Text(
-                              'Choose a plan that fits your needs. Upgrade or downgrade anytime.',
-                              style: TextStyle(
-                                color: AppColors.mutedText,
-                                fontSize: 12,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
+              ),
+              if (selectedPlan != null) _BottomAction(
+                planName: plans.firstWhere((p) => p['id'] == selectedPlan)['name'] as String,
+                onTap: () {
+                  final p = plans.firstWhere((x) => x['id'] == selectedPlan);
+                  Get.toNamed(AppRoutes.subscriptionPayment, arguments: {
+                    'plan': p['name'],
+                    'price': billing == 'monthly' ? p['monthly'] : p['yearly'],
+                    'billing': billing,
+                  });
+                },
+              ),
+            ],
+          ),
+        ),
+      );
+    });
+  }
+}
+
+class _Header extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+      child: Row(
+        children: [
+          InkWell(
+            onTap: () => Get.back(),
+            borderRadius: BorderRadius.circular(12),
+            child: Container(
+              width: 44,
+              height: 44,
+              decoration: BoxDecoration(
+                color: AppColors.card,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: AppColors.border),
+              ),
+              child: Icon(Icons.arrow_back_ios_new_rounded, color: AppColors.text, size: 18),
+            ),
+          ),
+          const SizedBox(width: 16),
+          Text(
+            'Choose Your Plan',
+            style: TextStyle(color: AppColors.text, fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _IntroCard extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: const Color(0xFF14B8A6).withOpacity(0.05),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: const Color(0xFF14B8A6).withOpacity(0.1)),
+      ),
+      child: Row(
+        children: [
+          const Icon(Icons.shield_outlined, color: Color(0xFF14B8A6), size: 24),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Start Your Trading Journey',
+                  style: TextStyle(color: AppColors.text, fontWeight: FontWeight.bold, fontSize: 14),
                 ),
-                const SizedBox(height: 10),
-                Container(
-                  padding: const EdgeInsets.all(6),
-                  decoration: BoxDecoration(
-                    color: AppColors.card,
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: AppColors.border),
-                  ),
-                  child: Row(
-                    children: [
-                      Expanded(child: _toggle('monthly', 'Monthly')),
-                      const SizedBox(width: 8),
-                      Expanded(child: _toggle('yearly', 'Yearly')),
-                    ],
-                  ),
+                const SizedBox(height: 4),
+                Text(
+                  'Choose a plan that fits your needs. Upgrade or downgrade anytime.',
+                  style: TextStyle(color: AppColors.mutedText, fontSize: 12),
                 ),
-                const SizedBox(height: 12),
-                ...plans.map((p) {
-                  final selected = selectedPlan == p['id'];
-                  final price = billing == 'monthly'
-                      ? p['monthly']
-                      : p['yearly'];
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 10),
-                    child: InkWell(
-                      onTap: () =>
-                          setState(() => selectedPlan = p['id']! as String),
-                      child: Container(
-                        padding: const EdgeInsets.all(14),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          color: AppColors.card,
-                          border: Border.all(
-                            color: selected
-                                ? AppColors.primary
-                                : AppColors.border,
-                            width: 2,
-                          ),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            if (p['recommended']! as bool)
-                              Center(
-                                child: Container(
-                                  margin: const EdgeInsets.only(bottom: 8),
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 10,
-                                    vertical: 4,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(999),
-                                    gradient: const LinearGradient(
-                                      colors: [
-                                        AppColors.primary,
-                                        AppColors.accent,
-                                      ],
-                                    ),
-                                  ),
-                                  child: Text(
-                                    'Recommended',
-                                    style: TextStyle(
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            Row(
-                              children: [
-                                Container(
-                                  width: 52,
-                                  height: 52,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(14),
-                                    gradient: LinearGradient(
-                                      colors: p['colors']! as List<Color>,
-                                    ),
-                                  ),
-                                  child: Icon(p['icon']! as IconData),
-                                ),
-                                const SizedBox(width: 10),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        p['name']! as String,
-                                        style: TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.w700,
-                                        ),
-                                      ),
-                                      Text(
-                                        'For ${(p['name']! as String).toLowerCase()} traders',
-                                        style: TextStyle(
-                                          fontSize: 11,
-                                          color: AppColors.mutedText,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                if (selected)
-                                  Icon(
-                                    Icons.check_circle,
-                                    color: AppColors.primary,
-                                  ),
-                              ],
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              price! as String,
-                              style: TextStyle(
-                                fontSize: 30,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                            Text(
-                              '/${billing == 'monthly' ? 'month' : 'year'}',
-                              style: TextStyle(
-                                color: AppColors.mutedText,
-                                fontSize: 12,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: _limit(
-                                    'Groups',
-                                    p['groups']! as String,
-                                    Icons.layers,
-                                  ),
-                                ),
-                                const SizedBox(width: 8),
-                                Expanded(
-                                  child: _limit(
-                                    'Members',
-                                    p['members']! as String,
-                                    Icons.groups,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 8),
-                            ...(p['features']! as List<String>).map(
-                              (f) => Padding(
-                                padding: const EdgeInsets.only(bottom: 4),
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      width: 18,
-                                      height: 18,
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        gradient: LinearGradient(
-                                          colors: p['colors']! as List<Color>,
-                                        ),
-                                      ),
-                                      child: Icon(Icons.check, size: 12),
-                                    ),
-                                    const SizedBox(width: 6),
-                                    Expanded(
-                                      child: Text(
-                                        f,
-                                        style: TextStyle(fontSize: 12),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  );
-                }),
               ],
             ),
-            if (selectedPlan != null)
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _BillingToggle extends StatelessWidget {
+  final String current;
+  final Function(String) onChanged;
+
+  const _BillingToggle({required this.current, required this.onChanged});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(6),
+      decoration: BoxDecoration(
+        color: AppColors.card,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColors.border),
+      ),
+      child: Row(
+        children: [
+          Expanded(child: _toggleItem('monthly', 'Monthly')),
+          Expanded(child: _toggleItem('yearly', 'Yearly', badge: 'Save 20%')),
+        ],
+      ),
+    );
+  }
+
+  Widget _toggleItem(String id, String label, {String? badge}) {
+    final active = current == id;
+    return InkWell(
+      onTap: () => onChanged(id),
+      child: Container(
+        height: 44,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          gradient: active ? const LinearGradient(colors: [Color(0xFF10B981), Color(0xFF0D9488)]) : null,
+        ),
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            Text(
+              label,
+              style: TextStyle(color: active ? Colors.white : AppColors.mutedText, fontWeight: FontWeight.bold, fontSize: 14),
+            ),
+            if (badge != null)
               Positioned(
-                left: 0,
-                right: 0,
-                bottom: 0,
+                top: 2,
+                right: 2,
                 child: Container(
-                  padding: const EdgeInsets.fromLTRB(24, 10, 24, 16),
+                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                   decoration: BoxDecoration(
-                    color: AppColors.background.withValues(alpha: 0.95),
-                    border: Border(top: BorderSide(color: AppColors.border)),
+                    color: active ? Colors.white.withOpacity(0.2) : const Color(0xFF14B8A6).withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(6),
                   ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      PrimaryButton(
-                        label:
-                            'Subscribe to ${plans.firstWhere((p) => p['id'] == selectedPlan)['name']}',
-                        icon: Icon(Icons.trending_up, size: 16),
-                        onTap: () {
-                          final p = plans.firstWhere(
-                            (x) => x['id'] == selectedPlan,
-                          );
-                          Get.toNamed(
-                            AppRoutes.subscriptionPayment,
-                            arguments: {
-                              'plan': p['name'],
-                              'price': billing == 'monthly'
-                                  ? p['monthly']
-                                  : p['yearly'],
-                              'billing': billing,
-                            },
-                          );
-                        },
-                      ),
-                      const SizedBox(height: 6),
-                      Text(
-                        'Cancel anytime • 30-day money back guarantee',
-                        style: TextStyle(
-                          fontSize: 11,
-                          color: AppColors.mutedText,
-                        ),
-                      ),
-                    ],
+                  child: Text(
+                    badge,
+                    style: TextStyle(color: active ? Colors.white : const Color(0xFF14B8A6), fontSize: 8, fontWeight: FontWeight.bold),
                   ),
                 ),
               ),
@@ -374,58 +271,228 @@ class _SubscriptionBodyState extends State<_SubscriptionBody> {
       ),
     );
   }
+}
 
-  Widget _toggle(String value, String label) {
-    final active = billing == value;
-    return InkWell(
-      onTap: () => setState(() => billing = value),
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 10),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          gradient: active
-              ? const LinearGradient(
-                  colors: [AppColors.primary, AppColors.accent],
-                )
-              : null,
-        ),
-        child: Center(
-          child: Text(
-            label,
-            style: TextStyle(
-              color: active ? Colors.white : AppColors.mutedText,
-              fontWeight: FontWeight.w600,
+class _PlanCard extends StatelessWidget {
+  final Map<String, dynamic> plan;
+  final String billing;
+  final bool isSelected;
+  final VoidCallback onSelect;
+
+  const _PlanCard({required this.plan, required this.billing, required this.isSelected, required this.onSelect});
+
+  @override
+  Widget build(BuildContext context) {
+    final isPremium = plan['isPremium'] == true;
+    final isRecommended = plan['recommended'] == true;
+    final Color color = plan['color'] as Color? ?? const Color(0xFF14B8A6);
+    final price = billing == 'monthly' ? plan['monthly'] : plan['yearly'];
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 20),
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          InkWell(
+            onTap: onSelect,
+            borderRadius: BorderRadius.circular(24),
+            child: Container(
+              padding: const EdgeInsets.all(24),
+              decoration: BoxDecoration(
+                color: isPremium ? color.withOpacity(0.05) : AppColors.card,
+                borderRadius: BorderRadius.circular(24),
+                border: Border.all(
+                  color: isSelected ? color : (isPremium ? color.withOpacity(0.3) : AppColors.border),
+                  width: isSelected ? 2 : 1,
+                ),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        width: 54,
+                        height: 54,
+                        decoration: BoxDecoration(
+                          color: color.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Icon(plan['icon'] as IconData? ?? Icons.star_rounded, color: color, size: 28),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              plan['name']?.toString() ?? 'Plan',
+                              style: TextStyle(color: AppColors.text, fontSize: 20, fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              'For ${plan['name']?.toString().toLowerCase() ?? ""} traders',
+                              style: TextStyle(color: AppColors.mutedText, fontSize: 12),
+                            ),
+                          ],
+                        ),
+                      ),
+                      if (isSelected) Icon(Icons.check_circle_rounded, color: color, size: 28),
+                    ],
+                  ),
+                  const SizedBox(height: 24),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(
+                        price?.toString() ?? '\$0',
+                        style: TextStyle(color: AppColors.text, fontSize: 32, fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(width: 4),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 6),
+                        child: Text(
+                          '/${billing == 'monthly' ? 'month' : 'year'}',
+                          style: TextStyle(color: AppColors.mutedText, fontSize: 14),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  Row(
+                    children: [
+                      Expanded(child: _StatBox(label: 'Groups', value: plan['groups']?.toString() ?? '0', icon: Icons.layers_outlined, color: color)),
+                      const SizedBox(width: 12),
+                      Expanded(child: _StatBox(label: 'Members', value: plan['members']?.toString() ?? '0', icon: Icons.people_outline_rounded, color: color)),
+                    ],
+                  ),
+                  const SizedBox(height: 24),
+                  if (plan['features'] != null)
+                    ...(plan['features'] as List<String>).map((f) => Padding(
+                      padding: const EdgeInsets.only(bottom: 12),
+                      child: Row(
+                        children: [
+                          Icon(Icons.check_circle_rounded, color: color, size: 18),
+                          const SizedBox(width: 12),
+                          Expanded(child: Text(f, style: TextStyle(color: AppColors.text, fontSize: 13, fontWeight: FontWeight.w500))),
+                        ],
+                      ),
+                    )),
+                ],
+              ),
             ),
           ),
-        ),
+          if (isRecommended)
+            Positioned(
+              top: -12,
+              left: 0,
+              right: 0,
+              child: Center(
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF14B8A6),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: const Text('Recommended', style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold)),
+                ),
+              ),
+            ),
+          if (isPremium)
+            Positioned(
+              top: -12,
+              right: 20,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(colors: [Color(0xFFF59E0B), Color(0xFFD97706)]),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: const Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.auto_awesome_rounded, color: Colors.white, size: 12),
+                    SizedBox(width: 4),
+                    Text('Premium', style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold)),
+                  ],
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }
+}
 
-  Widget _limit(String label, String value, IconData icon) {
+class _StatBox extends StatelessWidget {
+  final String label, value;
+  final IconData icon;
+  final Color color;
+
+  const _StatBox({required this.label, required this.value, required this.icon, required this.color});
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: AppColors.background.withValues(alpha: 0.6),
-        borderRadius: BorderRadius.circular(10),
+        color: AppColors.backgroundSecondary.withOpacity(0.5),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColors.border),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              Icon(icon, size: 14, color: AppColors.primary),
-              const SizedBox(width: 4),
-              Text(
-                label,
-                style: TextStyle(fontSize: 10, color: AppColors.mutedText),
-              ),
+              Icon(icon, color: color, size: 14),
+              const SizedBox(width: 6),
+              Text(label, style: TextStyle(color: AppColors.mutedText, fontSize: 10)),
             ],
           ),
-          Text(
-            value,
-            style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700),
+          const SizedBox(height: 4),
+          Text(value, style: TextStyle(color: AppColors.text, fontSize: 14, fontWeight: FontWeight.bold)),
+        ],
+      ),
+    );
+  }
+}
+
+class _BottomAction extends StatelessWidget {
+  final String planName;
+  final VoidCallback onTap;
+
+  const _BottomAction({required this.planName, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(20, 16, 20, 20),
+      decoration: BoxDecoration(
+        color: AppColors.card,
+        border: Border(top: BorderSide(color: AppColors.border)),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          InkWell(
+            onTap: onTap,
+            borderRadius: BorderRadius.circular(12),
+            child: Container(
+              height: 54,
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(colors: [Color(0xFF10B981), Color(0xFF0D9488)]),
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(color: const Color(0xFF10B981).withOpacity(0.3), blurRadius: 12, offset: const Offset(0, 4)),
+                ],
+              ),
+              child: Center(
+                child: Text('Subscribe to $planName', style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
+              ),
+            ),
           ),
+          const SizedBox(height: 12),
+          Text('Cancel anytime • 30-day money back guarantee', style: TextStyle(color: AppColors.mutedText, fontSize: 11)),
         ],
       ),
     );

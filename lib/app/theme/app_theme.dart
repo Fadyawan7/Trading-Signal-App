@@ -77,7 +77,7 @@ class AppTheme {
         suffixIconColor: const Color(0xFF475569),
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 16,
-          vertical: 15,
+          vertical: 12,
         ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
@@ -162,7 +162,7 @@ class AppTheme {
         suffixIconColor: const Color(0xFF9CA3AF),
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 16,
-          vertical: 15,
+          vertical: 12,
         ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),

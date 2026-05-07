@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../../routes/app_routes.dart';
 import '../../../../theme/app_colors.dart';
-import '../../../../widgets/market_ui.dart';
 import '../viewmodel/role_selection_view_model.dart';
 
 class RoleSelectionView extends GetView<RoleSelectionViewModel> {
@@ -11,161 +9,121 @@ class RoleSelectionView extends GetView<RoleSelectionViewModel> {
 
   @override
   Widget build(BuildContext context) {
-    return MarketLayout(
-      child: Stack(
-        children: [
-          const Positioned.fill(child: _RoleSelectionBg()),
-          SingleChildScrollView(
-            padding: const EdgeInsets.fromLTRB(24, 30, 24, 28),
-            child: Column(
-              children: [
-                const SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text('👥', style: TextStyle(fontSize: 54)),
-                    SizedBox(width: 8),
-                    Text('📊', style: TextStyle(fontSize: 64)),
-                    SizedBox(width: 8),
-                    Text('💼', style: TextStyle(fontSize: 54)),
-                  ],
-                ),
-                const SizedBox(height: 18),
-                Text(
-                  'Choose Your Path',
-                  style: TextStyle(fontSize: 34, fontWeight: FontWeight.w600),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  'Join the TradeConnect community',
-                  style: TextStyle(color: AppColors.mutedText),
-                ),
-                const SizedBox(height: 28),
-                _RoleOption(
-                  emoji: '👤',
-                  title: 'Join as User',
-                  subtitle:
-                      'Join trading groups and receive signals from professional traders',
-                  chips: const [
-                    '📊 Market Signals',
-                    '💬 Group Chat',
-                    '📈 Learn & Earn',
-                  ],
-                  onTap: () => Get.offAllNamed(AppRoutes.home),
-                  chipColor: AppColors.primary,
-                ),
-                const SizedBox(height: 14),
-                _RoleOption(
-                  emoji: '🚀',
-                  title: 'Become a Trader',
-                  subtitle:
-                      'Create trading groups, share signals, and earn from your expertise',
-                  chips: const [
-                    '💰 Earn Revenue',
-                    '👥 Build Community',
-                    '🏆 Verified Badge',
-                  ],
-                  onTap: () => Get.toNamed(AppRoutes.applyTrader),
-                  chipColor: AppColors.accent,
-                ),
-                const SizedBox(height: 22),
-                Text(
-                  'Start your journey today • Switch roles anytime',
-                  style: TextStyle(color: AppColors.mutedText, fontSize: 12),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _RoleOption extends StatelessWidget {
-  const _RoleOption({
-    required this.emoji,
-    required this.title,
-    required this.subtitle,
-    required this.chips,
-    required this.onTap,
-    required this.chipColor,
-  });
-
-  final String emoji;
-  final String title;
-  final String subtitle;
-  final List<String> chips;
-  final VoidCallback onTap;
-  final Color chipColor;
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(18),
-      child: MarketPanel(
-        radius: 18,
-        child: Column(
+    return Obx(
+      () => Scaffold(
+        backgroundColor: AppColors.background,
+        body: Stack(
           children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(emoji, style: TextStyle(fontSize: 46)),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        title,
-                        style: TextStyle(
-                          fontSize: 19,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        subtitle,
-                        style: TextStyle(
-                          fontSize: 12.5,
-                          color: AppColors.mutedText,
-                          height: 1.35,
-                        ),
+            // Ambient glow
+            Positioned(
+              top: 50,
+              left: 0,
+              right: 0,
+              child: Center(
+                child: Container(
+                  width: 200,
+                  height: 200,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColors.primary.withValues(alpha: 0.12),
+                        blurRadius: 100,
+                        spreadRadius: 50,
                       ),
                     ],
                   ),
                 ),
-                Icon(Icons.chevron_right, color: AppColors.mutedText),
-              ],
+              ),
             ),
-            const SizedBox(height: 10),
-            Wrap(
-              spacing: 6,
-              runSpacing: 6,
-              alignment: WrapAlignment.start,
-              children: chips
-                  .map(
-                    (chip) => Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 4,
-                      ),
-                      decoration: BoxDecoration(
-                        color: chipColor.withValues(alpha: 0.12),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Text(
-                        chip,
+            SafeArea(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+                child: Column(
+                  children: [
+                    const SizedBox(height: 16),
+                    RichText(
+                      textAlign: TextAlign.center,
+                      text: TextSpan(
                         style: TextStyle(
-                          color: chipColor,
-                          fontSize: 11,
-                          fontWeight: FontWeight.w600,
+                          fontSize: 32,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.text,
                         ),
+                        children: [
+                          const TextSpan(text: 'Choose Your '),
+                          TextSpan(
+                            text: 'Path',
+                            style: TextStyle(color: AppColors.primary),
+                          ),
+                        ],
                       ),
                     ),
-                  )
-                  .toList(),
+                    const SizedBox(height: 10),
+                    Text(
+                      'Join the TradeConnect community',
+                      style: TextStyle(
+                        color: AppColors.mutedText,
+                        fontSize: 15,
+                      ),
+                    ),
+                    const SizedBox(height: 32),
+                    _RoleOption(
+                      icon: Icons.person_outline,
+                      title: 'Join as User',
+                      subtitle:
+                          'Join trading groups and receive signals from professional traders',
+                      tags: const [
+                        _TagData(Icons.trending_up, 'Market Signals'),
+                        _TagData(Icons.chat_bubble_outline, 'Group Chat'),
+                        _TagData(Icons.school, 'Learn & Earn'),
+                      ],
+                      onTap: controller.continueAsUser,
+                    ),
+                    const SizedBox(height: 20),
+                    _RoleOption(
+                      icon: Icons.business_center_outlined,
+                      title: 'Become a Trader',
+                      subtitle:
+                          'Create trading groups, share signals, and earn from your expertise',
+                      tags: const [
+                        _TagData(Icons.attach_money, 'Earn Revenue'),
+                        _TagData(Icons.people_outline, 'Build Community'),
+                        _TagData(Icons.verified_user_outlined, 'Verified Badge'),
+                      ],
+                      onTap: controller.continueAsTrader,
+                    ),
+                    const SizedBox(height: 40),
+                    Text(
+                      'Start your journey today',
+                      style: TextStyle(
+                        color: AppColors.text,
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.sync,
+                          size: 14,
+                          color: AppColors.mutedText,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          'Switch roles anytime',
+                          style: TextStyle(
+                            color: AppColors.mutedText,
+                            fontSize: 13,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
             ),
           ],
         ),
@@ -174,56 +132,124 @@ class _RoleOption extends StatelessWidget {
   }
 }
 
-class _RoleSelectionBg extends StatelessWidget {
-  const _RoleSelectionBg();
+class _TagData {
+  final IconData icon;
+  final String label;
+  const _TagData(this.icon, this.label);
+}
+
+class _RoleOption extends StatelessWidget {
+  const _RoleOption({
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+    required this.tags,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final String title;
+  final String subtitle;
+  final List<_TagData> tags;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Positioned.fill(child: CustomPaint(painter: _GridBgPainter())),
-        Positioned(
-          top: 20,
-          left: 20,
-          child: Container(
-            width: 250,
-            height: 250,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: AppColors.primary.withValues(alpha: 0.16),
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(24),
+      child: Container(
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: AppColors.card,
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(color: AppColors.border),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.05),
+              blurRadius: 24,
+              offset: const Offset(0, 12),
             ),
-          ),
+          ],
         ),
-        Positioned(
-          bottom: 20,
-          right: 20,
-          child: Container(
-            width: 280,
-            height: 280,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: AppColors.accent.withValues(alpha: 0.18),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Container(
+                  width: 44,
+                  height: 44,
+                  decoration: BoxDecoration(
+                    color: AppColors.backgroundSecondary,
+                    shape: BoxShape.circle,
+                    border: Border.all(color: AppColors.border),
+                  ),
+                  child: Icon(icon, color: AppColors.primary, size: 22),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Text(
+                    title,
+                    style: TextStyle(
+                      color: AppColors.text,
+                      fontSize: 19,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                Icon(
+                  Icons.chevron_right,
+                  color: AppColors.mutedText,
+                ),
+              ],
             ),
-          ),
+            const SizedBox(height: 12),
+            Text(
+              subtitle,
+              style: TextStyle(
+                color: AppColors.mutedText,
+                fontSize: 13,
+                height: 1.5,
+              ),
+            ),
+            const SizedBox(height: 20),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: tags.map((tag) => _buildTag(tag)).toList(),
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
-}
 
-class _GridBgPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final p = Paint()..color = const Color(0x1010B981);
-    const gap = 60.0;
-    for (double x = 0; x <= size.width; x += gap) {
-      canvas.drawLine(Offset(x, 0), Offset(x, size.height), p);
-    }
-    for (double y = 0; y <= size.height; y += gap) {
-      canvas.drawLine(Offset(0, y), Offset(size.width, y), p);
-    }
+  Widget _buildTag(_TagData tag) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      decoration: BoxDecoration(
+        color: AppColors.primary.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: AppColors.primary.withValues(alpha: 0.2),
+        ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(tag.icon, color: AppColors.primary, size: 14),
+          const SizedBox(width: 6),
+          Text(
+            tag.label,
+            style: TextStyle(
+              color: AppColors.primary,
+              fontSize: 11,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
+      ),
+    );
   }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

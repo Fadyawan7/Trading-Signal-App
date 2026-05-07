@@ -42,7 +42,7 @@ class _TraderAccountBodyState extends State<_TraderAccountBody> {
         'id': 'btc',
         'name': 'Bitcoin',
         'symbol': 'BTC',
-        'icon': '₿',
+        'icon': Icons.currency_bitcoin,
         'fee': '\$2.50',
         'min': '\$50',
       },
@@ -50,7 +50,7 @@ class _TraderAccountBodyState extends State<_TraderAccountBody> {
         'id': 'eth',
         'name': 'Ethereum',
         'symbol': 'ETH',
-        'icon': 'Ξ',
+        'icon': Icons.account_balance_wallet,
         'fee': '\$1.80',
         'min': '\$30',
       },
@@ -58,7 +58,7 @@ class _TraderAccountBodyState extends State<_TraderAccountBody> {
         'id': 'usdt',
         'name': 'Tether',
         'symbol': 'USDT',
-        'icon': '₮',
+        'icon': Icons.attach_money,
         'fee': '\$1.00',
         'min': '\$20',
       },
@@ -66,7 +66,7 @@ class _TraderAccountBodyState extends State<_TraderAccountBody> {
         'id': 'bnb',
         'name': 'Binance Coin',
         'symbol': 'BNB',
-        'icon': 'B',
+        'icon': Icons.monetization_on,
         'fee': '\$0.50',
         'min': '\$25',
       },
@@ -322,13 +322,12 @@ class _TraderAccountBodyState extends State<_TraderAccountBody> {
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
-                              gradient: const LinearGradient(
-                                colors: [AppColors.primary, AppColors.accent],
-                              ),
+                              color: AppColors.primary.withValues(alpha: 0.15),
                             ),
-                            child: Text(
-                              c['icon']! as String,
-                              style: TextStyle(fontSize: 24),
+                            child: Icon(
+                              c['icon']! as IconData,
+                              size: 24,
+                              color: AppColors.primary,
                             ),
                           ),
                           const SizedBox(height: 4),
@@ -500,11 +499,9 @@ class _HeadAvatar extends StatelessWidget {
       alignment: Alignment.center,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(22),
-        gradient: const LinearGradient(
-          colors: [AppColors.primary, AppColors.accent],
-        ),
+        color: AppColors.primary.withValues(alpha: 0.15),
       ),
-      child: Text('👨‍💼', style: TextStyle(fontSize: 36)),
+      child: Icon(Icons.person, size: 36, color: AppColors.primary),
     );
   }
 }

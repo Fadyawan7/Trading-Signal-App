@@ -10,12 +10,12 @@ class GroupChatView extends GetView<GroupChatViewModel> {
 
   @override
   Widget build(BuildContext context) {
-    return const _GroupChatBody();
+    return _GroupChatBody();
   }
 }
 
 class _GroupChatBody extends StatefulWidget {
-  const _GroupChatBody();
+  const _GroupChatBody({super.key});
 
   @override
   State<_GroupChatBody> createState() => _GroupChatBodyState();
@@ -32,7 +32,7 @@ class _GroupChatBodyState extends State<_GroupChatBody> {
       'id': 1,
       'type': 'text',
       'sender': 'John Martinez',
-      'avatar': '👨‍💼',
+      'avatar': '👤',
       'message': 'Good morning everyone! Ready for today\'s market analysis.',
       'time': '09:00 AM',
       'isTrader': true,
@@ -41,7 +41,7 @@ class _GroupChatBodyState extends State<_GroupChatBody> {
       'id': 2,
       'type': 'signal',
       'sender': 'John Martinez',
-      'avatar': '👨‍💼',
+      'avatar': '👤',
       'action': 'BUY',
       'pair': 'BTC/USDT',
       'entry': '42,500 - 42,800',
@@ -51,15 +51,6 @@ class _GroupChatBodyState extends State<_GroupChatBody> {
       'votes': {'tpHit': 45, 'slHit': 8, 'targetAchieved': 32},
       'time': '09:15 AM',
       'isTrader': true,
-    },
-    {
-      'id': 3,
-      'type': 'text',
-      'sender': 'Alex Smith',
-      'avatar': '👤',
-      'message': 'Thanks for the signal! Just entered at 42,650',
-      'time': '09:20 AM',
-      'isTrader': false,
     },
   ];
 
@@ -81,26 +72,18 @@ class _GroupChatBodyState extends State<_GroupChatBody> {
     super.dispose();
   }
 
-  String _nowLabel() {
-    final now = TimeOfDay.now();
-    final hour12 = now.hourOfPeriod == 0 ? 12 : now.hourOfPeriod;
-    final minute = now.minute.toString().padLeft(2, '0');
-    final period = now.period == DayPeriod.am ? 'AM' : 'PM';
-    return '$hour12:$minute $period';
-  }
-
   void _sendMessage() {
     final text = _chatController.text.trim();
     if (text.isEmpty) return;
 
     setState(() {
       messages.add({
-        'id': (messages.last['id'] as int) + 1,
+        'id': messages.isEmpty ? 1 : (messages.last['id'] as int) + 1,
         'type': 'text',
         'sender': 'You',
-        'avatar': '🙂',
+        'avatar': '👤',
         'message': text,
-        'time': _nowLabel(),
+        'time': 'Just now',
         'isTrader': false,
       });
       _chatController.clear();
@@ -109,405 +92,229 @@ class _GroupChatBodyState extends State<_GroupChatBody> {
 
   @override
   Widget build(BuildContext context) {
-    final keyboardInset = MediaQuery.viewInsetsOf(context).bottom;
-    final bottomSafeInset = MediaQuery.paddingOf(context).bottom;
-    final composerBottomInset = keyboardInset > 0
-        ? keyboardInset
-        : bottomSafeInset;
-
-    return SafeArea(
-      bottom: false,
-      child: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.fromLTRB(16, 12, 16, 10),
-            decoration: BoxDecoration(
-              color: AppColors.card,
-              border: Border(bottom: BorderSide(color: AppColors.border)),
-            ),
+    final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
+    
+    return Obx(() {
+      AppColors.background;
+      return Scaffold(
+        backgroundColor: AppColors.background,
+        resizeToAvoidBottomInset: false, // Handle padding manually to prevent "jumping"
+        body: SafeArea(
+          bottom: false,
+          child: GestureDetector(
+            onTap: () => FocusScope.of(context).unfocus(),
             child: Column(
               children: [
-                Row(
-                  children: [
-                    GestureDetector(
-                      onTap: () => Get.offNamed(AppRoutes.chats),
-                      child: Icon(
-                        Icons.arrow_back_ios,
-                        size: 20,
-                        color: AppColors.mutedText,
-                      ),
-                    ),
-                    const SizedBox(width: 5),
-                    SizedBox(
-                      width: 35,
-                      height: 35,
-                      child: Stack(
-                        children: [
-                          Container(
-                            width: 35,
-                            height: 35,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12),
-                              gradient: const LinearGradient(
-                                colors: [AppColors.primary, AppColors.accent],
-                              ),
-                            ),
-                            child: Text('🚀', style: TextStyle(fontSize: 16)),
-                          ),
-                          Positioned(
-                            right: 0,
-                            bottom: 0,
-                            child: Container(
-                              width: 14,
-                              height: 14,
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(6),
-                                gradient: const LinearGradient(
-                                  colors: [AppColors.accent, AppColors.primary],
-                                ),
-                                border: Border.all(
-                                  color: AppColors.card,
-                                  width: 2,
-                                ),
-                              ),
-                              child: Text(
-                                '👨‍💼',
-                                style: TextStyle(fontSize: 9),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Crypto Elite Signals',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 13,
-                            ),
-                          ),
-                          Text(
-                            'John Martinez • 850 members',
-                            style: TextStyle(
-                              color: AppColors.mutedText,
-                              fontSize: 11,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    if (isAdmin)
-                      GestureDetector(
-                        onTap: () =>
-                            setState(() => showSettings = !showSettings),
-                        child: Icon(
-                          Icons.settings,
-                          size: 20,
-                          color: AppColors.mutedText,
-                        ),
-                      ),
-                  ],
+                _ChatHeader(
+                  isAdmin: isAdmin,
+                  showSettings: showSettings,
+                  onSettingsToggle: () => setState(() => showSettings = !showSettings),
                 ),
-                if (showSettings && isAdmin) ...[
-                  const SizedBox(height: 10),
-                  Container(
-                    padding: const EdgeInsets.fromLTRB(12, 5, 12, 5),
-                    decoration: BoxDecoration(
-                      color: AppColors.background,
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: AppColors.border),
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(
-                          isChatEnabled ? Icons.lock_open : Icons.lock,
-                          color: isChatEnabled ? Colors.green : Colors.red,
-                          size: 16,
-                        ),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Member Chat',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              Text(
-                                isChatEnabled
-                                    ? 'Members can send messages'
-                                    : 'Only admins can send messages',
-                                style: TextStyle(
-                                  fontSize: 10,
-                                  color: AppColors.mutedText,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Transform.scale(
-                          scale:
-                              0.7, // 👈 size decrease (0.6 = smaller, 0.8 = medium)
-                          child: Switch(
-                            value: isChatEnabled,
-                            onChanged: (v) => setState(() => isChatEnabled = v),
-                          ),
-                        ),
-                      ],
+                if (showSettings && isAdmin)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    child: _AdminSettingsBar(
+                      isEnabled: isChatEnabled,
+                      onToggle: (v) => setState(() => isChatEnabled = v),
                     ),
                   ),
-                ],
+                Expanded(
+                  child: ListView.builder(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    itemCount: messages.length,
+                    itemBuilder: (_, i) => _MessageItem(
+                      message: messages[i],
+                      onVote: vote,
+                    ),
+                  ),
+                ),
+                _InputSection(
+                  controller: _chatController,
+                  isChatEnabled: isChatEnabled || isAdmin,
+                  keyboardHeight: keyboardHeight,
+                  onSend: _sendMessage,
+                  onChanged: () => setState(() {}),
+                ),
               ],
             ),
           ),
+        ),
+      );
+    });
+  }
+}
+
+class _ChatHeader extends StatelessWidget {
+  final bool isAdmin;
+  final bool showSettings;
+  final VoidCallback onSettingsToggle;
+
+  const _ChatHeader({
+    required this.isAdmin,
+    required this.showSettings,
+    required this.onSettingsToggle,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+      decoration: BoxDecoration(
+        color: AppColors.card,
+        border: Border(bottom: BorderSide(color: AppColors.border.withValues(alpha: 0.5))),
+      ),
+      child: Row(
+        children: [
+          _IconButton(
+            icon: Icons.arrow_back_ios_new_rounded,
+            onTap: () => Get.back(),
+          ),
+          const SizedBox(width: 12),
+          Container(
+            width: 44,
+            height: 44,
+            decoration: BoxDecoration(
+              color: const Color(0xFF13242C),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: AppColors.border),
+            ),
+            child: const Center(
+              child: Icon(Icons.rocket_launch_rounded, color: Color(0xFF14B8A6), size: 24),
+            ),
+          ),
+          const SizedBox(width: 12),
           Expanded(
-            child: ListView.builder(
-              scrollDirection: Axis.vertical,
-              padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
-              itemCount: messages.length,
-              itemBuilder: (_, i) {
-                final m = messages[i];
-                final isSignal = m['type'] == 'signal';
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 10),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        width: 36,
-                        height: 36,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          gradient: const LinearGradient(
-                            colors: [AppColors.primary, AppColors.accent],
-                          ),
-                        ),
-                        child: Text(m['avatar'] as String),
-                      ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Crypto Elite Signals',
+                  style: TextStyle(
+                    color: AppColors.text,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  'John Martinez • 850 members',
+                  style: TextStyle(
+                    color: AppColors.mutedText,
+                    fontSize: 12,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          if (isAdmin)
+            _IconButton(
+              icon: Icons.settings_outlined,
+              onTap: onSettingsToggle,
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class _IconButton extends StatelessWidget {
+  final IconData icon;
+  final VoidCallback onTap;
+  const _IconButton({required this.icon, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        width: 40,
+        height: 40,
+        decoration: BoxDecoration(
+          color: AppColors.backgroundSecondary,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: AppColors.border),
+        ),
+        child: Icon(icon, color: AppColors.text, size: 20),
+      ),
+    );
+  }
+}
+
+class _MessageItem extends StatelessWidget {
+  final Map<String, dynamic> message;
+  final Function(int, String) onVote;
+
+  const _MessageItem({required this.message, required this.onVote});
+
+  @override
+  Widget build(BuildContext context) {
+    final isSignal = message['type'] == 'signal';
+    final isTrader = message['isTrader'] == true;
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 20),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              color: AppColors.card,
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: AppColors.border),
+            ),
+            child: const Center(child: Icon(Icons.person_outline_rounded, color: Color(0xFFFBBF24), size: 22)),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Text(
+                      message['sender'],
+                      style: TextStyle(color: AppColors.text, fontWeight: FontWeight.bold, fontSize: 14),
+                    ),
+                    if (isTrader) ...[
                       const SizedBox(width: 8),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Text(
-                                  m['sender'] as String,
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                                if (m['isTrader'] == true) ...[
-                                  const SizedBox(width: 6),
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 6,
-                                      vertical: 2,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(6),
-                                      gradient: const LinearGradient(
-                                        colors: [
-                                          AppColors.primary,
-                                          AppColors.accent,
-                                        ],
-                                      ),
-                                    ),
-                                    child: Text(
-                                      'Trader',
-                                      style: TextStyle(
-                                        fontSize: 9,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                                const SizedBox(width: 6),
-                                Text(
-                                  m['time'] as String,
-                                  style: TextStyle(
-                                    fontSize: 10,
-                                    color: AppColors.mutedText,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 4),
-                            if (!isSignal)
-                              Container(
-                                padding: const EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                  color: AppColors.card,
-                                  borderRadius: BorderRadius.circular(12),
-                                  border: Border.all(color: AppColors.border),
-                                ),
-                                child: Text(
-                                  m['message'] as String,
-                                  style: TextStyle(fontSize: 13),
-                                ),
-                              )
-                            else
-                              _SignalCard(message: m, onVote: vote),
-                          ],
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF14B8A6).withValues(alpha: 0.15),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: const Text(
+                          'Trader',
+                          style: TextStyle(color: Color(0xFF14B8A6), fontSize: 10, fontWeight: FontWeight.bold),
                         ),
                       ),
                     ],
-                  ),
-                );
-              },
-            ),
-          ),
-          AnimatedPadding(
-            duration: const Duration(milliseconds: 180),
-            curve: Curves.easeOut,
-            padding: EdgeInsets.only(bottom: composerBottomInset),
-            child: Container(
-              padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
-              // decoration: BoxDecoration(
-              //   color: AppColors.card,
-              //   border: Border(top: BorderSide(color: AppColors.border)),
-              // ),
-              child: isChatEnabled || isAdmin
-                  ? Row(
-                      children: [
-                        Expanded(
-                          child: Container(
-                            height: 44,
-                            padding: const EdgeInsets.symmetric(horizontal: 10),
-                            decoration: BoxDecoration(
-                              color: AppColors.secondary,
-                              borderRadius: BorderRadius.circular(24),
-                            ),
-                            child: Row(
-                              children: [
-                                //   Icon(
-                                //     Icons.sentiment_satisfied_alt,
-                                //     size: 21,
-                                //     color: AppColors.mutedText,
-                                //   ),
-                                //  const SizedBox(width: 6),
-                                Expanded(
-                                  child: TextField(
-                                    controller: _chatController,
-                                    onChanged: (_) => setState(() {}),
-                                    onSubmitted: (_) => _sendMessage(),
-                                    textInputAction: TextInputAction.send,
-                                    style: TextStyle(fontSize: 14),
-
-                                    decoration: InputDecoration(
-                                      hintText: 'Type a message',
-                                      filled: true,
-                                      fillColor: AppColors.secondary,
-                                      border: const OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: Colors.transparent,
-                                        ),
-                                        borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(60),
-                                          bottomLeft: Radius.circular(60),
-                                        ),
-                                      ),
-                                      enabledBorder: const OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: Colors.transparent,
-                                        ),
-                                        borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(60),
-                                          bottomLeft: Radius.circular(60),
-                                        ),
-                                      ),
-                                      focusedBorder: const OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: Colors.transparent,
-                                        ),
-                                        borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(60),
-                                          bottomLeft: Radius.circular(60),
-                                        ),
-                                      ),
-                                      isDense: true,
-                                      hintStyle: TextStyle(
-                                        color: AppColors.mutedText,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(width: 4),
-                                Icon(
-                                  Icons.attach_file,
-                                  size: 20,
-                                  color: AppColors.mutedText,
-                                ),
-                                const SizedBox(width: 10),
-                                Icon(
-                                  Icons.camera_alt_outlined,
-                                  size: 20,
-                                  color: AppColors.mutedText,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        InkWell(
-                          onTap: _sendMessage,
-                          borderRadius: BorderRadius.circular(999),
-                          child: Container(
-                            width: 44,
-                            height: 44,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              gradient: LinearGradient(
-                                colors: [AppColors.primary, AppColors.accent],
-                              ),
-                            ),
-                            child: Icon(
-                              _chatController.text.trim().isEmpty
-                                  ? Icons.chat
-                                  : Icons.send,
-                              size: 20,
-                            ),
-                          ),
-                        ),
-                      ],
-                    )
-                  : Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: AppColors.secondary,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.lock,
-                            size: 14,
-                            color: AppColors.mutedText,
-                          ),
-                          SizedBox(width: 6),
-                          Text(
-                            'Only admins can send messages in this group',
-                            style: TextStyle(
-                              color: AppColors.mutedText,
-                              fontSize: 11,
-                            ),
-                          ),
-                        ],
-                      ),
+                    const SizedBox(width: 8),
+                    Text(
+                      message['time'],
+                      style: TextStyle(color: AppColors.mutedText, fontSize: 11),
                     ),
+                  ],
+                ),
+                const SizedBox(height: 6),
+                if (!isSignal)
+                  Container(
+                    padding: const EdgeInsets.all(14),
+                    decoration: BoxDecoration(
+                      color: AppColors.card,
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: AppColors.border),
+                    ),
+                    child: Text(
+                      message['message'],
+                      style: TextStyle(color: AppColors.text, fontSize: 14, height: 1.4),
+                    ),
+                  )
+                else
+                  _SignalMessage(message: message, onVote: onVote),
+              ],
             ),
           ),
         ],
@@ -516,23 +323,21 @@ class _GroupChatBodyState extends State<_GroupChatBody> {
   }
 }
 
-class _SignalCard extends StatelessWidget {
-  const _SignalCard({required this.message, required this.onVote});
-
+class _SignalMessage extends StatelessWidget {
   final Map<String, dynamic> message;
-  final void Function(int id, String key) onVote;
+  final Function(int, String) onVote;
+
+  const _SignalMessage({required this.message, required this.onVote});
 
   @override
   Widget build(BuildContext context) {
-    final buy = message['action'] == 'BUY';
     final votes = message['votes'] as Map<String, dynamic>;
-    final total = (votes['tpHit'] as int) + (votes['slHit'] as int);
-    final pct = total == 0 ? 0 : ((votes['tpHit'] as int) * 100 ~/ total);
+
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: AppColors.card,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(24),
         border: Border.all(color: AppColors.border),
       ),
       child: Column(
@@ -544,222 +349,330 @@ class _SignalCard extends StatelessWidget {
               Row(
                 children: [
                   Container(
-                    width: 32,
-                    height: 32,
-                    alignment: Alignment.center,
+                    width: 38,
+                    height: 38,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      gradient: buy
-                          ? const LinearGradient(
-                              colors: [Color(0xFF34D399), Color(0xFF10B981)],
-                            )
-                          : const LinearGradient(
-                              colors: [Color(0xFFEF4444), Color(0xFFF59E0B)],
-                            ),
+                      color: const Color(0xFF13242C),
+                      borderRadius: BorderRadius.circular(12),
                     ),
-                    child: Icon(
-                      buy ? Icons.trending_up : Icons.trending_down,
-                      size: 16,
-                    ),
+                    child: const Icon(Icons.trending_up_rounded, color: Color(0xFF14B8A6), size: 20),
                   ),
-                  const SizedBox(width: 8),
+                  const SizedBox(width: 12),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        message['action'] as String,
-                        style: TextStyle(
-                          color: buy ? Colors.green : Colors.red,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w700,
-                        ),
+                        message['action'],
+                        style: const TextStyle(color: Color(0xFF14B8A6), fontWeight: FontWeight.bold, fontSize: 12),
                       ),
                       Text(
-                        message['pair'] as String,
-                        style: TextStyle(
-                          fontWeight: FontWeight.w700,
-                          fontSize: 16,
-                        ),
+                        message['pair'],
+                        style: TextStyle(color: AppColors.text, fontWeight: FontWeight.bold, fontSize: 18),
                       ),
                     ],
                   ),
                 ],
               ),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
-                  color: AppColors.primary.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(8),
+                  color: AppColors.backgroundSecondary,
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: AppColors.border),
                 ),
                 child: Text(
-                  message['leverage'] as String,
-                  style: TextStyle(color: AppColors.primary, fontSize: 10),
+                  message['leverage'],
+                  style: const TextStyle(color: Color(0xFF14B8A6), fontWeight: FontWeight.bold, fontSize: 11),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 8),
-          _line('Entry Zone', message['entry'] as String),
-          const SizedBox(height: 8),
+          const SizedBox(height: 20),
+          _SignalInfoCard(
+            label: 'Entry Zone',
+            value: message['entry'],
+            isFullWidth: true,
+          ),
+          const SizedBox(height: 12),
           Row(
             children: [
               Expanded(
-                child: Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Colors.green.withValues(alpha: 0.08),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Take Profit',
-                        style: TextStyle(
-                          fontSize: 10,
-                          color: AppColors.mutedText,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      ...(message['tp'] as List<dynamic>).asMap().entries.map(
-                        (e) => Text(
-                          'TP${e.key + 1}: ${e.value}',
-                          style: TextStyle(fontSize: 11, color: Colors.green),
-                        ),
-                      ),
-                    ],
-                  ),
+                child: _SignalValueBox(
+                  label: 'Take Profit',
+                  values: message['tp'],
+                  color: const Color(0xFF14B8A6),
                 ),
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: 12),
               Expanded(
-                child: Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Colors.red.withValues(alpha: 0.08),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Stop Loss',
-                        style: TextStyle(
-                          fontSize: 10,
-                          color: AppColors.mutedText,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        'SL: ${message['sl']}',
-                        style: TextStyle(fontSize: 11, color: Colors.red),
-                      ),
-                    ],
-                  ),
+                child: _SignalValueBox(
+                  label: 'Stop Loss',
+                  values: [message['sl']],
+                  color: const Color(0xFFEF4444),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
                 'Community Feedback',
-                style: TextStyle(fontSize: 10, color: AppColors.mutedText),
+                style: TextStyle(color: AppColors.mutedText, fontSize: 12),
               ),
               Text(
-                '$pct% Success',
-                style: TextStyle(fontSize: 10, fontWeight: FontWeight.w600),
+                '85% Success',
+                style: TextStyle(color: AppColors.text, fontWeight: FontWeight.bold, fontSize: 12),
               ),
             ],
           ),
-          const SizedBox(height: 6),
+          const SizedBox(height: 10),
           Row(
             children: [
-              Expanded(
-                child: _voteBtn(
-                  Icons.thumb_up,
-                  Colors.green,
-                  votes['tpHit'] as int,
-                  () => onVote(message['id'] as int, 'tpHit'),
-                ),
-              ),
-              const SizedBox(width: 6),
-              Expanded(
-                child: _voteBtn(
-                  Icons.thumb_down,
-                  Colors.red,
-                  votes['slHit'] as int,
-                  () => onVote(message['id'] as int, 'slHit'),
-                ),
-              ),
-              const SizedBox(width: 6),
-              Expanded(
-                child: _voteBtn(
-                  Icons.gps_fixed,
-                  AppColors.primary,
-                  votes['targetAchieved'] as int,
-                  () => onVote(message['id'] as int, 'targetAchieved'),
-                ),
-              ),
+              Expanded(child: _VoteButton(icon: Icons.thumb_up_alt_outlined, value: votes['tpHit'], color: const Color(0xFF14B8A6), onTap: () => onVote(message['id'], 'tpHit'))),
+              const SizedBox(width: 8),
+              Expanded(child: _VoteButton(icon: Icons.thumb_down_alt_outlined, value: votes['slHit'], color: const Color(0xFFEF4444), onTap: () => onVote(message['id'], 'slHit'))),
+              const SizedBox(width: 8),
+              Expanded(child: _VoteButton(icon: Icons.track_changes_rounded, value: votes['targetAchieved'], color: const Color(0xFF14B8A6), onTap: () => onVote(message['id'], 'targetAchieved'))),
             ],
           ),
         ],
       ),
     );
   }
+}
 
-  Widget _line(String label, String value) {
+class _SignalInfoCard extends StatelessWidget {
+  final String label, value;
+  final bool isFullWidth;
+  const _SignalInfoCard({required this.label, required this.value, this.isFullWidth = false});
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(8),
+      width: isFullWidth ? double.infinity : null,
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: AppColors.background,
-        borderRadius: BorderRadius.circular(8),
+        color: AppColors.backgroundSecondary,
+        borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            label,
-            style: TextStyle(fontSize: 10, color: AppColors.mutedText),
+          Text(label, style: TextStyle(color: AppColors.mutedText, fontSize: 11)),
+          const SizedBox(height: 4),
+          Text(value, style: TextStyle(color: AppColors.text, fontWeight: FontWeight.bold, fontSize: 14)),
+        ],
+      ),
+    );
+  }
+}
+
+class _SignalValueBox extends StatelessWidget {
+  final String label;
+  final List<dynamic> values;
+  final Color color;
+
+  const _SignalValueBox({required this.label, required this.values, required this.color});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.05),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: color.withValues(alpha: 0.2)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(label, style: TextStyle(color: AppColors.mutedText, fontSize: 11)),
+          const SizedBox(height: 8),
+          ...values.asMap().entries.map((e) => Padding(
+            padding: const EdgeInsets.only(bottom: 2),
+            child: Text(
+              '${values.length > 1 ? "TP${e.key + 1}: " : "SL: "}${e.value}',
+              style: TextStyle(color: color, fontWeight: FontWeight.bold, fontSize: 12),
+            ),
+          )),
+          if (values.length == 1) const SizedBox(height: 24),
+        ],
+      ),
+    );
+  }
+}
+
+class _VoteButton extends StatelessWidget {
+  final IconData icon;
+  final int value;
+  final Color color;
+  final VoidCallback onTap;
+
+  const _VoteButton({required this.icon, required this.value, required this.color, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        decoration: BoxDecoration(
+          color: AppColors.backgroundSecondary,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: AppColors.border),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, color: color.withValues(alpha: 0.8), size: 18),
+            const SizedBox(width: 8),
+            Text(
+              '$value',
+              style: TextStyle(color: AppColors.text, fontWeight: FontWeight.bold, fontSize: 14),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _InputSection extends StatelessWidget {
+  final TextEditingController controller;
+  final bool isChatEnabled;
+  final double keyboardHeight;
+  final VoidCallback onSend;
+  final VoidCallback onChanged;
+
+  const _InputSection({
+    required this.controller,
+    required this.isChatEnabled,
+    required this.keyboardHeight,
+    required this.onSend,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    if (!isChatEnabled) {
+      return Container(
+        margin: const EdgeInsets.fromLTRB(16, 0, 16, 20),
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: AppColors.backgroundSecondary,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.lock_rounded, size: 14, color: AppColors.mutedText),
+            const SizedBox(width: 8),
+            Text('Only admins can send messages here', style: TextStyle(color: AppColors.mutedText, fontSize: 12)),
+          ],
+        ),
+      );
+    }
+
+    return Container(
+      color: AppColors.background, // Fill the space behind keyboard with background color
+      padding: EdgeInsets.fromLTRB(16, 8, 16, (keyboardHeight > 0 ? keyboardHeight : 20) + 10),
+      child: Row(
+        children: [
+          // Simplified attachment button to avoid "double border" look
+          GestureDetector(
+            onTap: () {},
+            child: Container(
+              width: 48,
+              height: 48,
+              decoration: BoxDecoration(
+                color: AppColors.card,
+                shape: BoxShape.circle,
+                // Removed border here to solve "double border" visual issue
+              ),
+              child: Icon(Icons.attach_file_rounded, color: AppColors.mutedText, size: 22),
+            ),
           ),
-          const SizedBox(height: 2),
-          Text(
-            value,
-            style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Container(
+              height: 48,
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              decoration: BoxDecoration(
+                color: AppColors.card,
+                borderRadius: BorderRadius.circular(24),
+                border: Border.all(color: AppColors.border, width: 1.2),
+              ),
+              child: TextField(
+                controller: controller,
+                onChanged: (_) => onChanged(),
+                onSubmitted: (_) => onSend(),
+                style: TextStyle(color: AppColors.text, fontSize: 14),
+                decoration: const InputDecoration(
+                  hintText: 'Type a message...',
+                  hintStyle: TextStyle(color: Color(0xFF64748B)),
+                  border: InputBorder.none,
+                  enabledBorder: InputBorder.none,
+                  focusedBorder: InputBorder.none,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(width: 12),
+          InkWell(
+            onTap: onSend,
+            borderRadius: BorderRadius.circular(24),
+            child: Container(
+              width: 48,
+              height: 48,
+              decoration: BoxDecoration(
+                color: const Color(0xFF14B8A6),
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(color: const Color(0xFF14B8A6).withValues(alpha: 0.3), blurRadius: 10, offset: const Offset(0, 4)),
+                ],
+              ),
+              child: const Icon(Icons.send_rounded, color: Colors.white, size: 20),
+            ),
           ),
         ],
       ),
     );
   }
+}
 
-  Widget _voteBtn(IconData icon, Color color, int value, VoidCallback onTap) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(8),
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 6),
-        decoration: BoxDecoration(
-          color: color.withValues(alpha: 0.12),
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: color.withValues(alpha: 0.25)),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, size: 14, color: color),
-            const SizedBox(width: 4),
-            Text(
-              '$value',
-              style: TextStyle(
-                fontSize: 11,
-                color: color,
-                fontWeight: FontWeight.w600,
-              ),
+class _AdminSettingsBar extends StatelessWidget {
+  final bool isEnabled;
+  final Function(bool) onToggle;
+
+  const _AdminSettingsBar({required this.isEnabled, required this.onToggle});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        color: AppColors.backgroundSecondary,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.border),
+      ),
+      child: Row(
+        children: [
+          Icon(isEnabled ? Icons.lock_open_rounded : Icons.lock_rounded, color: isEnabled ? Colors.green : Colors.red, size: 16),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Member Chat', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.text)),
+                Text(isEnabled ? 'Members can send messages' : 'Only admins can send messages', style: TextStyle(fontSize: 10, color: AppColors.mutedText)),
+              ],
             ),
-          ],
-        ),
+          ),
+          Transform.scale(scale: 0.7, child: Switch(value: isEnabled, onChanged: onToggle, activeColor: const Color(0xFF14B8A6))),
+        ],
       ),
     );
   }

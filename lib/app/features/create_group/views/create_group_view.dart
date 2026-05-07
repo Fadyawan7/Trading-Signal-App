@@ -28,12 +28,12 @@ class _CreateGroupBodyState extends State<_CreateGroupBody> {
   final selectedFeatures = <String>{};
 
   final categories = const [
-    {'name': 'Crypto', 'icon': '💰'},
-    {'name': 'Forex', 'icon': '💵'},
-    {'name': 'Gold', 'icon': '🏆'},
-    {'name': 'Stocks', 'icon': '📊'},
-    {'name': 'Commodities', 'icon': '⚡'},
-    {'name': 'NFTs', 'icon': '🎨'},
+    {'name': 'Crypto', 'icon': Icons.currency_bitcoin},
+    {'name': 'Forex', 'icon': Icons.attach_money},
+    {'name': 'Gold', 'icon': Icons.monetization_on},
+    {'name': 'Stocks', 'icon': Icons.show_chart},
+    {'name': 'Commodities', 'icon': Icons.bolt},
+    {'name': 'NFTs', 'icon': Icons.image},
   ];
 
   final features = const [
@@ -168,7 +168,7 @@ class _CreateGroupBodyState extends State<_CreateGroupBody> {
                 final c = categories[i];
                 final active = selectedCategory == c['name'];
                 return InkWell(
-                  onTap: () => setState(() => selectedCategory = c['name']),
+                  onTap: () => setState(() => selectedCategory = c['name']! as String),
                   child: Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
@@ -187,13 +187,12 @@ class _CreateGroupBodyState extends State<_CreateGroupBody> {
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
-                            gradient: const LinearGradient(
-                              colors: [AppColors.primary, AppColors.accent],
-                            ),
+                            color: AppColors.primary.withValues(alpha: 0.15),
                           ),
-                          child: Text(
-                            c['icon']! as String,
-                            style: TextStyle(fontSize: 20),
+                          child: Icon(
+                            c['icon']! as IconData,
+                            size: 20,
+                            color: AppColors.primary,
                           ),
                         ),
                         const SizedBox(height: 6),

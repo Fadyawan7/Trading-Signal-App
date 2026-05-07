@@ -16,7 +16,7 @@ class AppColors {
   static const yellow400 = Color(0xFFFACC15);
   static const yellow500 = Color(0xFFEAB308);
 
-  static const primary = emerald500;
+  static const primary = teal500;
   static const accent = teal500;
 
   static const success = emerald500;
@@ -24,44 +24,48 @@ class AppColors {
   static const error = Color(0xFFEF4444);
   static const info = teal500;
 
-  static const ring = emerald500;
+  static const ring = teal500;
 
+  // Light Mode Colors (Polished)
   static const Color _lightBackground = Color(0xFFF8FAFC);
-  static const Color _lightBackgroundSecondary = Color(0xFFE2E8F0);
+  static const Color _lightBackgroundSecondary = Color(0xFFF1F5F9);
   static const Color _lightCard = Colors.white;
   static const Color _lightPopover = Colors.white;
   static const Color _lightSurfaceGlass = Color(0xCCFFFFFF);
   static const Color _lightSurfaceGlassHover = Color(0xFFF8FAFC);
   static const Color _lightSecondary = Color(0xFFF1F5F9);
   static const Color _lightText = Color(0xFF0F172A);
-  static const Color _lightTextSecondary = Color(0xFF1E293B);
+  static const Color _lightTextSecondary = Color(0xFF334155);
   static const Color _lightMutedText = Color(0xFF64748B);
   static const Color _lightTextDisabled = Color(0xFF94A3B8);
-  static const Color _lightBorder = Color(0x1F0F172A);
-  static const Color _lightInput = Color(0x1F0F172A);
+  static const Color _lightBorder = Color(0xFFE2E8F0);
+  static const Color _lightInput = Color(0xFFE2E8F0);
   static const Color _lightInputBackground = Colors.white;
   static const Color _lightSidebar = Colors.white;
 
-  static const Color _darkBackground = Color(0xFF0A0F1E);
-  static const Color _darkBackgroundSecondary = Color(0xFF111827);
-  static const Color _darkCard = Color(0xFF0F172A);
-  static const Color _darkPopover = Color(0xFF0F172A);
+  // Dark Mode Colors (User's Exact Favorites)
+  static const Color _darkBackground = Color(0xFF0B111D);
+  static const Color _darkBackgroundSecondary = Color(0xFF0F172A);
+  static const Color _darkCard = Color(0xFF131C2D);
+  static const Color _darkPopover = Color(0xFF131C2D);
   static const Color _darkSurfaceGlass = Color(0x0DFFFFFF);
   static const Color _darkSurfaceGlassHover = Color(0x1AFFFFFF);
   static const Color _darkSecondary = Color(0x0DFFFFFF);
   static const Color _darkText = Color(0xFFFFFFFF);
-  static const Color _darkTextSecondary = Color(0xFFE5E7EB);
-  static const Color _darkMutedText = Color(0xFF9CA3AF);
+  static const Color _darkTextSecondary = Color(0xFFE2E8F0);
+  static const Color _darkMutedText = Color(0x80FFFFFF); // white with 0.5 alpha
   static const Color _darkTextDisabled = Color(0xFF6B7280);
-  static const Color _darkBorder = Color(0x3310B981);
-  static const Color _darkInput = Color(0x3310B981);
+  static const Color _darkBorder = Color(0xFF1E293B);
+  static const Color _darkInput = Color(0xFF1E293B);
   static const Color _darkInputBackground = _darkCard;
   static const Color _darkSidebar = _darkCard;
 
   static bool get _isDark {
-    if (Get.isRegistered<ThemeController>()) {
-      return Get.find<ThemeController>().isDarkMode;
-    }
+    try {
+      if (Get.isRegistered<ThemeController>()) {
+        return Get.find<ThemeController>().isDarkMode;
+      }
+    } catch (_) {}
     return WidgetsBinding.instance.platformDispatcher.platformBrightness ==
         Brightness.dark;
   }
@@ -87,4 +91,5 @@ class AppColors {
   static Color get inputBackground =>
       _isDark ? _darkInputBackground : _lightInputBackground;
   static Color get sidebar => _isDark ? _darkSidebar : _lightSidebar;
+  static Color get buttonText => Colors.white;
 }

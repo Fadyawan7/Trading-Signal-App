@@ -23,24 +23,24 @@ class _TraderEditBody extends StatefulWidget {
 }
 
 class _TraderEditBodyState extends State<_TraderEditBody> {
-  String avatar = '👨‍💼';
+  IconData avatar = Icons.person;
   final avatars = [
-    '👨‍💼',
-    '👩‍💼',
-    '🧑‍💼',
-    '💼',
-    '📊',
-    '📈',
-    '💰',
-    '🎯',
-    '🚀',
-    '💎',
-    '⚡',
-    '🔥',
-    '🏆',
-    '⭐',
-    '👔',
-    '🤵',
+    Icons.person,
+    Icons.work,
+    Icons.business_center,
+    Icons.account_balance,
+    Icons.bar_chart,
+    Icons.show_chart,
+    Icons.attach_money,
+    Icons.my_location,
+    Icons.rocket_launch,
+    Icons.diamond,
+    Icons.bolt,
+    Icons.local_fire_department,
+    Icons.emoji_events,
+    Icons.star,
+    Icons.person_pin,
+    Icons.face,
   ];
   final experience = [
     'Beginner (< 1 year)',
@@ -93,11 +93,9 @@ class _TraderEditBodyState extends State<_TraderEditBody> {
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        gradient: const LinearGradient(
-                          colors: [AppColors.primary, AppColors.accent],
-                        ),
+                        color: AppColors.primary.withValues(alpha: 0.15),
                       ),
-                      child: Text(avatar, style: TextStyle(fontSize: 52)),
+                      child: Icon(avatar, size: 52, color: AppColors.primary),
                     ),
                     Positioned(
                       right: 0,
@@ -167,17 +165,12 @@ class _TraderEditBodyState extends State<_TraderEditBody> {
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
-                      color: active ? null : AppColors.card,
-                      gradient: active
-                          ? const LinearGradient(
-                              colors: [AppColors.primary, AppColors.accent],
-                            )
-                          : null,
+                      color: active ? AppColors.primary.withValues(alpha: 0.15) : AppColors.card,
                       border: Border.all(
-                        color: active ? Colors.transparent : AppColors.border,
+                        color: active ? AppColors.primary : AppColors.border,
                       ),
                     ),
-                    child: Text(a, style: TextStyle(fontSize: 22)),
+                    child: Icon(a, size: 22, color: active ? AppColors.primary : AppColors.mutedText),
                   ),
                 );
               },

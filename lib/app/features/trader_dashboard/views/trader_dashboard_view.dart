@@ -17,25 +17,21 @@ class TraderDashboardView extends GetView<TraderDashboardViewModel> {
         'label': 'Total Members',
         'value': '1,270',
         'icon': Icons.groups,
-        'colors': [Color(0xFF34D399), Color(0xFF10B981)],
       },
       {
         'label': 'Monthly Revenue',
         'value': '\$14,715',
         'icon': Icons.attach_money,
-        'colors': [Color(0xFF059669), Color(0xFF10B981)],
       },
       {
         'label': 'Avg. ROI',
         'value': '+94%',
         'icon': Icons.trending_up,
-        'colors': [Color(0xFF059669), Color(0xFF34D399)],
       },
       {
         'label': 'Success Rate',
         'value': '78%',
         'icon': Icons.bar_chart,
-        'colors': [Color(0xFFF59E0B), Color(0xFFEAB308)],
       },
     ];
 
@@ -43,7 +39,7 @@ class TraderDashboardView extends GetView<TraderDashboardViewModel> {
       {
         'id': '1',
         'name': 'Crypto Elite Signals',
-        'avatar': '🚀',
+        'avatar': Icons.currency_bitcoin,
         'members': '850/1000',
         'revenue': '\$8,415',
         'growth': '+12%',
@@ -51,7 +47,7 @@ class TraderDashboardView extends GetView<TraderDashboardViewModel> {
       {
         'id': '2',
         'name': 'Advanced Crypto Pro',
-        'avatar': '💎',
+        'avatar': Icons.currency_bitcoin,
         'members': '420/500',
         'revenue': '\$6,300',
         'growth': '+8%',
@@ -80,9 +76,11 @@ class TraderDashboardView extends GetView<TraderDashboardViewModel> {
     ];
 
     return Scaffold(
+      extendBody: true,
       backgroundColor: AppColors.background,
       bottomNavigationBar: const MarketBottomNav(currentIndex: 0),
       body: SafeArea(
+        bottom: false,
         child: ListView(
           padding: const EdgeInsets.fromLTRB(24, 16, 24, 90),
           children: [
@@ -160,11 +158,9 @@ class TraderDashboardView extends GetView<TraderDashboardViewModel> {
                         height: 44,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(12),
-                          gradient: LinearGradient(
-                            colors: s['colors']! as List<Color>,
-                          ),
+                          color: AppColors.primary.withValues(alpha: 0.15),
                         ),
-                        child: Icon(s['icon']! as IconData),
+                        child: Icon(s['icon']! as IconData, color: AppColors.primary),
                       ),
                       const Spacer(),
                       Text(
@@ -295,13 +291,12 @@ class TraderDashboardView extends GetView<TraderDashboardViewModel> {
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(14),
-                              gradient: const LinearGradient(
-                                colors: [AppColors.primary, AppColors.accent],
-                              ),
+                              color: AppColors.primary.withValues(alpha: 0.15),
                             ),
-                            child: Text(
-                              g['avatar']! as String,
-                              style: TextStyle(fontSize: 24),
+                            child: Icon(
+                              g['avatar']! as IconData,
+                              size: 28,
+                              color: AppColors.primary,
                             ),
                           ),
                           const SizedBox(width: 10),
@@ -505,11 +500,9 @@ class _Avatar extends StatelessWidget {
       alignment: Alignment.center,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(14),
-        gradient: const LinearGradient(
-          colors: [AppColors.primary, AppColors.accent],
-        ),
+        color: AppColors.primary.withValues(alpha: 0.15),
       ),
-      child: Text('👨‍💼', style: TextStyle(fontSize: 24)),
+      child: Icon(Icons.person, size: 24, color: AppColors.primary),
     );
   }
 }

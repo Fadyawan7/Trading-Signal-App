@@ -3,9 +3,8 @@ import 'package:get/get.dart';
 
 import '../../../routes/app_routes.dart';
 import '../../../theme/app_colors.dart';
-import '../../../theme/theme_controller.dart';
+import '../../../widgets/app_loading_overlay.dart';
 import '../../../widgets/market_bottom_nav.dart';
-import '../../../widgets/market_ui.dart';
 import '../viewmodel/user_profile_view_model.dart';
 
 class UserProfileView extends GetView<UserProfileViewModel> {
@@ -13,303 +12,96 @@ class UserProfileView extends GetView<UserProfileViewModel> {
 
   @override
   Widget build(BuildContext context) {
-    const menu = [
-      {'icon': Icons.notifications_none, 'label': 'Notifications'},
-      {'icon': Icons.shield_outlined, 'label': 'Privacy & Security'},
-      {'icon': Icons.help_outline, 'label': 'Help & Support'},
-      {'icon': Icons.settings, 'label': 'Settings'},
-    ];
-
-    return Obx(() {
-      final themePreference = Get.find<ThemeController>().preference;
-
-      return Scaffold(
-        key: ValueKey('user-profile-${themePreference.name}'),
-        backgroundColor: AppColors.background,
-        bottomNavigationBar: const MarketBottomNav(currentIndex: 3),
-        body: SafeArea(
-          child: ListView(
-            padding: const EdgeInsets.fromLTRB(12, 18, 12, 8),
+    return Obx(
+      () => AppLoadingOverlay(
+        isLoading: controller.isLoading.value,
+        message: 'Signing you out...',
+        child: Scaffold(
+          backgroundColor: AppColors.background,
+          extendBody: true,
+          bottomNavigationBar: const MarketBottomNav(currentIndex: 3),
+          body: Stack(
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Profile',
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
+              Positioned.fill(
+                child: Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        AppColors.backgroundSecondary,
+                        AppColors.background,
+                      ],
+                    ),
                   ),
-                ],
+                ),
               ),
-              const SizedBox(height: 20),
-              MarketPanel(
-                radius: 18,
+              SafeArea(
                 child: Column(
                   children: [
-                    Row(
-                      children: [
-                        Stack(
-                          children: [
-                            Container(
-                              width: 80,
-                              height: 80,
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(16),
-                                gradient: const LinearGradient(
-                                  colors: [AppColors.primary, AppColors.accent],
-                                ),
-                              ),
-                              child: Text('👤', style: TextStyle(fontSize: 34)),
-                            ),
-                            Positioned(
-                              right: -2,
-                              bottom: -2,
-                              child: InkWell(
-                                onTap: () => Get.toNamed(AppRoutes.editProfile),
-                                child: Container(
-                                  width: 30,
-                                  height: 30,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8),
-                                    gradient: const LinearGradient(
-                                      colors: [
-                                        AppColors.primary,
-                                        AppColors.accent,
-                                      ],
-                                    ),
-                                  ),
-                                  child: Icon(Icons.edit, size: 16),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Alex Smith',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              SizedBox(height: 2),
-                              Text(
-                                'alex.smith@email.com',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: AppColors.mutedText,
-                                ),
-                              ),
-                              SizedBox(height: 8),
-                              _Tag(icon: Icons.people, text: 'User Member'),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 14),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: _Metric(label: 'Groups', value: '3'),
-                        ),
-                        SizedBox(width: 8),
-                        Expanded(
-                          child: _Metric(
-                            label: 'ROI',
-                            value: '+47%',
-                            green: true,
-                          ),
-                        ),
-                        SizedBox(width: 8),
-                        Expanded(
-                          child: _Metric(
-                            label: 'Signals',
-                            value: '156',
-                            primary: true,
-                          ),
-                        ),
-                      ],
+                    _Header(),
+                    Expanded(
+                      child: ListView(
+                        padding: const EdgeInsets.fromLTRB(20, 12, 20, 100),
+                        children: [
+                          _ProfileCard(),
+                          const SizedBox(height: 24),
+                          _MyGroupsSection(),
+                          const SizedBox(height: 24),
+                          _QuickActionsSection(),
+                          const SizedBox(height: 24),
+                          _SettingsSection(),
+                          const SizedBox(height: 24),
+                          _LogoutButton(),
+                        ],
+                      ),
                     ),
                   ],
-                ),
-              ),
-              const SizedBox(height: 12),
-
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //   children: [
-              //     Text('My Groups', style: TextStyle(fontWeight: FontWeight.w600)),
-              //     InkWell(onTap: () => Get.toNamed(AppRoutes.explore), child: Text('View All →', style: TextStyle(fontSize: 12, color: AppColors.primary))),
-              //   ],
-              // ),
-              // const SizedBox(height: 8),
-              // ...groups.map((g) => Padding(
-              //       padding: const EdgeInsets.only(bottom: 8),
-              //       child: InkWell(
-              //         onTap: () => Get.toNamed(AppRoutes.groupChat, arguments: {'groupId': g['id']}),
-              //         child: MarketPanel(
-              //           radius: 14,
-              //           padding: const EdgeInsets.all(12),
-              //           child: Row(
-              //             children: [
-              //               Container(
-              //                 width: 46,
-              //                 height: 46,
-              //                 alignment: Alignment.center,
-              //                 decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), gradient: const LinearGradient(colors: [AppColors.primary, AppColors.accent])),
-              //                 child: Text(g['avatar']! as String, style: TextStyle(fontSize: 22)),
-              //               ),
-              //               const SizedBox(width: 10),
-              //               Expanded(
-              //                 child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              //                   Text(g['name']! as String, style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
-              //                   Text('Joined ${g['joined']}', style: TextStyle(fontSize: 11, color: AppColors.mutedText)),
-              //                 ]),
-              //               ),
-              //               Container(
-              //                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-              //                 decoration: BoxDecoration(color: Colors.green.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(8)),
-              //                 child: Text('Active', style: TextStyle(color: Colors.green, fontSize: 10, fontWeight: FontWeight.w600)),
-              //               ),
-              //             ],
-              //           ),
-              //         ),
-              //       ),
-              //     )),
-              const SizedBox(height: 12),
-              Text(
-                'Quick Actions',
-                style: TextStyle(fontWeight: FontWeight.w600),
-              ),
-              const SizedBox(height: 8),
-              Row(
-                children: [
-                  Expanded(
-                    child: _ActionCard(
-                      icon: Icons.people,
-                      label: 'Explore Groups',
-                      onTap: () => Get.toNamed(AppRoutes.explore),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: _ActionCard(
-                      icon: Icons.trending_up,
-                      label: 'Become Trader',
-                      onTap: () => Get.toNamed(AppRoutes.applyTrader),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 12),
-              Text(
-                'Account Settings',
-                style: TextStyle(fontWeight: FontWeight.w600),
-              ),
-              const SizedBox(height: 8),
-              MarketPanel(
-                radius: 14,
-                padding: EdgeInsets.zero,
-                child: Column(
-                  children: menu
-                      .map(
-                        (m) => InkWell(
-                          onTap: () => Get.toNamed(AppRoutes.settings),
-                          child: Container(
-                            padding: const EdgeInsets.all(12),
-                            decoration: BoxDecoration(
-                              border: Border(
-                                bottom: BorderSide(color: AppColors.border),
-                              ),
-                            ),
-                            child: Row(
-                              children: [
-                                Container(
-                                  width: 36,
-                                  height: 36,
-                                  decoration: BoxDecoration(
-                                    color: AppColors.secondary,
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  child: Icon(m['icon']! as IconData, size: 18),
-                                ),
-                                const SizedBox(width: 10),
-                                Expanded(
-                                  child: Text(
-                                    m['label']! as String,
-                                    style: TextStyle(fontSize: 13),
-                                  ),
-                                ),
-                                Icon(
-                                  Icons.chevron_right,
-                                  color: AppColors.mutedText,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      )
-                      .toList(),
-                ),
-              ),
-              const SizedBox(height: 12),
-              InkWell(
-                onTap: () => Get.offAllNamed(AppRoutes.login),
-                child: MarketPanel(
-                  radius: 14,
-                  padding: const EdgeInsets.all(12),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.logout, color: Colors.red, size: 18),
-                      SizedBox(width: 6),
-                      Text(
-                        'Logout',
-                        style: TextStyle(
-                          color: Colors.red,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
-                  ),
                 ),
               ),
             ],
           ),
         ),
-      );
-    });
+      ),
+    );
   }
 }
 
-class _Tag extends StatelessWidget {
-  const _Tag({required this.icon, required this.text});
-  final IconData icon;
-  final String text;
+class _Header extends StatelessWidget {
+  const _Header();
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-      decoration: BoxDecoration(
-        color: AppColors.primary.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(8),
-      ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
       child: Row(
-        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Icon(icon, size: 13, color: AppColors.primary),
-          const SizedBox(width: 4),
+          const SizedBox(width: 42), // Spacer for centering
           Text(
-            text,
+            'Profile',
             style: TextStyle(
-              fontSize: 11,
-              color: AppColors.primary,
-              fontWeight: FontWeight.w600,
+              color: AppColors.text,
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          InkWell(
+            onTap: () => Get.toNamed(AppRoutes.settings),
+            borderRadius: BorderRadius.circular(12),
+            child: Container(
+              width: 42,
+              height: 42,
+              decoration: BoxDecoration(
+                color: AppColors.card,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: AppColors.border),
+              ),
+              child: Icon(
+                Icons.settings_outlined,
+                color: AppColors.text,
+                size: 20,
+              ),
             ),
           ),
         ],
@@ -318,45 +110,189 @@ class _Tag extends StatelessWidget {
   }
 }
 
-class _Metric extends StatelessWidget {
-  const _Metric({
-    required this.label,
-    required this.value,
-    this.green = false,
-    this.primary = false,
-  });
-  final String label;
-  final String value;
-  final bool green;
-  final bool primary;
+class _ProfileCard extends StatelessWidget {
+  const _ProfileCard();
+
   @override
   Widget build(BuildContext context) {
-    final color = green
-        ? Colors.green
-        : (primary ? AppColors.primary : Colors.white);
     return Container(
-      padding: const EdgeInsets.all(10),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: green
-            ? Colors.green.withValues(alpha: 0.1)
-            : primary
-            ? AppColors.primary.withValues(alpha: 0.1)
-            : AppColors.background,
-        borderRadius: BorderRadius.circular(10),
+        color: AppColors.card,
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: AppColors.border),
+      ),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Stack(
+                children: [
+                  Container(
+                    width: 80,
+                    height: 80,
+                    decoration: BoxDecoration(
+                      color: AppColors.backgroundSecondary,
+                      borderRadius: BorderRadius.circular(24),
+                      border: Border.all(color: AppColors.border),
+                    ),
+                    child: Center(
+                      child: Text(
+                        'AS',
+                        style: TextStyle(
+                          color: AppColors.text,
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    right: 0,
+                    bottom: 0,
+                    child: InkWell(
+                      onTap: () => Get.toNamed(AppRoutes.editProfile),
+                      borderRadius: BorderRadius.circular(8),
+                      child: Container(
+                        width: 28,
+                        height: 28,
+                        decoration: BoxDecoration(
+                          color: AppColors.primary,
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(
+                            color: AppColors.backgroundSecondary,
+                            width: 2,
+                          ),
+                        ),
+                        child: Icon(
+                          Icons.edit,
+                          color: AppColors.buttonText,
+                          size: 14,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Alex Smith',
+                      style: TextStyle(
+                        color: AppColors.text,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      'alex.smith@email.com',
+                      style: TextStyle(
+                        color: AppColors.mutedText,
+                        fontSize: 14,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppColors.primary.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(
+                          color: AppColors.primary.withValues(alpha: 0.3),
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.person_outline,
+                            color: AppColors.primary,
+                            size: 14,
+                          ),
+                          const SizedBox(width: 6),
+                          Text(
+                            'User Member',
+                            style: TextStyle(
+                              color: AppColors.primary,
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 24),
+          Row(
+            children: [
+              Expanded(
+                child: _MetricItem(value: '3', label: 'Groups'),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: _MetricItem(
+                  value: '+47%',
+                  label: 'ROI',
+                  isHighlight: true,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: _MetricItem(value: '156', label: 'Signals'),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _MetricItem extends StatelessWidget {
+  final String value;
+  final String label;
+  final bool isHighlight;
+
+  const _MetricItem({
+    required this.value,
+    required this.label,
+    this.isHighlight = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 12),
+      decoration: BoxDecoration(
+        color: AppColors.backgroundSecondary,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColors.border),
       ),
       child: Column(
         children: [
           Text(
             value,
             style: TextStyle(
-              color: color,
-              fontWeight: FontWeight.w700,
+              color: isHighlight ? AppColors.primary : AppColors.text,
               fontSize: 18,
+              fontWeight: FontWeight.bold,
             ),
           ),
+          const SizedBox(height: 4),
           Text(
             label,
-            style: TextStyle(color: AppColors.mutedText, fontSize: 10),
+            style: TextStyle(color: AppColors.mutedText, fontSize: 12),
           ),
         ],
       ),
@@ -364,42 +300,379 @@ class _Metric extends StatelessWidget {
   }
 }
 
+class _MyGroupsSection extends StatelessWidget {
+  const _MyGroupsSection();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'My Groups',
+              style: TextStyle(
+                color: AppColors.text,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            InkWell(
+              onTap: () => Get.toNamed(AppRoutes.explore),
+              child: Row(
+                children: [
+                  Text(
+                    'View All',
+                    style: TextStyle(
+                      color: AppColors.primary,
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(width: 4),
+                  Icon(Icons.arrow_forward, color: AppColors.primary, size: 14),
+                ],
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 16),
+        _GroupItem(
+          name: 'Crypto Elite Signals',
+          date: 'Joined Jan 2026',
+          icon: Icons.rocket_launch_rounded,
+        ),
+        _GroupItem(
+          name: 'Forex Masters Club',
+          date: 'Joined Feb 2026',
+          icon: Icons.payments_rounded,
+        ),
+        _GroupItem(
+          name: 'Gold Trading Pro',
+          date: 'Joined Mar 2026',
+          icon: Icons.emoji_events_rounded,
+        ),
+      ],
+    );
+  }
+}
+
+class _QuickActionsSection extends StatelessWidget {
+  const _QuickActionsSection();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Quick Actions',
+          style: TextStyle(
+            color: AppColors.text,
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 16),
+        Row(
+          children: [
+            Expanded(
+              child: _ActionCard(
+                title: 'Explore Groups',
+                icon: Icons.groups_outlined,
+                onTap: () => Get.toNamed(AppRoutes.explore),
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: _ActionCard(
+                title: 'Become Trader',
+                icon: Icons.trending_up_rounded,
+                hasNotification: true,
+                onTap: () => Get.toNamed(AppRoutes.applyTrader),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
 class _ActionCard extends StatelessWidget {
-  const _ActionCard({
-    required this.icon,
-    required this.label,
-    required this.onTap,
-  });
+  final String title;
   final IconData icon;
-  final String label;
   final VoidCallback onTap;
+  final bool hasNotification;
+
+  const _ActionCard({
+    required this.title,
+    required this.icon,
+    required this.onTap,
+    this.hasNotification = false,
+  });
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
-      child: MarketPanel(
-        radius: 12,
-        padding: const EdgeInsets.all(12),
+      borderRadius: BorderRadius.circular(24),
+      child: Container(
+        height: 130,
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: AppColors.card,
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(color: AppColors.border),
+        ),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Container(
-              width: 44,
-              height: 44,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                gradient: const LinearGradient(
-                  colors: [AppColors.primary, AppColors.accent],
+            Stack(
+              clipBehavior: Clip.none,
+              children: [
+                Container(
+                  width: 56,
+                  height: 56,
+                  decoration: BoxDecoration(
+                    color: AppColors.backgroundSecondary,
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: AppColors.border),
+                  ),
+                  child: Icon(icon, color: AppColors.text, size: 28),
                 ),
-              ),
-              child: Icon(icon),
+                if (hasNotification)
+                  Positioned(
+                    top: -2,
+                    right: -2,
+                    child: Container(
+                      width: 10,
+                      height: 10,
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        shape: BoxShape.circle,
+                        border: Border.all(color: AppColors.card, width: 2),
+                      ),
+                    ),
+                  ),
+              ],
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 16),
             Text(
-              label,
+              title,
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+              style: TextStyle(
+                color: AppColors.text,
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _SettingsSection extends StatelessWidget {
+  const _SettingsSection();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Account Settings',
+          style: TextStyle(
+            color: AppColors.text,
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 16),
+        Container(
+          decoration: BoxDecoration(
+            color: AppColors.card,
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: AppColors.border),
+          ),
+          child: Column(
+            children: [
+              _SettingItem(
+                icon: Icons.notifications_none_rounded,
+                label: 'Notifications',
+              ),
+              _SettingItem(icon: Icons.security_rounded, label: 'Security'),
+              _SettingItem(
+                icon: Icons.help_outline_rounded,
+                label: 'Help & Support',
+                isLast: true,
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _SettingItem extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final bool isLast;
+
+  const _SettingItem({
+    required this.icon,
+    required this.label,
+    this.isLast = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () => Get.toNamed(AppRoutes.settings),
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          border: isLast
+              ? null
+              : Border(bottom: BorderSide(color: AppColors.border)),
+        ),
+        child: Row(
+          children: [
+            Icon(icon, color: AppColors.mutedText, size: 20),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Text(
+                label,
+                style: TextStyle(color: AppColors.text, fontSize: 15),
+              ),
+            ),
+            Icon(Icons.chevron_right, color: AppColors.mutedText, size: 20),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _LogoutButton extends GetView<UserProfileViewModel> {
+  const _LogoutButton();
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: controller.logout,
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 16),
+        decoration: BoxDecoration(
+          color: Colors.red.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: Colors.red.withValues(alpha: 0.2)),
+        ),
+        child: const Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.logout_rounded, color: Colors.red, size: 20),
+            SizedBox(width: 12),
+            Text(
+              'Logout Account',
+              style: TextStyle(
+                color: Colors.red,
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _GroupItem extends StatelessWidget {
+  final String name;
+  final String date;
+  final IconData icon;
+
+  const _GroupItem({
+    required this.name,
+    required this.date,
+    required this.icon,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: InkWell(
+        onTap: () => Get.toNamed(AppRoutes.groupChat),
+        borderRadius: BorderRadius.circular(20),
+        child: Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: AppColors.card,
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: AppColors.border),
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: 44,
+                height: 44,
+                decoration: BoxDecoration(
+                  color: AppColors.backgroundSecondary,
+                  borderRadius: BorderRadius.circular(14),
+                  border: Border.all(color: AppColors.border),
+                ),
+                child: Icon(icon, color: AppColors.primary, size: 20),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      name,
+                      style: TextStyle(
+                        color: AppColors.text,
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      date,
+                      style: TextStyle(
+                        color: AppColors.mutedText,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 4,
+                ),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF14B8A6).withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: const Text(
+                  'Active',
+                  style: TextStyle(
+                    color: AppColors.primary,
+                    fontSize: 11,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

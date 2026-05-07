@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../../routes/app_routes.dart';
 import '../../../../theme/app_colors.dart';
+import '../../../../widgets/app_loading_overlay.dart';
 import '../../../../widgets/market_ui.dart';
 import '../viewmodel/register_view_model.dart';
 
@@ -11,173 +11,271 @@ class RegisterView extends GetView<RegisterViewModel> {
 
   @override
   Widget build(BuildContext context) {
-    return MarketLayout(
-      child: Stack(
-        children: [
-          const Positioned.fill(child: _RegisterBackground()),
-          SingleChildScrollView(
-            padding: const EdgeInsets.fromLTRB(24, 28, 24, 24),
-            child: Column(
-              children: [
-                const SizedBox(height: 16),
-                const _RegisterHeader(),
-                const SizedBox(height: 28),
-                const MarketTextInput(
-                  label: 'Full Name',
-                  hint: 'Enter your full name',
-                  prefix: Icon(Icons.person_outline),
-                ),
-                const SizedBox(height: 14),
-                const MarketTextInput(
-                  label: 'Email',
-                  hint: 'Enter your email',
-                  prefix: Icon(Icons.mail_outline),
-                ),
-                const SizedBox(height: 14),
-                const MarketTextInput(
-                  label: 'Password',
-                  hint: 'Create a password',
-                  prefix: Icon(Icons.lock_outline),
-                  obscure: true,
-                ),
-                const SizedBox(height: 14),
-                const MarketTextInput(
-                  label: 'Confirm Password',
-                  hint: 'Confirm your password',
-                  prefix: Icon(Icons.lock_outline),
-                  obscure: true,
-                ),
-                const SizedBox(height: 12),
-                PrimaryButton(
-                  label: 'Create Account',
-                  icon: Icon(
-                    Icons.arrow_forward,
-                    size: 18,
-                    color: Colors.white,
+    return Obx(
+      () => AppLoadingOverlay(
+        isLoading: controller.isLoading.value,
+        message: 'Creating your account...',
+        child: Scaffold(
+          backgroundColor: AppColors.background,
+          body: Stack(
+            children: [
+              Positioned(
+                top: 50,
+                left: 0,
+                right: 0,
+                child: Center(
+                  child: Container(
+                    width: 220,
+                    height: 220,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppColors.primary.withValues(alpha: 0.12),
+                          blurRadius: 100,
+                          spreadRadius: 50,
+                        ),
+                      ],
+                    ),
                   ),
-                  onTap: () => Get.toNamed(AppRoutes.otpVerification),
                 ),
-                const SizedBox(height: 26),
-                Row(
-                  children: [
-                    Expanded(child: Divider(color: AppColors.border)),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10),
-                      child: Text(
-                        'or continue with',
-                        style: TextStyle(color: AppColors.mutedText),
-                      ),
-                    ),
-                    Expanded(child: Divider(color: AppColors.border)),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                Row(
-                  children: [
-                    Expanded(
-                      child: _SocialBtn(label: 'Google', icon: 'G'),
-                    ),
-                    SizedBox(width: 10),
-                    Expanded(
-                      child: _SocialBtn(label: 'Apple', icon: 'A'),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                Wrap(
-                  alignment: WrapAlignment.center,
-                  children: [
-                    Text(
-                      'By signing up, you agree to our ',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: AppColors.mutedText,
-                      ),
-                    ),
-                    InkWell(
-                      onTap: () {},
-                      child: Text(
-                        'Terms',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: AppColors.accent,
-                          fontWeight: FontWeight.w600,
+              ),
+              SafeArea(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 16,
+                  ),
+                  child: Form(
+                    key: controller.formKey,
+                    child: Column(
+                      children: [
+                        const _LogoHeader(),
+                        const SizedBox(height: 16),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 20,
+                            vertical: 20,
+                          ),
+                          decoration: BoxDecoration(
+                            color: AppColors.card,
+                            borderRadius: BorderRadius.circular(24),
+                            border: Border.all(color: AppColors.border),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.08),
+                                blurRadius: 24,
+                                offset: const Offset(0, 12),
+                              ),
+                            ],
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              Text(
+                                'Create Account',
+                                style: TextStyle(
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.text,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                'Start your trading journey today',
+                                style: TextStyle(
+                                  color: AppColors.mutedText,
+                                  fontSize: 13,
+                                ),
+                              ),
+                              const SizedBox(height: 16),
+                              MarketTextInput(
+                                label: 'Full Name',
+                                hint: 'John Doe',
+                                controller: controller.nameController,
+                                validator: controller.validateName,
+                                textInputAction: TextInputAction.next,
+                                autofillHints: const [AutofillHints.name],
+                                prefix: const Icon(
+                                  Icons.person_outline,
+                                  size: 20,
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+                              MarketTextInput(
+                                label: 'Email',
+                                hint: 'your.email@example.com',
+                                controller: controller.emailController,
+                                validator: controller.validateEmail,
+                                keyboardType: TextInputType.emailAddress,
+                                textInputAction: TextInputAction.next,
+                                autofillHints: const [AutofillHints.email],
+                                prefix: const Icon(
+                                  Icons.mail_outline,
+                                  size: 20,
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+                              MarketTextInput(
+                                label: 'Referral Code',
+                                hint: 'Optional referral code',
+                                controller: controller.referralCodeController,
+                                textInputAction: TextInputAction.next,
+                                prefix: const Icon(
+                                  Icons.sell_outlined,
+                                  size: 20,
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+                              MarketTextInput(
+                                label: 'Password',
+                                hint: 'Create a strong password',
+                                controller: controller.passwordController,
+                                validator: controller.validatePassword,
+                                obscure: true,
+                                enableObscureToggle: true,
+                                textInputAction: TextInputAction.next,
+                                autofillHints: const [
+                                  AutofillHints.newPassword,
+                                ],
+                                prefix: const Icon(
+                                  Icons.lock_outline,
+                                  size: 20,
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+                              MarketTextInput(
+                                label: 'Confirm Password',
+                                hint: 'Confirm your password',
+                                controller:
+                                    controller.confirmPasswordController,
+                                validator: controller.validateConfirmPassword,
+                                obscure: true,
+                                enableObscureToggle: true,
+                                textInputAction: TextInputAction.done,
+                                autofillHints: const [
+                                  AutofillHints.newPassword,
+                                ],
+                                prefix: const Icon(
+                                  Icons.lock_outline,
+                                  size: 20,
+                                ),
+                              ),
+                              const SizedBox(height: 12),
+                              Text(
+                                'Password must include uppercase, lowercase, number, and special character.',
+                                style: TextStyle(
+                                  color: AppColors.mutedText,
+                                  fontSize: 11,
+                                  height: 1.4,
+                                ),
+                              ),
+                              const SizedBox(height: 16),
+                              _CreateAccountButton(onTap: controller.register),
+                            ],
+                          ),
                         ),
-                      ),
-                    ),
-                    Text(
-                      ' and ',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: AppColors.mutedText,
-                      ),
-                    ),
-                    InkWell(
-                      onTap: () {},
-                      child: Text(
-                        'Privacy Policy',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: AppColors.accent,
-                          fontWeight: FontWeight.w600,
+                        const SizedBox(height: 16),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Already have an account? ',
+                              style: TextStyle(color: AppColors.mutedText),
+                            ),
+                            GestureDetector(
+                              onTap: Get.back,
+                              child: Text(
+                                'Sign In',
+                                style: TextStyle(
+                                  color: AppColors.primary,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
+                        const SizedBox(height: 16),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
-                const SizedBox(height: 22),
-                Wrap(
-                  alignment: WrapAlignment.center,
-                  children: [
-                    Text(
-                      'Already have an account? ',
-                      style: TextStyle(color: AppColors.mutedText),
-                    ),
-                    InkWell(
-                      onTap: () {
-                        if (Get.previousRoute == AppRoutes.login &&
-                            Get.key.currentState?.canPop() == true) {
-                          Get.back();
-                          return;
-                        }
-                        Get.offNamed(AppRoutes.login);
-                      },
-                      child: Text(
-                        'Sign In',
-                        style: TextStyle(
-                          color: AppColors.accent,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
 }
 
-class _RegisterHeader extends StatelessWidget {
-  const _RegisterHeader();
+class _CreateAccountButton extends StatelessWidget {
+  const _CreateAccountButton({required this.onTap});
+
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(16),
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(vertical: 14),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [AppColors.primary, AppColors.accent],
+          ),
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.primary.withValues(alpha: 0.3),
+              blurRadius: 20,
+              offset: const Offset(0, 8),
+            ),
+          ],
+        ),
+        child: const Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'Create Account',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            SizedBox(width: 8),
+            Icon(Icons.arrow_forward, color: Colors.white, size: 20),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _LogoHeader extends StatelessWidget {
+  const _LogoHeader();
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        _LogoBox(),
-        SizedBox(height: 12),
+        const _LogoBox(),
+        const SizedBox(height: 10),
         Text(
-          'Join TradeConnect',
-          style: TextStyle(fontSize: 30, fontWeight: FontWeight.w700),
+          'TradeConnect',
+          style: TextStyle(
+            fontSize: 22,
+            fontWeight: FontWeight.bold,
+            color: AppColors.text,
+          ),
         ),
-        SizedBox(height: 6),
+        const SizedBox(height: 4),
         Text(
-          'Start your trading journey today',
-          style: TextStyle(color: AppColors.mutedText),
+          'Trade smarter, earn better',
+          style: TextStyle(color: AppColors.mutedText, fontSize: 14),
         ),
       ],
     );
@@ -190,146 +288,24 @@ class _LogoBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 96,
-      height: 96,
+      width: 60,
+      height: 60,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(24),
         gradient: const LinearGradient(
-          colors: [AppColors.primary, AppColors.accent, AppColors.primary],
+          colors: [AppColors.primary, AppColors.accent],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        boxShadow: const [
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
           BoxShadow(
-            color: Color(0x6610B981),
+            color: AppColors.primary.withValues(alpha: 0.4),
             blurRadius: 24,
-            offset: Offset(0, 10),
+            offset: const Offset(0, 8),
           ),
         ],
       ),
-      child: Icon(Icons.trending_up_rounded, size: 52, color: Colors.white),
-    );
-  }
-}
-
-class _RegisterBackground extends StatelessWidget {
-  const _RegisterBackground();
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Positioned.fill(child: CustomPaint(painter: _GridPainter())),
-        Positioned(
-          top: 60,
-          left: 30,
-          child: _Orb(size: 220, c1: AppColors.primary, c2: AppColors.accent),
-        ),
-        Positioned(
-          bottom: 90,
-          right: 10,
-          child: _Orb(size: 250, c1: AppColors.accent, c2: AppColors.primary),
-        ),
-        Positioned(
-          top: 170,
-          left: 200,
-          child: _Orb(size: 140, c1: Color(0xFF059669), c2: Color(0xFF10B981)),
-        ),
-        Positioned(
-          top: 140,
-          left: 70,
-          child: Text(
-            '💰',
-            style: TextStyle(fontSize: 46, color: Colors.white10),
-          ),
-        ),
-        Positioned(
-          top: 220,
-          right: 60,
-          child: Text(
-            '📈',
-            style: TextStyle(fontSize: 42, color: Colors.white10),
-          ),
-        ),
-        Positioned(
-          bottom: 210,
-          left: 110,
-          child: Text(
-            '💹',
-            style: TextStyle(fontSize: 46, color: Colors.white10),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _Orb extends StatelessWidget {
-  const _Orb({required this.size, required this.c1, required this.c2});
-
-  final double size;
-  final Color c1;
-  final Color c2;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: size,
-      height: size,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        gradient: RadialGradient(
-          colors: [c1.withValues(alpha: 0.26), c2.withValues(alpha: 0.04)],
-        ),
-      ),
-    );
-  }
-}
-
-class _GridPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()..color = const Color(0x3314B8A6);
-    const gap = 56.0;
-    for (double x = 0; x <= size.width; x += gap) {
-      canvas.drawLine(Offset(x, 0), Offset(x, size.height), paint);
-    }
-    for (double y = 0; y <= size.height; y += gap) {
-      canvas.drawLine(Offset(0, y), Offset(size.width, y), paint);
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
-}
-
-class _SocialBtn extends StatelessWidget {
-  const _SocialBtn({required this.label, required this.icon});
-
-  final String label;
-  final String icon;
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {},
-      borderRadius: BorderRadius.circular(12),
-      child: Ink(
-        padding: const EdgeInsets.symmetric(vertical: 12),
-        decoration: BoxDecoration(
-          color: AppColors.card,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: AppColors.border),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(icon, style: TextStyle(fontWeight: FontWeight.w700)),
-            const SizedBox(width: 8),
-            Text(label),
-          ],
-        ),
-      ),
+      child: const Icon(Icons.trending_up, size: 32, color: Colors.white),
     );
   }
 }

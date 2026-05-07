@@ -13,6 +13,23 @@ class MarketBottomNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final navGradientColors = isDark
+        ? const [Color(0xCC111827), Color(0x990A0F1E)]
+        : [
+            Colors.white.withValues(alpha: 0.7),
+            const Color(0xFFF8FAFC).withValues(alpha: 0.6),
+          ];
+    final navBorderColor = isDark
+        ? AppColors.primary.withValues(alpha: 0.45)
+        : AppColors.border;
+    final activeBubbleColor = isDark
+        ? Colors.white.withValues(alpha: 0.14)
+        : AppColors.primary.withValues(alpha: 0.12);
+    final inactiveItemColor = isDark
+        ? Colors.white.withValues(alpha: 0.5)
+        : AppColors.mutedText;
+
     final items = const [
       _NavItem(route: AppRoutes.home, icon: Icons.home_outlined, label: 'Home'),
       _NavItem(route: AppRoutes.explore, icon: Icons.search, label: 'Explore'),
@@ -29,33 +46,23 @@ class MarketBottomNav extends StatelessWidget {
     ];
 
     return SafeArea(
-      top: false,
-      child: ClipRRect(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(24),
-          topRight: Radius.circular(24),
-        ),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 18, sigmaY: 18),
-          child: Container(
-            padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
-            decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [Color(0xF0111827), Color(0xD90A0F1E)],
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(32),
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 18, sigmaY: 18),
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: navGradientColors,
+                ),
+                borderRadius: BorderRadius.circular(32),
+                border: Border.all(color: navBorderColor, width: 0.8),
               ),
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(24),
-                topRight: Radius.circular(24),
-              ),
-              border: Border(
-                top: BorderSide(color: AppColors.primary, width: 0.4),
-                left: BorderSide(color: AppColors.primary, width: 0.4),
-                right: BorderSide(color: AppColors.primary, width: 0.4),
-                bottom: BorderSide.none, // ❌ no bottom border
-              ),
-            ),
             child: Row(
               children: List.generate(items.length, (index) {
                 final item = items[index];
@@ -65,7 +72,7 @@ class MarketBottomNav extends StatelessWidget {
                     borderRadius: BorderRadius.circular(18),
                     onTap: () {
                       if (currentIndex == index) return;
-                      Get.offNamed(item.route);
+                      Get.offAllNamed(item.route);
                     },
                     child: AnimatedContainer(
                       duration: const Duration(milliseconds: 260),
@@ -82,7 +89,7 @@ class MarketBottomNav extends StatelessWidget {
                             height: active ? 30 : 22,
                             decoration: BoxDecoration(
                               color: active
-                                  ? Colors.white.withValues(alpha: 0.14)
+                                  ? activeBubbleColor
                                   : Colors.transparent,
                               shape: BoxShape.circle,
                             ),
@@ -91,7 +98,7 @@ class MarketBottomNav extends StatelessWidget {
                               size: active ? 18 : 20,
                               color: active
                                   ? AppColors.primary
-                                  : Colors.white.withValues(alpha: 0.5),
+                                  : inactiveItemColor,
                             ),
                           ),
                           const SizedBox(height: 4),
@@ -101,7 +108,7 @@ class MarketBottomNav extends StatelessWidget {
                               fontSize: 11,
                               color: active
                                   ? AppColors.primary
-                                  : Colors.white.withValues(alpha: 0.5),
+                                  : inactiveItemColor,
                               fontWeight: active
                                   ? FontWeight.w700
                                   : FontWeight.w500,
@@ -117,7 +124,7 @@ class MarketBottomNav extends StatelessWidget {
           ),
         ),
       ),
-    );
+    ));
   }
 }
 

@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 
 import '../../../../routes/app_routes.dart';
 import '../../../../theme/app_colors.dart';
+import '../../../../widgets/app_loading_overlay.dart';
 import '../../../../widgets/market_ui.dart';
 import '../viewmodel/login_view_model.dart';
 
@@ -11,100 +12,257 @@ class LoginView extends GetView<LoginViewModel> {
 
   @override
   Widget build(BuildContext context) {
-    return MarketLayout(
-      child: Stack(
-        children: [
-          const Positioned.fill(child: _LoginBackground()),
-          SingleChildScrollView(
-            padding: const EdgeInsets.fromLTRB(24, 28, 24, 24),
-            child: Column(
-              children: [
-                const SizedBox(height: 16),
-                const _LogoHeader(),
-                const SizedBox(height: 28),
-                const MarketTextInput(
-                  label: 'Email',
-                  hint: 'Enter your email',
-                  prefix: Icon(Icons.mail_outline),
-                ),
-                const SizedBox(height: 14),
-                const MarketTextInput(
-                  label: 'Password',
-                  hint: 'Enter your password',
-                  prefix: Icon(Icons.lock_outline),
-                  obscure: true,
-                ),
-                const SizedBox(height: 6),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: TextButton(
-                    onPressed: () => Get.toNamed(AppRoutes.forgotPassword),
-                    child: Text(
-                      'Forgot Password?',
-                      style: TextStyle(color: AppColors.accent),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 6),
-                PrimaryButton(
-                  label: 'Sign In',
-                  icon: Icon(
-                    Icons.arrow_forward,
-                    size: 18,
-                    color: Colors.white,
-                  ),
-                  onTap: () => Get.offAllNamed(AppRoutes.roleSelection),
-                ),
-                const SizedBox(height: 26),
-                Row(
-                  children: [
-                    Expanded(child: Divider(color: AppColors.border)),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10),
-                      child: Text(
-                        'or continue with',
-                        style: TextStyle(color: AppColors.mutedText),
-                      ),
-                    ),
-                    Expanded(child: Divider(color: AppColors.border)),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                Row(
-                  children: [
-                    Expanded(
-                      child: _SocialButton(label: 'Google', icon: 'G'),
-                    ),
-                    SizedBox(width: 10),
-                    Expanded(
-                      child: _SocialButton(label: 'Apple', icon: 'A'),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 22),
-                Wrap(
-                  alignment: WrapAlignment.center,
-                  children: [
-                    Text(
-                      'Don\'t have an account? ',
-                      style: TextStyle(color: AppColors.mutedText),
-                    ),
-                    InkWell(
-                      onTap: () => Get.toNamed(AppRoutes.register),
-                      child: Text(
-                        'Sign Up',
-                        style: TextStyle(
-                          color: AppColors.accent,
-                          fontWeight: FontWeight.w600,
+    return Obx(
+      () => AppLoadingOverlay(
+        isLoading: controller.isLoading.value,
+        message: 'Signing you in...',
+        child: Scaffold(
+          backgroundColor: AppColors.background,
+          body: Stack(
+            children: [
+              Positioned(
+                top: 50,
+                left: 0,
+                right: 0,
+                child: Center(
+                  child: Container(
+                    width: 200,
+                    height: 200,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppColors.primary.withValues(alpha: 0.12),
+                          blurRadius: 100,
+                          spreadRadius: 50,
                         ),
-                      ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
-              ],
-            ),
+              ),
+              SafeArea(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 24,
+                  ),
+                  child: Form(
+                    key: controller.formKey,
+                    child: Column(
+                      children: [
+                        const _LogoHeader(),
+                        const SizedBox(height: 24),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 20,
+                            vertical: 24,
+                          ),
+                          decoration: BoxDecoration(
+                            color: AppColors.card,
+                            borderRadius: BorderRadius.circular(24),
+                            border: Border.all(color: AppColors.border),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.08),
+                                blurRadius: 24,
+                                offset: const Offset(0, 12),
+                              ),
+                            ],
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              Text(
+                                'Welcome Back',
+                                style: TextStyle(
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.text,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                'Sign in to continue to your account',
+                                style: TextStyle(
+                                  color: AppColors.mutedText,
+                                  fontSize: 13,
+                                ),
+                              ),
+                              const SizedBox(height: 20),
+                              MarketTextInput(
+                                label: 'Email',
+                                hint: 'your.email@example.com',
+                                controller: controller.emailController,
+                                validator: controller.validateEmail,
+                                keyboardType: TextInputType.emailAddress,
+                                textInputAction: TextInputAction.next,
+                                autofillHints: const [AutofillHints.email],
+                                prefix: const Icon(
+                                  Icons.mail_outline,
+                                  size: 20,
+                                ),
+                              ),
+                              const SizedBox(height: 12),
+                              MarketTextInput(
+                                label: 'Password',
+                                hint: 'Enter your password',
+                                controller: controller.passwordController,
+                                validator: controller.validatePassword,
+                                obscure: true,
+                                enableObscureToggle: true,
+                                textInputAction: TextInputAction.done,
+                                autofillHints: const [AutofillHints.password],
+                                prefix: const Icon(
+                                  Icons.lock_outline,
+                                  size: 20,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Align(
+                                alignment: Alignment.centerRight,
+                                child: TextButton(
+                                  onPressed: () =>
+                                      Get.toNamed(AppRoutes.forgotPassword),
+                                  style: TextButton.styleFrom(
+                                    padding: EdgeInsets.zero,
+                                    minimumSize: Size.zero,
+                                    tapTargetSize:
+                                        MaterialTapTargetSize.shrinkWrap,
+                                  ),
+                                  child: Text(
+                                    'Forgot Password?',
+                                    style: TextStyle(
+                                      color: AppColors.primary,
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 13,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 16),
+                              const _SignInButton(),
+                              const SizedBox(height: 20),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: Divider(color: AppColors.border),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 16,
+                                    ),
+                                    child: Text(
+                                      'or continue with',
+                                      style: TextStyle(
+                                        color: AppColors.mutedText,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Divider(color: AppColors.border),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 16),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: _SocialButton(
+                                      label: 'Google',
+                                      icon: const _GoogleIcon(),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 12),
+                                  Expanded(
+                                    child: _SocialButton(
+                                      label: 'Apple',
+                                      icon: Icon(
+                                        Icons.apple,
+                                        size: 20,
+                                        color: AppColors.text,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Don't have an account? ",
+                              style: TextStyle(color: AppColors.mutedText),
+                            ),
+                            GestureDetector(
+                              onTap: () => Get.toNamed(AppRoutes.register),
+                              child: Text(
+                                'Sign Up',
+                                style: TextStyle(
+                                  color: AppColors.primary,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
+      ),
+    );
+  }
+}
+
+class _SignInButton extends GetView<LoginViewModel> {
+  const _SignInButton();
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: controller.login,
+      borderRadius: BorderRadius.circular(16),
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(vertical: 14),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [AppColors.primary, AppColors.accent],
+          ),
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.primary.withValues(alpha: 0.3),
+              blurRadius: 20,
+              offset: const Offset(0, 8),
+            ),
+          ],
+        ),
+        child: const Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'Sign In',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            SizedBox(width: 8),
+            Icon(Icons.arrow_forward, color: Colors.white, size: 20),
+          ],
+        ),
       ),
     );
   }
@@ -117,16 +275,20 @@ class _LogoHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        _LogoBox(),
-        SizedBox(height: 12),
+        const _LogoBox(),
+        const SizedBox(height: 20),
         Text(
           'TradeConnect',
-          style: TextStyle(fontSize: 30, fontWeight: FontWeight.w700),
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            color: AppColors.text,
+          ),
         ),
-        SizedBox(height: 6),
+        const SizedBox(height: 6),
         Text(
-          'Your Gateway to Trading Success',
-          style: TextStyle(color: AppColors.mutedText),
+          'Trade smarter, earn better',
+          style: TextStyle(color: AppColors.mutedText, fontSize: 14),
         ),
       ],
     );
@@ -139,146 +301,89 @@ class _LogoBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 96,
-      height: 96,
+      width: 64,
+      height: 64,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(24),
-        gradient: const LinearGradient(
-          colors: [AppColors.primary, AppColors.accent, AppColors.primary],
+        gradient: LinearGradient(
+          colors: [AppColors.primary, AppColors.accent],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        boxShadow: const [
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
           BoxShadow(
-            color: Color(0x6610B981),
+            color: AppColors.primary.withValues(alpha: 0.4),
             blurRadius: 24,
-            offset: Offset(0, 10),
+            offset: const Offset(0, 8),
           ),
         ],
       ),
-      child: Icon(Icons.trending_up_rounded, size: 52, color: Colors.white),
+      child: const Icon(Icons.trending_up, size: 36, color: Colors.white),
     );
   }
-}
-
-class _LoginBackground extends StatelessWidget {
-  const _LoginBackground();
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Positioned.fill(child: CustomPaint(painter: _GridPainter())),
-        Positioned(
-          top: 60,
-          left: 30,
-          child: _Orb(size: 220, c1: AppColors.primary, c2: AppColors.accent),
-        ),
-        Positioned(
-          bottom: 90,
-          right: 10,
-          child: _Orb(size: 250, c1: AppColors.accent, c2: AppColors.primary),
-        ),
-        Positioned(
-          top: 170,
-          left: 200,
-          child: _Orb(size: 140, c1: Color(0xFF059669), c2: Color(0xFF10B981)),
-        ),
-        Positioned(
-          top: 140,
-          left: 70,
-          child: Text(
-            '💰',
-            style: TextStyle(fontSize: 46, color: Colors.white10),
-          ),
-        ),
-        Positioned(
-          top: 220,
-          right: 60,
-          child: Text(
-            '📈',
-            style: TextStyle(fontSize: 42, color: Colors.white10),
-          ),
-        ),
-        Positioned(
-          bottom: 210,
-          left: 110,
-          child: Text(
-            '💹',
-            style: TextStyle(fontSize: 46, color: Colors.white10),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _Orb extends StatelessWidget {
-  const _Orb({required this.size, required this.c1, required this.c2});
-
-  final double size;
-  final Color c1;
-  final Color c2;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: size,
-      height: size,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        gradient: RadialGradient(
-          colors: [c1.withValues(alpha: 0.26), c2.withValues(alpha: 0.04)],
-        ),
-      ),
-    );
-  }
-}
-
-class _GridPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()..color = const Color(0x3314B8A6);
-    const gap = 56.0;
-    for (double x = 0; x <= size.width; x += gap) {
-      canvas.drawLine(Offset(x, 0), Offset(x, size.height), paint);
-    }
-    for (double y = 0; y <= size.height; y += gap) {
-      canvas.drawLine(Offset(0, y), Offset(size.width, y), paint);
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 
 class _SocialButton extends StatelessWidget {
   const _SocialButton({required this.label, required this.icon});
 
   final String label;
-  final String icon;
+  final Widget icon;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {},
-      borderRadius: BorderRadius.circular(12),
-      child: Ink(
-        padding: const EdgeInsets.symmetric(vertical: 12),
+      borderRadius: BorderRadius.circular(16),
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 11),
         decoration: BoxDecoration(
-          color: AppColors.card,
-          borderRadius: BorderRadius.circular(12),
+          color: AppColors.secondary,
+          borderRadius: BorderRadius.circular(16),
           border: Border.all(color: AppColors.border),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Text(icon, style: TextStyle(fontWeight: FontWeight.w700)),
+            SizedBox(width: 24, height: 24, child: Center(child: icon)),
             const SizedBox(width: 8),
-            Text(label),
+            Flexible(
+              child: Text(
+                label,
+                style: TextStyle(
+                  color: AppColors.text,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 14,
+                ),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
           ],
         ),
       ),
+    );
+  }
+}
+
+class _GoogleIcon extends StatelessWidget {
+  const _GoogleIcon();
+
+  @override
+  Widget build(BuildContext context) {
+    return Image.network(
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/120px-Google_%22G%22_logo.svg.png',
+      width: 18,
+      height: 18,
+      errorBuilder: (context, error, stackTrace) {
+        return Text(
+          'G',
+          style: TextStyle(
+            color: AppColors.primary,
+            fontSize: 18,
+            fontWeight: FontWeight.w900,
+          ),
+        );
+      },
     );
   }
 }

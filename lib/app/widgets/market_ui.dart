@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 import '../theme/app_colors.dart';
@@ -179,7 +180,7 @@ class GradientButton extends PrimaryButton {
   });
 }
 
-class MarketTextInput extends StatelessWidget {
+class MarketTextInput extends StatefulWidget {
   const MarketTextInput({
     super.key,
     this.label,
@@ -192,6 +193,13 @@ class MarketTextInput extends StatelessWidget {
     this.keyboardType,
     this.readOnly = false,
     this.onTap,
+    this.validator,
+    this.onChanged,
+    this.textInputAction,
+    this.autofillHints,
+    this.maxLength,
+    this.inputFormatters,
+    this.enableObscureToggle = false,
   });
 
   final String? label;
@@ -204,17 +212,53 @@ class MarketTextInput extends StatelessWidget {
   final TextInputType? keyboardType;
   final bool readOnly;
   final VoidCallback? onTap;
+  final String? Function(String?)? validator;
+  final ValueChanged<String>? onChanged;
+  final TextInputAction? textInputAction;
+  final Iterable<String>? autofillHints;
+  final int? maxLength;
+  final List<TextInputFormatter>? inputFormatters;
+  final bool enableObscureToggle;
+
+  @override
+  State<MarketTextInput> createState() => _MarketTextInputState();
+}
+
+class _MarketTextInputState extends State<MarketTextInput> {
+  late bool _obscureText;
+
+  @override
+  void initState() {
+    super.initState();
+    _obscureText = widget.obscure;
+  }
 
   @override
   Widget build(BuildContext context) {
     final themedDecoration = Theme.of(context).inputDecorationTheme;
+    final suffixIcon = widget.enableObscureToggle
+        ? IconButton(
+            onPressed: () {
+              setState(() {
+                _obscureText = !_obscureText;
+              });
+            },
+            icon: Icon(
+              _obscureText
+                  ? Icons.visibility_off_outlined
+                  : Icons.visibility_outlined,
+              size: 20,
+              color: AppColors.mutedText,
+            ),
+          )
+        : widget.suffix;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (label != null) ...[
+        if (widget.label != null) ...[
           Text(
-            label!,
+            widget.label!,
             style: TextStyle(
               color: AppColors.mutedText,
               fontWeight: FontWeight.w600,
@@ -222,25 +266,32 @@ class MarketTextInput extends StatelessWidget {
           ),
           const SizedBox(height: 8),
         ],
-        TextField(
-          controller: controller,
-          obscureText: obscure,
-          maxLines: maxLines,
-          keyboardType: keyboardType,
-          readOnly: readOnly,
-          onTap: onTap,
+        TextFormField(
+          controller: widget.controller,
+          obscureText: _obscureText,
+          maxLines: widget.maxLines,
+          keyboardType: widget.keyboardType,
+          readOnly: widget.readOnly,
+          onTap: widget.onTap,
+          validator: widget.validator,
+          onChanged: widget.onChanged,
+          textInputAction: widget.textInputAction,
+          autofillHints: widget.autofillHints,
+          maxLength: widget.maxLength,
+          inputFormatters: widget.inputFormatters,
           decoration: InputDecoration(
-            hintText: hint,
-            prefixIcon: prefix == null
+            hintText: widget.hint,
+            counterText: '',
+            prefixIcon: widget.prefix == null
                 ? null
                 : Padding(
                     padding: const EdgeInsets.only(left: 10, right: 6),
                     child: IconTheme(
                       data: IconThemeData(color: AppColors.mutedText),
-                      child: prefix!,
+                      child: widget.prefix!,
                     ),
                   ),
-            suffixIcon: suffix,
+            suffixIcon: suffixIcon,
           ).applyDefaults(themedDecoration),
         ),
       ],

@@ -13,164 +13,82 @@ class SettingsView extends GetView<SettingsViewModel> {
   Widget build(BuildContext context) {
     return Obx(
       () => Scaffold(
-        appBar: AppBar(
-          title: Text('Settings'),
-          backgroundColor: AppColors.background,
-          centerTitle: true,
-          surfaceTintColor: AppColors.background,
-          scrolledUnderElevation: 0,
-          elevation: 0,
-          shadowColor: Colors.transparent,
-          leading: GestureDetector(
-            onTap: () => Get.back(),
-            child: Icon(
-              Icons.arrow_back_ios_new_outlined,
-              size: 18,
-              color: AppColors.text,
-            ),
-          ),
-        ),
         backgroundColor: AppColors.background,
         body: SafeArea(
-          child: ListView(
-            padding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
+          child: Column(
             children: [
-              const _SectionTitle('Appearance'),
-              const SizedBox(height: 8),
-              MarketPanel(
-                radius: 16,
-                padding: EdgeInsets.zero,
-                child: _row(
-                  icon: controller.isDarkTheme
-                      ? Icons.dark_mode
-                      : controller.isLightTheme
-                      ? Icons.light_mode
-                      : Icons.brightness_auto,
-                  label: 'Theme',
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      _themeBtn(
-                        icon: Icons.brightness_auto,
-                        active: controller.isSystemTheme,
-                        onTap: () => controller.setThemePreference(
-                          AppThemePreference.system,
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      _themeBtn(
-                        icon: Icons.light_mode,
-                        active: controller.isLightTheme,
-                        onTap: () => controller.setThemePreference(
-                          AppThemePreference.light,
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      _themeBtn(
-                        icon: Icons.dark_mode,
-                        active: controller.isDarkTheme,
-                        onTap: () => controller.setThemePreference(
-                          AppThemePreference.dark,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'Use phone setting, or force light/dark for the whole app.',
-                style: TextStyle(color: AppColors.mutedText, fontSize: 12),
-              ),
-              const SizedBox(height: 14),
-              const _SectionTitle('Notifications'),
-              const SizedBox(height: 8),
-              MarketPanel(
-                radius: 16,
-                padding: EdgeInsets.zero,
-                child: _row(
-                  icon: Icons.notifications_none,
-                  label: 'Push Notifications',
-                  trailing: Transform.scale(
-                    scale: 0.7,
-                    child: Switch(
-                      value: controller.notifications.value,
-                      onChanged: controller.setNotifications,
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 14),
-              const _SectionTitle('General'),
-              const SizedBox(height: 8),
-              MarketPanel(
-                radius: 16,
-                padding: EdgeInsets.zero,
-                child: Column(
+              _Header(),
+              Expanded(
+                child: ListView(
+                  padding: const EdgeInsets.fromLTRB(20, 8, 20, 30),
                   children: [
-                    _row(
-                      icon: Icons.shield_outlined,
-                      label: 'Privacy & Security',
-                      trailing: Icon(
-                        Icons.chevron_right,
-                        color: AppColors.mutedText,
+                    const _SectionTitle('Appearance'),
+                    const SizedBox(height: 12),
+                    _SettingCard(
+                      child: _SettingRow(
+                        icon: Icons.dark_mode_outlined,
+                        label: 'Theme',
+                        trailing: _ThemeToggle(
+                          isDark: controller.isDarkTheme,
+                          onToggle: (dark) {
+                            controller.setThemePreference(
+                              dark ? AppThemePreference.dark : AppThemePreference.light,
+                            );
+                          },
+                        ),
                       ),
                     ),
-                    _divider(),
-                    _row(
-                      icon: Icons.language,
-                      label: 'Language',
-                      trailing: Icon(
-                        Icons.chevron_right,
-                        color: AppColors.mutedText,
+                    const SizedBox(height: 24),
+                    const _SectionTitle('Notifications'),
+                    const SizedBox(height: 12),
+                    _SettingCard(
+                      child: _SettingRow(
+                        icon: Icons.notifications_none_rounded,
+                        label: 'Push Notifications',
+                        trailing: Switch(
+                          value: controller.notifications.value,
+                          onChanged: controller.setNotifications,
+                          activeColor: AppColors.primary,
+                          activeTrackColor: AppColors.primary.withValues(alpha: 0.2),
+                        ),
                       ),
                     ),
-                    _divider(),
-                    _row(
-                      icon: Icons.help_outline,
-                      label: 'Help & Support',
-                      trailing: Icon(
-                        Icons.chevron_right,
-                        color: AppColors.mutedText,
+                    const SizedBox(height: 24),
+                    const _SectionTitle('General'),
+                    const SizedBox(height: 12),
+                    _SettingCard(
+                      child: Column(
+                        children: [
+                          _SettingRow(
+                            icon: Icons.shield_outlined,
+                            label: 'Privacy & Security',
+                            onTap: () {},
+                          ),
+                          _divider(),
+                          _SettingRow(
+                            icon: Icons.language_rounded,
+                            label: 'Language',
+                            onTap: () {},
+                          ),
+                          _divider(),
+                          _SettingRow(
+                            icon: Icons.help_outline_rounded,
+                            label: 'Help & Support',
+                            onTap: () {},
+                          ),
+                          _divider(),
+                          _SettingRow(
+                            icon: Icons.info_outline_rounded,
+                            label: 'About',
+                            onTap: () {},
+                          ),
+                        ],
                       ),
                     ),
-                    _divider(),
-                    _row(
-                      icon: Icons.info_outline,
-                      label: 'About',
-                      trailing: Icon(
-                        Icons.chevron_right,
-                        color: AppColors.mutedText,
-                      ),
-                    ),
+                    const SizedBox(height: 40),
+                    _BrandingSection(),
                   ],
                 ),
-              ),
-              const SizedBox(height: 24),
-              Column(
-                children: [
-                  Container(
-                    width: 62,
-                    height: 62,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(16),
-                      gradient: const LinearGradient(
-                        colors: [AppColors.primary, AppColors.accent],
-                      ),
-                    ),
-                    child: Icon(Icons.trending_up, size: 30),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'TradeConnect',
-                    style: TextStyle(fontWeight: FontWeight.w600),
-                  ),
-                  const SizedBox(height: 3),
-                  Text(
-                    'Version 1.0.0',
-                    style: TextStyle(color: AppColors.mutedText, fontSize: 12),
-                  ),
-                ],
               ),
             ],
           ),
@@ -179,64 +97,39 @@ class SettingsView extends GetView<SettingsViewModel> {
     );
   }
 
-  Widget _divider() => Divider(height: 1, color: AppColors.border);
+  Widget _divider() => Divider(height: 1, color: AppColors.border, indent: 54);
+}
 
-  Widget _themeBtn({
-    required IconData icon,
-    required bool active,
-    required VoidCallback onTap,
-  }) {
-    return InkWell(
-      onTap: onTap,
-      child: Container(
-        width: 34,
-        height: 34,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          gradient: active
-              ? const LinearGradient(
-                  colors: [AppColors.primary, AppColors.accent],
-                )
-              : null,
-          color: active ? null : AppColors.secondary,
-        ),
-        child: Icon(
-          icon,
-          size: 16,
-          color: active ? Colors.white : AppColors.mutedText,
-        ),
-      ),
-    );
-  }
-
-  Widget _row({
-    required IconData icon,
-    required String label,
-    required Widget trailing,
-  }) {
+class _Header extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(10),
+      padding: const EdgeInsets.fromLTRB(20, 12, 20, 12),
       child: Row(
         children: [
-          Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              gradient: LinearGradient(
-                colors: [
-                  AppColors.primary.withValues(alpha: 0.15),
-                  AppColors.accent.withValues(alpha: 0.15),
-                ],
+          InkWell(
+            onTap: () => Get.back(),
+            borderRadius: BorderRadius.circular(12),
+            child: Container(
+              width: 42,
+              height: 42,
+              decoration: BoxDecoration(
+                color: AppColors.card,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: AppColors.border),
               ),
+              child: Icon(Icons.arrow_back_ios_new_rounded, color: AppColors.text, size: 18),
             ),
-            child: Icon(icon, color: AppColors.primary),
           ),
-          const SizedBox(width: 10),
-          Expanded(
-            child: Text(label, style: TextStyle(fontWeight: FontWeight.w500)),
+          const SizedBox(width: 16),
+          Text(
+            'Settings',
+            style: TextStyle(
+              color: AppColors.text,
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+            ),
           ),
-          trailing,
         ],
       ),
     );
@@ -244,17 +137,209 @@ class SettingsView extends GetView<SettingsViewModel> {
 }
 
 class _SectionTitle extends StatelessWidget {
-  const _SectionTitle(this.title);
   final String title;
+  const _SectionTitle(this.title);
+
   @override
   Widget build(BuildContext context) {
     return Text(
       title.toUpperCase(),
       style: TextStyle(
-        fontSize: 12,
+        fontSize: 11,
         color: AppColors.mutedText,
-        fontWeight: FontWeight.w700,
-        letterSpacing: 0.6,
+        fontWeight: FontWeight.bold,
+        letterSpacing: 1.2,
+      ),
+    );
+  }
+}
+
+class _SettingCard extends StatelessWidget {
+  final Widget child;
+  const _SettingCard({required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.card.withValues(alpha: 0.6),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: AppColors.border.withValues(alpha: 0.6)),
+      ),
+      child: child,
+    );
+  }
+}
+
+class _SettingRow extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final Widget? trailing;
+  final VoidCallback? onTap;
+
+  const _SettingRow({
+    required this.icon,
+    required this.label,
+    this.trailing,
+    this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(20),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        child: Row(
+          children: [
+            Container(
+              width: 38,
+              height: 38,
+              decoration: BoxDecoration(
+                color: AppColors.primary.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Icon(icon, color: AppColors.primary, size: 18),
+            ),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Text(
+                label,
+                style: TextStyle(
+                  color: AppColors.text,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+            if (trailing != null)
+              trailing!
+            else
+              Icon(Icons.chevron_right_rounded, color: AppColors.mutedText, size: 20),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _ThemeToggle extends StatelessWidget {
+  final bool isDark;
+  final Function(bool) onToggle;
+
+  const _ThemeToggle({required this.isDark, required this.onToggle});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(4),
+      decoration: BoxDecoration(
+        color: AppColors.backgroundSecondary,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.border),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _ToggleBtn(
+            icon: Icons.dark_mode_rounded,
+            isSelected: isDark,
+            onTap: () => onToggle(true),
+          ),
+          const SizedBox(width: 4),
+          _ToggleBtn(
+            icon: Icons.light_mode_rounded,
+            isSelected: !isDark,
+            onTap: () => onToggle(false),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ToggleBtn extends StatelessWidget {
+  final IconData icon;
+  final bool isSelected;
+  final VoidCallback onTap;
+
+  const _ToggleBtn({
+    required this.icon,
+    required this.isSelected,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(8),
+      child: Container(
+        width: 32,
+        height: 32,
+        decoration: BoxDecoration(
+          color: isSelected ? AppColors.primary : Colors.transparent,
+          borderRadius: BorderRadius.circular(8),
+          boxShadow: isSelected
+              ? [
+                  BoxShadow(
+                    color: AppColors.primary.withValues(alpha: 0.3),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ]
+              : null,
+        ),
+        child: Icon(
+          icon,
+          size: 16,
+          color: isSelected ? Colors.white : AppColors.mutedText,
+        ),
+      ),
+    );
+  }
+}
+
+class _BrandingSection extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 24),
+      decoration: BoxDecoration(
+        color: AppColors.card.withValues(alpha: 0.4),
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: AppColors.border.withValues(alpha: 0.4)),
+      ),
+      child: Column(
+        children: [
+          Container(
+            width: 54,
+            height: 54,
+            decoration: BoxDecoration(
+              color: AppColors.primary.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: const Icon(Icons.trending_up_rounded, color: AppColors.primary, size: 28),
+          ),
+          const SizedBox(height: 16),
+          Text(
+            'TradeConnect',
+            style: TextStyle(
+              color: AppColors.text,
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            'Version 1.0.0',
+            style: TextStyle(
+              color: AppColors.mutedText,
+              fontSize: 12,
+            ),
+          ),
+        ],
       ),
     );
   }

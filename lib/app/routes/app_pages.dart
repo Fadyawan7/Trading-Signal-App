@@ -1,6 +1,8 @@
 import 'package:get/get.dart';
 
 import 'app_routes.dart';
+import '../features/splash/bindings/splash_binding.dart';
+import '../features/splash/views/splash_view.dart';
 import '../features/auth/login/bindings/login_binding.dart';
 import '../features/auth/login/views/login_view.dart';
 import '../features/auth/register/bindings/register_binding.dart';
@@ -51,6 +53,11 @@ import '../features/subscription_payment/views/subscription_payment_view.dart';
 class AppPages {
   static final pages = <GetPage<dynamic>>[
     GetPage(
+      name: AppRoutes.splash,
+      page: () => const SplashView(),
+      binding: SplashBinding(),
+    ),
+    GetPage(
       name: AppRoutes.login,
       page: () => const LoginView(),
       binding: LoginBinding(),
@@ -79,11 +86,13 @@ class AppPages {
       name: AppRoutes.home,
       page: () => const HomeView(),
       binding: HomeBinding(),
+      transition: Transition.noTransition,
     ),
     GetPage(
       name: AppRoutes.explore,
       page: () => const ExploreView(),
       binding: ExploreBinding(),
+      transition: Transition.noTransition,
     ),
     GetPage(
       name: AppRoutes.groupDetail,
@@ -99,6 +108,7 @@ class AppPages {
       name: AppRoutes.chats,
       page: () => const ChatsListView(),
       binding: ChatsListBinding(),
+      transition: Transition.noTransition,
     ),
     GetPage(
       name: AppRoutes.groupChat,
@@ -109,6 +119,7 @@ class AppPages {
       name: AppRoutes.profile,
       page: () => const UserProfileView(),
       binding: UserProfileBinding(),
+      transition: Transition.noTransition,
     ),
     GetPage(
       name: AppRoutes.traderProfile,

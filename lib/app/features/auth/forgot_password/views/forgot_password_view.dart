@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../../core/services/app_feedback_service.dart';
 import '../../../../theme/app_colors.dart';
 import '../../../../widgets/market_ui.dart';
 import '../viewmodel/forgot_password_view_model.dart';
@@ -10,53 +11,209 @@ class ForgotPasswordView extends GetView<ForgotPasswordViewModel> {
 
   @override
   Widget build(BuildContext context) {
-    return MarketLayout(
-      child: Stack(
-        children: [
-          const Positioned.fill(child: _ForgotBackground()),
-          SingleChildScrollView(
-            padding: const EdgeInsets.fromLTRB(24, 28, 24, 24),
-            child: Column(
-              children: [
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: iconSquare(icon: Icons.arrow_back, onTap: Get.back),
+    return Obx(
+      () => Scaffold(
+        backgroundColor: AppColors.background,
+        body: Stack(
+          children: [
+            // Ambient glow
+            Positioned(
+              top: 50,
+              left: 0,
+              right: 0,
+              child: Center(
+                child: Container(
+                  width: 200,
+                  height: 200,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColors.primary.withValues(alpha: 0.12),
+                        blurRadius: 100,
+                        spreadRadius: 50,
+                      ),
+                    ],
+                  ),
                 ),
-                const SizedBox(height: 20),
-                const _Header(),
-                const SizedBox(height: 30),
-                const MarketTextInput(
-                  label: 'Email',
-                  hint: 'Enter your registered email',
-                  prefix: Icon(Icons.mail_outline),
-                ),
-                const SizedBox(height: 14),
-                Text(
-                  'We will send a password reset link to your email address.',
-                  style: TextStyle(color: AppColors.mutedText),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 22),
-                PrimaryButton(
-                  label: 'Send Reset Link',
-                  icon: Icon(Icons.send_rounded, size: 18, color: Colors.white),
-                  onTap: () {
-                    Get.snackbar(
-                      'Reset Link Sent',
-                      'Check your inbox and follow the instructions.',
-                      backgroundColor: AppColors.card,
-                      colorText: AppColors.text,
-                      margin: const EdgeInsets.all(12),
-                    );
-                    if (Get.key.currentState?.canPop() == true) {
-                      Get.back();
-                    }
-                  },
-                ),
-              ],
+              ),
             ),
+            SafeArea(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Back button
+                  Padding(
+                    padding: const EdgeInsets.only(left: 16, top: 8),
+                    child: InkWell(
+                      onTap: Get.back,
+                      borderRadius: BorderRadius.circular(10),
+                      child: Container(
+                        width: 40,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          color: AppColors.secondary,
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(color: AppColors.border),
+                        ),
+                        child: Icon(
+                          Icons.arrow_back_ios_new_rounded,
+                          size: 16,
+                          color: AppColors.text,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 16,
+                      ),
+                      child: Column(
+                        children: [
+                          const _Header(),
+                          const SizedBox(height: 24),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 20,
+                              vertical: 24,
+                            ),
+                            decoration: BoxDecoration(
+                              color: AppColors.card,
+                              borderRadius: BorderRadius.circular(24),
+                              border: Border.all(color: AppColors.border),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withValues(alpha: 0.08),
+                                  blurRadius: 24,
+                                  offset: const Offset(0, 12),
+                                ),
+                              ],
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                Text(
+                                  'Reset Password',
+                                  style: TextStyle(
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColors.text,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  'We will send a password reset link to your email address.',
+                                  style: TextStyle(
+                                    color: AppColors.mutedText,
+                                    fontSize: 13,
+                                    height: 1.4,
+                                  ),
+                                ),
+                                const SizedBox(height: 24),
+                                const MarketTextInput(
+                                  label: 'Email',
+                                  hint: 'Enter your registered email',
+                                  prefix: Icon(Icons.mail_outline, size: 20),
+                                ),
+                                const SizedBox(height: 24),
+                                _SendLinkButton(),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 28),
+                          // Tips card
+                          Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: AppColors.primary.withValues(alpha: 0.08),
+                              borderRadius: BorderRadius.circular(16),
+                              border: Border.all(
+                                color: AppColors.primary.withValues(alpha: 0.2),
+                              ),
+                            ),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Icon(
+                                  Icons.info_outline_rounded,
+                                  color: AppColors.primary,
+                                  size: 18,
+                                ),
+                                const SizedBox(width: 10),
+                                Expanded(
+                                  child: Text(
+                                    'Check your spam folder if you don\'t see the email within a few minutes.',
+                                    style: TextStyle(
+                                      color: AppColors.primary,
+                                      fontSize: 12,
+                                      height: 1.4,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _SendLinkButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () {
+        Get.find<AppFeedbackService>().showSuccess(
+          title: 'Reset Link Sent',
+          message: 'Check your inbox and follow the instructions.',
+        );
+        if (Get.key.currentState?.canPop() == true) {
+          Get.back();
+        }
+      },
+      borderRadius: BorderRadius.circular(16),
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(vertical: 14),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [AppColors.primary, AppColors.accent],
           ),
-        ],
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.primary.withValues(alpha: 0.3),
+              blurRadius: 20,
+              offset: const Offset(0, 8),
+            ),
+          ],
+        ),
+        child: const Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'Send Reset Link',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            SizedBox(width: 8),
+            Icon(Icons.send_rounded, color: Colors.white, size: 18),
+          ],
+        ),
       ),
     );
   }
@@ -69,16 +226,20 @@ class _Header extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        _LogoBox(),
-        SizedBox(height: 12),
+        const _LogoBox(),
+        const SizedBox(height: 20),
         Text(
           'Forgot Password?',
-          style: TextStyle(fontSize: 30, fontWeight: FontWeight.w700),
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            color: AppColors.text,
+          ),
         ),
-        SizedBox(height: 6),
+        const SizedBox(height: 6),
         Text(
           'Recover your account in a few steps',
-          style: TextStyle(color: AppColors.mutedText),
+          style: TextStyle(color: AppColors.mutedText, fontSize: 14),
         ),
       ],
     );
@@ -91,115 +252,28 @@ class _LogoBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 96,
-      height: 96,
+      width: 64,
+      height: 64,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(24),
-        gradient: const LinearGradient(
-          colors: [AppColors.primary, AppColors.accent, AppColors.primary],
+        gradient: LinearGradient(
+          colors: [AppColors.primary, AppColors.accent],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        boxShadow: const [
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
           BoxShadow(
-            color: Color(0x6610B981),
+            color: AppColors.primary.withValues(alpha: 0.4),
             blurRadius: 24,
-            offset: Offset(0, 10),
+            offset: const Offset(0, 8),
           ),
         ],
       ),
-      child: Icon(Icons.lock_reset_rounded, size: 52, color: Colors.white),
-    );
-  }
-}
-
-class _ForgotBackground extends StatelessWidget {
-  const _ForgotBackground();
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Positioned.fill(child: CustomPaint(painter: _GridPainter())),
-        Positioned(
-          top: 60,
-          left: 30,
-          child: _Orb(size: 220, c1: AppColors.primary, c2: AppColors.accent),
-        ),
-        Positioned(
-          bottom: 90,
-          right: 10,
-          child: _Orb(size: 250, c1: AppColors.accent, c2: AppColors.primary),
-        ),
-        Positioned(
-          top: 170,
-          left: 200,
-          child: _Orb(size: 140, c1: Color(0xFF059669), c2: Color(0xFF10B981)),
-        ),
-        Positioned(
-          top: 140,
-          left: 70,
-          child: Text(
-            '💰',
-            style: TextStyle(fontSize: 46, color: Colors.white10),
-          ),
-        ),
-        Positioned(
-          top: 220,
-          right: 60,
-          child: Text(
-            '📈',
-            style: TextStyle(fontSize: 42, color: Colors.white10),
-          ),
-        ),
-        Positioned(
-          bottom: 210,
-          left: 110,
-          child: Text(
-            '💹',
-            style: TextStyle(fontSize: 46, color: Colors.white10),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _Orb extends StatelessWidget {
-  const _Orb({required this.size, required this.c1, required this.c2});
-
-  final double size;
-  final Color c1;
-  final Color c2;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: size,
-      height: size,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        gradient: RadialGradient(
-          colors: [c1.withValues(alpha: 0.26), c2.withValues(alpha: 0.04)],
-        ),
+      child: const Icon(
+        Icons.lock_reset_rounded,
+        size: 36,
+        color: Colors.white,
       ),
     );
   }
-}
-
-class _GridPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()..color = const Color(0x3314B8A6);
-    const gap = 56.0;
-    for (double x = 0; x <= size.width; x += gap) {
-      canvas.drawLine(Offset(x, 0), Offset(x, size.height), paint);
-    }
-    for (double y = 0; y <= size.height; y += gap) {
-      canvas.drawLine(Offset(0, y), Offset(size.width, y), paint);
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

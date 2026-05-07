@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 
 import '../../../routes/app_routes.dart';
 import '../../../theme/app_colors.dart';
-import '../../../widgets/market_ui.dart';
 import '../viewmodel/group_detail_view_model.dart';
 
 class GroupDetailView extends GetView<GroupDetailViewModel> {
@@ -12,653 +11,361 @@ class GroupDetailView extends GetView<GroupDetailViewModel> {
   @override
   Widget build(BuildContext context) {
     final id = (Get.arguments?['id'] ?? 1).toString();
-    const performance = [
-      {'month': 'Jan', 'profit': 12.0},
-      {'month': 'Feb', 'profit': 18.0},
-      {'month': 'Mar', 'profit': 15.0},
-      {'month': 'Apr', 'profit': 22.0},
-      {'month': 'May', 'profit': 28.0},
-      {'month': 'Jun', 'profit': 32.0},
-    ];
-    const reviews = [
-      {
-        'user': 'Alex Smith',
-        'avatar': '👤',
-        'rating': 5,
-        'comment':
-            'Best trading group I\'ve ever joined. Signals are accurate and support is amazing!',
-        'date': '2 days ago',
-      },
-      {
-        'user': 'Emma Wilson',
-        'avatar': '👩',
-        'rating': 5,
-        'comment':
-            'Made back my investment in the first week. Highly recommended!',
-        'date': '1 week ago',
-      },
-      {
-        'user': 'Michael Brown',
-        'avatar': '🧑',
-        'rating': 4,
-        'comment':
-            'Great signals and community. Learning a lot from John\'s analysis.',
-        'date': '2 weeks ago',
-      },
-    ];
+    
+    return Obx(() {
+      // Trigger listener
+      AppColors.background; 
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Group Details'),
+      return Scaffold(
         backgroundColor: AppColors.background,
-        centerTitle: true,
-        surfaceTintColor: AppColors.background,
-        scrolledUnderElevation: 0,
-        elevation: 0,
-        shadowColor: Colors.transparent,
-        leading: GestureDetector(
-          onTap: () => Get.back(),
-          child: Icon(
-            Icons.arrow_back_ios_new_outlined,
-            size: 18,
-            color: AppColors.text,
-          ),
-        ),
-        actions: [
-          Icon(Icons.share, size: 18, color: AppColors.text),
-          SizedBox(width: 20),
-        ],
-      ),
-      backgroundColor: AppColors.background,
-      body: SafeArea(
-        bottom: false,
-        child: Stack(
-          fit: StackFit.expand,
+        body: Stack(
           children: [
-            Positioned.fill(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.fromLTRB(24, 16, 24, 110),
-                child: Column(
-                  children: [
-                    const SizedBox(height: 16),
-                    MarketPanel(
-                      radius: 18,
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              height: 200,
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      AppColors.primary,
+                      AppColors.primary.withValues(alpha: 0.5),
+                      AppColors.background,
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            SafeArea(
+              child: Column(
+                children: [
+                  _Header(),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      padding: const EdgeInsets.fromLTRB(16, 0, 16, 100),
                       child: Column(
                         children: [
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                width: 64,
-                                height: 64,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(12),
-                                  gradient: const LinearGradient(
-                                    colors: [
-                                      AppColors.primary,
-                                      AppColors.accent,
-                                    ],
-                                  ),
-                                ),
-                                alignment: Alignment.center,
-                                child: Text(
-                                  '🚀',
-                                  style: TextStyle(fontSize: 32),
-                                ),
-                              ),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                          child: Text(
-                                            'Crypto Elite Signals',
-                                            style: TextStyle(
-                                              fontSize: 21,
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                          ),
-                                        ),
-                                        Icon(
-                                          Icons.verified,
-                                          color: AppColors.primary,
-                                          size: 18,
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(height: 6),
-                                    _CategoryTag(label: 'Crypto'),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 14),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: _StatTile(
-                                  label: 'Rating',
-                                  value: '4.9',
-                                  icon: Icons.star,
-                                  iconColor: Colors.amber,
-                                ),
-                              ),
-                              SizedBox(width: 8),
-                              Expanded(
-                                child: _StatTile(
-                                  label: 'ROI',
-                                  value: '+127%',
-                                  valueColor: Colors.green,
-                                ),
-                              ),
-                              SizedBox(width: 8),
-                              Expanded(
-                                child: _StatTile(
-                                  label: 'Win Rate',
-                                  value: '78%',
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 14),
-                          Column(
-                            children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    'Members',
-                                    style: TextStyle(
-                                      color: AppColors.mutedText,
-                                    ),
-                                  ),
-                                  Text('850/1000'),
-                                ],
-                              ),
-                              const SizedBox(height: 8),
-                              Container(
-                                height: 8,
-                                decoration: BoxDecoration(
-                                  color: AppColors.background,
-                                  borderRadius: BorderRadius.circular(999),
-                                ),
-                                child: Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Container(
-                                    width:
-                                        MediaQuery.of(context).size.width *
-                                        0.58,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(999),
-                                      gradient: const LinearGradient(
-                                        colors: [
-                                          AppColors.primary,
-                                          AppColors.accent,
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 14),
-                          PrimaryButton(
-                            label: 'Join Membership - \$99/mo',
-                            onTap: () => Get.toNamed(
-                              AppRoutes.payment,
-                              arguments: {'groupId': id},
-                            ),
-                          ),
+                          _MainGroupCard(id: id),
+                          const SizedBox(height: 20),
+                          _TraderSection(),
+                          const SizedBox(height: 20),
+                          _AboutGroupSection(),
+                          const SizedBox(height: 20),
+                          _PerformanceSection(),
+                          const SizedBox(height: 20),
+                          _ReviewsSection(),
                         ],
                       ),
                     ),
-                    const SizedBox(height: 16),
-                    InkWell(
-                      onTap: () => Get.toNamed(
-                        AppRoutes.traderProfile,
-                        arguments: {'id': id},
+                  ),
+                ],
+              ),
+            ),
+            Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: Container(
+                padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      AppColors.background.withValues(alpha: 0),
+                      AppColors.background,
+                    ],
+                  ),
+                ),
+                child: InkWell(
+                  onTap: () => Get.toNamed(AppRoutes.payment, arguments: {'groupId': id}),
+                  borderRadius: BorderRadius.circular(14),
+                  child: Container(
+                    height: 50,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [AppColors.primary, AppColors.primary.withValues(alpha: 0.8)],
                       ),
-                      borderRadius: BorderRadius.circular(18),
-                      child: MarketPanel(
-                        radius: 18,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'About the Trader',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            const SizedBox(height: 14),
-                            Row(
-                              children: [
-                                Container(
-                                  width: 56,
-                                  height: 56,
-                                  alignment: Alignment.center,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    gradient: const LinearGradient(
-                                      colors: [
-                                        AppColors.accent,
-                                        AppColors.primary,
-                                      ],
-                                    ),
-                                  ),
-                                  child: Text(
-                                    '👨‍💼',
-                                    style: TextStyle(fontSize: 24),
-                                  ),
-                                ),
-                                const SizedBox(width: 12),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Text(
-                                            'John Martinez',
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                          ),
-                                          SizedBox(width: 4),
-                                          Icon(
-                                            Icons.verified,
-                                            color: AppColors.primary,
-                                            size: 14,
-                                          ),
-                                        ],
-                                      ),
-                                      SizedBox(height: 4),
-                                      Text(
-                                        '8 years experience',
-                                        style: TextStyle(
-                                          color: AppColors.mutedText,
-                                          fontSize: 12,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 12,
-                                    vertical: 8,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: AppColors.primary.withValues(
-                                      alpha: 0.12,
-                                    ),
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  child: Text(
-                                    'View Profile',
-                                    style: TextStyle(
-                                      color: AppColors.primary,
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 12),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: _SmallPanel(
-                                    label: 'Total Members',
-                                    value: '2500+',
-                                  ),
-                                ),
-                                SizedBox(width: 10),
-                                Expanded(
-                                  child: _SmallPanel(
-                                    label: 'Signals Sent',
-                                    value: '450+',
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
+                      borderRadius: BorderRadius.circular(14),
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppColors.primary.withValues(alpha: 0.3),
+                          blurRadius: 10,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: Center(
+                      child: Text(
+                        'Join Now - \$99/mo',
+                        style: TextStyle(
+                          color: AppColors.buttonText,
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
-                    const SizedBox(height: 14),
-                    MarketPanel(
-                      radius: 18,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'About This Group',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          SizedBox(height: 10),
-                          Text(
-                            'Join our elite crypto trading community and receive high-quality trading signals with detailed analysis. Our proven track record speaks for itself.',
-                            style: TextStyle(
-                              color: AppColors.mutedText,
-                              height: 1.4,
-                            ),
-                          ),
-                          SizedBox(height: 10),
-                          _FeatureRow(text: 'Real-time trading signals'),
-                          _FeatureRow(text: '24/7 support'),
-                          _FeatureRow(text: 'Risk management guidance'),
-                          _FeatureRow(text: 'Market analysis reports'),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 14),
-                    MarketPanel(
-                      radius: 18,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Performance (Last 6 Months)',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          const SizedBox(height: 12),
-                          SizedBox(
-                            height: 140,
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: performance.map((p) {
-                                final h = (p['profit']! as double) / 35;
-                                return Expanded(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      Container(
-                                        height: 90 * h + 16,
-                                        margin: const EdgeInsets.symmetric(
-                                          horizontal: 3,
-                                        ),
-                                        decoration: BoxDecoration(
-                                          gradient: LinearGradient(
-                                            begin: Alignment.bottomCenter,
-                                            end: Alignment.topCenter,
-                                            colors: [
-                                              AppColors.primary,
-                                              AppColors.accent,
-                                            ],
-                                          ),
-                                          borderRadius: BorderRadius.vertical(
-                                            top: Radius.circular(8),
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(height: 6),
-                                      Text(
-                                        p['month']! as String,
-                                        style: TextStyle(
-                                          fontSize: 11,
-                                          color: AppColors.mutedText,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              }).toList(),
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: _SmallCenter(
-                                  label: 'Total ROI',
-                                  value: '+127%',
-                                ),
-                              ),
-                              Expanded(
-                                child: _SmallCenter(
-                                  label: 'Win Rate',
-                                  value: '78%',
-                                ),
-                              ),
-                              Expanded(
-                                child: _SmallCenter(
-                                  label: 'Total Signals',
-                                  value: '450',
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 14),
-                    MarketPanel(
-                      radius: 18,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'Reviews (3)',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              Row(
-                                children: [
-                                  Icon(
-                                    Icons.star,
-                                    color: Colors.amber,
-                                    size: 18,
-                                  ),
-                                  SizedBox(width: 2),
-                                  Text('4.9'),
-                                ],
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 12),
-                          ...reviews.map(
-                            (r) => Padding(
-                              padding: const EdgeInsets.only(bottom: 12),
-                              child: Container(
-                                padding: const EdgeInsets.only(bottom: 12),
-                                decoration: BoxDecoration(
-                                  border: Border(
-                                    bottom: BorderSide(color: AppColors.border),
-                                  ),
-                                ),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      width: 40,
-                                      height: 40,
-                                      alignment: Alignment.center,
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        gradient: const LinearGradient(
-                                          colors: [
-                                            AppColors.primary,
-                                            AppColors.accent,
-                                          ],
-                                        ),
-                                      ),
-                                      child: Text(r['avatar']! as String),
-                                    ),
-                                    const SizedBox(width: 10),
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(
-                                                r['user']! as String,
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.w600,
-                                                ),
-                                              ),
-                                              Text(
-                                                r['date']! as String,
-                                                style: TextStyle(
-                                                  fontSize: 11,
-                                                  color: AppColors.mutedText,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          const SizedBox(height: 4),
-                                          Row(
-                                            children: List.generate(
-                                              r['rating']! as int,
-                                              (_) => Padding(
-                                                padding: EdgeInsets.only(
-                                                  right: 2,
-                                                ),
-                                                child: Icon(
-                                                  Icons.star,
-                                                  size: 12,
-                                                  color: Colors.amber,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          const SizedBox(height: 4),
-                                          Text(
-                                            r['comment']! as String,
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              color: AppColors.mutedText,
-                                              height: 1.35,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
               ),
             ),
           ],
         ),
-      ),
-      bottomNavigationBar: Container(
-        color: AppColors.card,
-        padding: const EdgeInsets.fromLTRB(16, 10, 16, 16),
-        child: PrimaryButton(
-          label: 'Join Now - \$99/mo',
-          onTap: () =>
-              Get.toNamed(AppRoutes.payment, arguments: {'groupId': id}),
-        ),
+      );
+    });
+  }
+}
+
+class _Header extends StatelessWidget {
+  const _Header();
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          _HeaderButton(
+            icon: Icons.arrow_back_ios_new_rounded,
+            onTap: () => Get.back(),
+          ),
+          _HeaderButton(
+            icon: Icons.share_outlined,
+            onTap: () {},
+          ),
+        ],
       ),
     );
   }
 }
 
-class _CategoryTag extends StatelessWidget {
-  const _CategoryTag({required this.label});
+class _HeaderButton extends StatelessWidget {
+  final IconData icon;
+  final VoidCallback onTap;
 
-  final String label;
+  const _HeaderButton({required this.icon, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(10),
+      child: Container(
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: AppColors.text.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: AppColors.border),
+        ),
+        child: Icon(icon, color: AppColors.text, size: 16),
+      ),
+    );
+  }
+}
+
+class _MainGroupCard extends StatelessWidget {
+  final String id;
+  const _MainGroupCard({required this.id});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: AppColors.primary.withValues(alpha: 0.12),
-        borderRadius: BorderRadius.circular(8),
+        color: AppColors.card,
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: AppColors.border),
       ),
-      child: Text(
-        label,
-        style: TextStyle(
-          color: AppColors.primary,
-          fontSize: 12,
-          fontWeight: FontWeight.w600,
-        ),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 60,
+                height: 60,
+                decoration: BoxDecoration(
+                  color: AppColors.backgroundSecondary,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: AppColors.border),
+                ),
+                child: const Center(
+                  child: Text('🚀', style: TextStyle(fontSize: 28)),
+                ),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          'Crypto Elite Signals',
+                          style: TextStyle(
+                            color: AppColors.text,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(width: 4),
+                        Icon(Icons.verified, color: AppColors.mutedText, size: 14),
+                      ],
+                    ),
+                    const SizedBox(height: 6),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                      decoration: BoxDecoration(
+                        color: AppColors.primary.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(6),
+                        border: Border.all(color: AppColors.primary.withValues(alpha: 0.2)),
+                      ),
+                      child: const Text(
+                        'Crypto',
+                        style: TextStyle(
+                          color: AppColors.primary,
+                          fontSize: 11,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          Row(
+            children: [
+              const Expanded(child: _StatBox(label: 'Rating', value: '4.9', icon: Icons.star, iconColor: Colors.amber)),
+              const SizedBox(width: 8),
+              const Expanded(child: _StatBox(label: 'ROI', value: '+127%', isHighlight: true)),
+              const SizedBox(width: 8),
+              const Expanded(child: _StatBox(label: 'Win Rate', value: '78%')),
+            ],
+          ),
+          const SizedBox(height: 20),
+          Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Members',
+                    style: TextStyle(color: AppColors.mutedText, fontSize: 12),
+                  ),
+                  Text(
+                    '850/1000',
+                    style: TextStyle(color: AppColors.text, fontSize: 12, fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Container(
+                height: 5,
+                decoration: BoxDecoration(
+                  color: AppColors.backgroundSecondary,
+                  borderRadius: BorderRadius.circular(3),
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: 85,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [AppColors.primary, AppColors.primary.withValues(alpha: 0.8)],
+                          ),
+                          borderRadius: BorderRadius.circular(3),
+                        ),
+                      ),
+                    ),
+                    const Expanded(flex: 15, child: SizedBox()),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          InkWell(
+            onTap: () => Get.toNamed(AppRoutes.payment, arguments: {'groupId': id}),
+            borderRadius: BorderRadius.circular(14),
+            child: Container(
+              height: 48,
+              decoration: BoxDecoration(
+                color: AppColors.primary,
+                borderRadius: BorderRadius.circular(14),
+              ),
+              child: Center(
+                child: Text(
+                  'Join Membership - \$99/mo',
+                  style: TextStyle(
+                    color: AppColors.buttonText,
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
 }
 
-class _StatTile extends StatelessWidget {
-  const _StatTile({
-    required this.label,
-    required this.value,
-    this.icon,
-    this.iconColor,
-    this.valueColor,
-  });
-
+class _StatBox extends StatelessWidget {
   final String label;
   final String value;
   final IconData? icon;
   final Color? iconColor;
-  final Color? valueColor;
+  final bool isHighlight;
+
+  const _StatBox({
+    required this.label,
+    required this.value,
+    this.icon,
+    this.iconColor,
+    this.isHighlight = false,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 10),
       decoration: BoxDecoration(
-        color: AppColors.background,
-        borderRadius: BorderRadius.circular(12),
+        color: AppColors.backgroundSecondary,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(
+          color: isHighlight ? AppColors.primary.withValues(alpha: 0.3) : AppColors.border,
+        ),
       ),
       child: Column(
         children: [
-          if (icon != null)
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(icon, size: 14, color: iconColor),
-                const SizedBox(width: 4),
-                Text(
-                  value,
-                  style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    color: valueColor,
-                  ),
-                ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              if (icon != null) ...[
+                Icon(icon, color: iconColor, size: 12),
+                const SizedBox(width: 3),
               ],
-            )
-          else
-            Text(
-              value,
-              style: TextStyle(fontWeight: FontWeight.w600, color: valueColor),
-            ),
-          const SizedBox(height: 4),
+              Text(
+                value,
+                style: TextStyle(
+                  color: isHighlight ? AppColors.primary : AppColors.text,
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 2),
           Text(
             label,
-            style: TextStyle(fontSize: 11, color: AppColors.mutedText),
+            style: TextStyle(color: AppColors.mutedText, fontSize: 9),
           ),
         ],
       ),
@@ -666,28 +373,85 @@ class _StatTile extends StatelessWidget {
   }
 }
 
-class _SmallPanel extends StatelessWidget {
-  const _SmallPanel({required this.label, required this.value});
-
-  final String label;
-  final String value;
+class _TraderSection extends StatelessWidget {
+  const _TraderSection();
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(10),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.background,
-        borderRadius: BorderRadius.circular(12),
+        color: AppColors.card,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: AppColors.border),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(value, style: TextStyle(fontWeight: FontWeight.w600)),
-          const SizedBox(height: 2),
           Text(
-            label,
-            style: TextStyle(color: AppColors.mutedText, fontSize: 11),
+            'About the Trader',
+            style: TextStyle(color: AppColors.text, fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 14),
+          Row(
+            children: [
+              Container(
+                width: 44,
+                height: 44,
+                decoration: BoxDecoration(
+                  color: AppColors.backgroundSecondary,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: AppColors.border),
+                ),
+                child: const Center(child: Text('👨‍💼', style: TextStyle(fontSize: 20))),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          'John Martinez',
+                          style: TextStyle(color: AppColors.text, fontSize: 14, fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(width: 3),
+                        Icon(Icons.verified, color: AppColors.primary.withValues(alpha: 0.5), size: 12),
+                      ],
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      '8 years experience',
+                      style: TextStyle(color: AppColors.mutedText, fontSize: 11),
+                    ),
+                  ],
+                ),
+              ),
+              InkWell(
+                onTap: () {},
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: AppColors.primary.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: AppColors.primary.withValues(alpha: 0.2)),
+                  ),
+                  child: const Text(
+                    'View Profile',
+                    style: TextStyle(color: AppColors.primary, fontSize: 11, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          Row(
+            children: [
+              const Expanded(child: _TraderMetric(label: 'Total Members', value: '2500+')),
+              const SizedBox(width: 10),
+              const Expanded(child: _TraderMetric(label: 'Signals Sent', value: '450+')),
+            ],
           ),
         ],
       ),
@@ -695,53 +459,312 @@ class _SmallPanel extends StatelessWidget {
   }
 }
 
-class _FeatureRow extends StatelessWidget {
-  const _FeatureRow({required this.text});
+class _TraderMetric extends StatelessWidget {
+  final String label;
+  final String value;
 
-  final String text;
+  const _TraderMetric({required this.label, required this.value});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: AppColors.backgroundSecondary,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: AppColors.border),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(value, style: TextStyle(color: AppColors.text, fontSize: 14, fontWeight: FontWeight.bold)),
+          const SizedBox(height: 2),
+          Text(label, style: TextStyle(color: AppColors.mutedText, fontSize: 10)),
+        ],
+      ),
+    );
+  }
+}
+
+class _AboutGroupSection extends StatelessWidget {
+  const _AboutGroupSection();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColors.card,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: AppColors.border),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'About This Group',
+            style: TextStyle(color: AppColors.text, fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 10),
+          Text(
+            'Join our elite crypto trading community and receive high-quality trading signals with detailed analysis. Our proven track record speaks for itself.',
+            style: TextStyle(color: AppColors.mutedText, fontSize: 13, height: 1.4),
+          ),
+          const SizedBox(height: 16),
+          const _FeatureItem(icon: Icons.bolt_rounded, label: 'Real-time trading signals'),
+          const _FeatureItem(icon: Icons.notifications_none_rounded, label: '24/7 support'),
+          const _FeatureItem(icon: Icons.lock_outline_rounded, label: 'Risk management guidance'),
+          const _FeatureItem(icon: Icons.analytics_outlined, label: 'Market analysis reports'),
+        ],
+      ),
+    );
+  }
+}
+
+class _FeatureItem extends StatelessWidget {
+  final IconData icon;
+  final String label;
+
+  const _FeatureItem({required this.icon, required this.label});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 4),
+      padding: const EdgeInsets.only(bottom: 10),
       child: Row(
         children: [
           Container(
-            width: 18,
-            height: 18,
+            width: 28,
+            height: 28,
             decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: AppColors.primary.withValues(alpha: 0.16),
+              color: AppColors.backgroundSecondary,
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: AppColors.border),
             ),
-            child: Center(
-              child: CircleAvatar(
-                radius: 3,
-                backgroundColor: AppColors.primary,
-              ),
-            ),
+            child: Icon(icon, color: AppColors.primary, size: 14),
           ),
-          const SizedBox(width: 8),
-          Text(text, style: TextStyle(fontSize: 12.5)),
+          const SizedBox(width: 10),
+          Text(label, style: TextStyle(color: AppColors.text, fontSize: 13)),
         ],
       ),
     );
   }
 }
 
-class _SmallCenter extends StatelessWidget {
-  const _SmallCenter({required this.label, required this.value});
-
-  final String label;
-  final String value;
+class _PerformanceSection extends StatelessWidget {
+  const _PerformanceSection();
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text(value, style: TextStyle(fontWeight: FontWeight.w600)),
-        const SizedBox(height: 2),
-        Text(label, style: TextStyle(fontSize: 11, color: AppColors.mutedText)),
-      ],
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColors.card,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: AppColors.border),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Performance (Last 6 Months)',
+            style: TextStyle(color: AppColors.text, fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 20),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'].map((m) {
+              return Text(m, style: TextStyle(color: AppColors.mutedText, fontSize: 10));
+            }).toList(),
+          ),
+          const SizedBox(height: 16),
+          Row(
+            children: [
+              const Expanded(child: _PerfCard(label: 'Total ROI', value: '+127%', color: AppColors.primary)),
+              const SizedBox(width: 8),
+              const Expanded(child: _PerfCard(label: 'Win Rate', value: '78%')),
+              const SizedBox(width: 8),
+              const Expanded(child: _PerfCard(label: 'Total Signals', value: '450')),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _PerfCard extends StatelessWidget {
+  final String label;
+  final String value;
+  final Color? color;
+
+  const _PerfCard({required this.label, required this.value, this.color});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 14),
+      decoration: BoxDecoration(
+        color: AppColors.backgroundSecondary,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(
+          color: color != null ? color!.withValues(alpha: 0.3) : AppColors.border,
+        ),
+      ),
+      child: Column(
+        children: [
+          Text(
+            value,
+            style: TextStyle(
+              color: color ?? AppColors.text,
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 2),
+          Text(
+            label,
+            style: TextStyle(color: AppColors.mutedText, fontSize: 9),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ReviewsSection extends StatelessWidget {
+  const _ReviewsSection();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColors.card,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: AppColors.border),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Reviews (5)',
+                style: TextStyle(color: AppColors.text, fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: Colors.amber.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: const Row(
+                  children: [
+                    Icon(Icons.star, color: Colors.amber, size: 12),
+                    SizedBox(width: 4),
+                    Text(
+                      '4.9',
+                      style: TextStyle(color: Colors.amber, fontSize: 12, fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          const _ReviewItem(
+            name: 'Alex Smith',
+            date: '2 days ago',
+            comment: 'Best trading group I\'ve ever joined. Signals are accurate and support is amazing!',
+          ),
+          const _ReviewItem(
+            name: 'Emma Wilson',
+            date: '1 week ago',
+            comment: 'Made back my investment in the first week. Highly recommended!',
+          ),
+          const _ReviewItem(
+            name: 'John Doe',
+            date: '2 weeks ago',
+            comment: 'Great signals and community. Learning a lot from the analysis.',
+          ),
+          const _ReviewItem(
+            name: 'Sarah Connor',
+            date: '3 weeks ago',
+            comment: 'Consistent results and very professional signals.',
+          ),
+          const _ReviewItem(
+            name: 'Mike Ross',
+            date: '1 month ago',
+            comment: 'Perfect for beginners and advanced traders alike.',
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ReviewItem extends StatelessWidget {
+  final String name;
+  final String date;
+  final String comment;
+
+  const _ReviewItem({required this.name, required this.date, required this.comment});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 36,
+                height: 36,
+                decoration: BoxDecoration(
+                  color: AppColors.backgroundSecondary,
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: AppColors.border),
+                ),
+                child: Icon(Icons.person_rounded, color: AppColors.mutedText, size: 18),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          name,
+                          style: TextStyle(color: AppColors.text, fontSize: 13, fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          date,
+                          style: TextStyle(color: AppColors.mutedText, fontSize: 10),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 3),
+                    Row(
+                      children: List.generate(5, (index) => const Icon(Icons.star, color: Colors.amber, size: 10)),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          Text(
+            comment,
+            style: TextStyle(color: AppColors.mutedText, fontSize: 12, height: 1.4),
+          ),
+        ],
+      ),
     );
   }
 }

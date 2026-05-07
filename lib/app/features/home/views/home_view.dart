@@ -4,8 +4,6 @@ import 'package:get/get.dart';
 import '../../../routes/app_routes.dart';
 import '../../../theme/app_colors.dart';
 import '../../../widgets/market_bottom_nav.dart';
-import '../../../widgets/market_ui.dart';
-import '../../../widgets/market_widgets.dart';
 import '../viewmodel/home_view_model.dart';
 
 class HomeView extends GetView<HomeViewModel> {
@@ -13,14 +11,423 @@ class HomeView extends GetView<HomeViewModel> {
 
   @override
   Widget build(BuildContext context) {
-    final categories = const [
-      {'name': 'Crypto', 'icon': '💰'},
-      {'name': 'Forex', 'icon': '💵'},
-      {'name': 'Gold', 'icon': '🏆'},
-      {'name': 'Stocks', 'icon': '📊'},
+    return Obx(
+      () => Scaffold(
+        backgroundColor: AppColors.background,
+        extendBody: true,
+        bottomNavigationBar: const MarketBottomNav(currentIndex: 0),
+        body: Stack(
+          children: [
+            Positioned.fill(
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      AppColors.backgroundSecondary,
+                      AppColors.background,
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            SafeArea(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.fromLTRB(20, 16, 20, 80),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const _Header(),
+                    const SizedBox(height: 16),
+                    const _SearchBar(),
+                    const SizedBox(height: 20),
+                    const _FeaturedCard(),
+                    const SizedBox(height: 24),
+                    const _SectionHeader(title: 'Categories'),
+                    const SizedBox(height: 12),
+                    const _CategoriesGrid(),
+                    const SizedBox(height: 24),
+                    const _SectionHeader(title: 'Top Trading Groups'),
+                    const SizedBox(height: 12),
+                    const _TradingGroupsList(),
+                    const SizedBox(height: 24),
+                    const _SectionHeader(title: 'Verified Traders'),
+                    const SizedBox(height: 12),
+                    const _VerifiedTradersList(),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _Header extends StatelessWidget {
+  const _Header();
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Welcome back,',
+                style: TextStyle(
+                  color: AppColors.mutedText,
+                  fontSize: 13,
+                ),
+              ),
+              const SizedBox(height: 2),
+              Text(
+                'Alex Smith',
+                style: TextStyle(
+                  color: AppColors.text,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+        ),
+        const _HeaderIcon(
+          icon: Icons.notifications_none_rounded,
+          hasNotification: true,
+        ),
+        const SizedBox(width: 12),
+        const _HeaderIcon(icon: Icons.people_outline_rounded),
+      ],
+    );
+  }
+}
+
+class _HeaderIcon extends StatelessWidget {
+  final IconData icon;
+  final bool hasNotification;
+
+  const _HeaderIcon({required this.icon, this.hasNotification = false});
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () {
+        if (icon == Icons.people_outline_rounded) {
+          Get.toNamed(AppRoutes.profile);
+        }
+      },
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        width: 42,
+        height: 42,
+        decoration: BoxDecoration(
+          color: AppColors.card,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: AppColors.border),
+        ),
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            Icon(icon, color: AppColors.text, size: 20),
+            if (hasNotification)
+              Positioned(
+                top: 8,
+                right: 8,
+                child: Container(
+                  width: 7,
+                  height: 7,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFEF4444),
+                    shape: BoxShape.circle,
+                    border: Border.all(color: AppColors.card, width: 1),
+                  ),
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _SearchBar extends StatelessWidget {
+  const _SearchBar();
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () => Get.toNamed(AppRoutes.explore),
+      borderRadius: BorderRadius.circular(14),
+      child: Container(
+        height: 48,
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        decoration: BoxDecoration(
+          color: AppColors.card,
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: AppColors.border),
+        ),
+        child: Row(
+          children: [
+            Icon(Icons.search, color: AppColors.mutedText, size: 18),
+            const SizedBox(width: 10),
+            Text(
+              'Search trading groups...',
+              style: TextStyle(
+                color: AppColors.mutedText,
+                fontSize: 14,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _FeaturedCard extends StatelessWidget {
+  const _FeaturedCard();
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () => Get.toNamed(AppRoutes.explore),
+      borderRadius: BorderRadius.circular(24),
+      child: Container(
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(24),
+          gradient: const LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Color(0xFF14B8A6),
+              Color(0xFF0D9488),
+            ],
+          ),
+        ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.2),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: const Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.auto_awesome, color: Colors.white, size: 14),
+                SizedBox(width: 6),
+                Text(
+                  'FEATURED',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 11,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 20),
+          const Text(
+            'Join Trusted Trading Groups',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+              height: 1.2,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Connect with verified traders and receive real-time signals',
+            style: TextStyle(
+              color: Colors.white.withOpacity(0.8),
+              fontSize: 13,
+              height: 1.4,
+            ),
+          ),
+          const SizedBox(height: 20),
+          Row(
+            children: [
+              Expanded(
+                child: InkWell(
+                  onTap: () => Get.toNamed('/explore'),
+                  borderRadius: BorderRadius.circular(12),
+                  child: Container(
+                    height: 42,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: const Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Explore Groups',
+                            style: TextStyle(
+                              color: Color(0xFF14B8A6),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 13,
+                            ),
+                          ),
+                          SizedBox(width: 4),
+                          Icon(Icons.arrow_forward, color: Color(0xFF14B8A6), size: 12),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: InkWell(
+                  onTap: () => Get.toNamed('/apply-trader'),
+                  borderRadius: BorderRadius.circular(12),
+                  child: Container(
+                    height: 42,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: Colors.white.withOpacity(0.4)),
+                    ),
+                    child: const Center(
+                      child: Text(
+                        'Become a Trader',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 13,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    ),
+  );
+}
+}
+
+class _SectionHeader extends StatelessWidget {
+  final String title;
+
+  const _SectionHeader({required this.title});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          title,
+          style: TextStyle(
+            color: AppColors.text,
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        InkWell(
+          onTap: () => Get.toNamed(AppRoutes.explore),
+          child: const Row(
+            children: [
+              Text(
+                'View All',
+                style: TextStyle(
+                  color: Color(0xFF14B8A6),
+                  fontSize: 13,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(width: 4),
+              Icon(Icons.arrow_forward, color: Color(0xFF14B8A6), size: 12),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _CategoriesGrid extends StatelessWidget {
+  const _CategoriesGrid();
+
+  @override
+  Widget build(BuildContext context) {
+    final categories = [
+      {'name': 'Crypto', 'icon': Icons.currency_bitcoin},
+      {'name': 'Forex', 'icon': Icons.attach_money},
+      {'name': 'Gold', 'icon': Icons.monetization_on},
+      {'name': 'Stocks', 'icon': Icons.show_chart},
     ];
 
-    final topGroups = const [
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: categories.map((c) => _CategoryItem(
+        name: c['name'] as String,
+        icon: c['icon'] as IconData,
+      )).toList(),
+    );
+  }
+}
+
+class _CategoryItem extends StatelessWidget {
+  final String name;
+  final IconData icon;
+
+  const _CategoryItem({required this.name, required this.icon});
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () => Get.toNamed('/explore', arguments: {'category': name}),
+      borderRadius: BorderRadius.circular(14),
+      child: Column(
+        children: [
+          Container(
+            width: 60,
+            height: 60,
+            decoration: BoxDecoration(
+              color: AppColors.card,
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(color: AppColors.border),
+            ),
+            child: Center(
+              child: Icon(icon, color: AppColors.primary, size: 24),
+            ),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            name,
+            style: TextStyle(
+              color: AppColors.text,
+              fontSize: 11,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _TradingGroupsList extends StatelessWidget {
+  const _TradingGroupsList();
+
+  @override
+  Widget build(BuildContext context) {
+    final groups = [
       {
         'name': 'Crypto Elite Signals',
         'trader': 'John Martinez',
@@ -28,7 +435,7 @@ class HomeView extends GetView<HomeViewModel> {
         'roi': '+127%',
         'rating': '4.9',
         'price': '\$99/mo',
-        'avatar': '🚀',
+        'icon': Icons.currency_bitcoin,
       },
       {
         'name': 'Forex Masters Club',
@@ -37,7 +444,7 @@ class HomeView extends GetView<HomeViewModel> {
         'roi': '+94%',
         'rating': '4.8',
         'price': '\$149/mo',
-        'avatar': '💎',
+        'icon': Icons.attach_money,
       },
       {
         'name': 'Gold Trading Pro',
@@ -46,402 +453,334 @@ class HomeView extends GetView<HomeViewModel> {
         'roi': '+68%',
         'rating': '4.7',
         'price': 'Free',
-        'avatar': '⚡',
+        'icon': Icons.monetization_on,
       },
     ];
 
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      bottomNavigationBar: const MarketBottomNav(currentIndex: 0),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(16, 12, 16, 90),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                padding: const EdgeInsets.fromLTRB(8, 12, 8, 12),
+    return Column(
+      children: groups.map((g) => _TradingGroupCard(
+        name: g['name'] as String,
+        trader: g['trader'] as String,
+        members: g['members'] as String,
+        roi: g['roi'] as String,
+        rating: g['rating'] as String,
+        price: g['price'] as String,
+        icon: g['icon'] as IconData,
+      )).toList(),
+    );
+  }
+}
 
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+class _TradingGroupCard extends StatelessWidget {
+  final String name;
+  final String trader;
+  final String members;
+  final String roi;
+  final String rating;
+  final String price;
+  final IconData icon;
+
+  const _TradingGroupCard({
+    required this.name,
+    required this.trader,
+    required this.members,
+    required this.roi,
+    required this.rating,
+    required this.price,
+    required this.icon,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () => Get.toNamed(AppRoutes.groupDetail, arguments: {'name': name}),
+      borderRadius: BorderRadius.circular(20),
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 12),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: AppColors.card,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: AppColors.border),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Container(
+                  width: 42,
+                  height: 42,
+                  decoration: BoxDecoration(
+                    color: AppColors.backgroundSecondary,
+                    shape: BoxShape.circle,
+                    border: Border.all(color: AppColors.border),
+                  ),
+                  child: Icon(icon, color: AppColors.text, size: 20),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
                         children: [
                           Text(
-                            'Welcome back,',
+                            name,
                             style: TextStyle(
-                              color: AppColors.mutedText,
-                              fontSize: 13,
+                              color: AppColors.text,
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
-                          SizedBox(height: 2),
-                          Text(
-                            'Alex Smith',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
+                          const SizedBox(width: 4),
+                          const Icon(Icons.verified, color: Color(0xFF14B8A6), size: 12),
                         ],
                       ),
-                    ),
-                    Stack(
-                      children: [
-                        SizedBox(
-                          width: 42,
-                          height: 42,
-
-                          child: Icon(Icons.notifications_none_rounded),
-                        ),
-                        Positioned(
-                          right: 8,
-                          top: 8,
-                          child: Container(
-                            width: 8,
-                            height: 8,
-                            decoration: BoxDecoration(
-                              color: Colors.red,
-                              shape: BoxShape.circle,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    // InkWell(
-                    //   onTap: () => Get.toNamed(AppRoutes.profile),
-                    //   child: Container(
-                    //     width: 30,
-                    //     height: 30,
-                    //     decoration: BoxDecoration(
-                    //       borderRadius: BorderRadius.circular(7),
-                    //       gradient: const LinearGradient(
-                    //         colors: [AppColors.primary, AppColors.accent],
-                    //       ),
-                    //     ),
-                    //     child: Center(child: Text('👤')),
-                    //   ),
-                    // ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 8),
-              TextField(
-                decoration: InputDecoration(
-                  hintText: 'Search trading groups...',
-                  prefixIcon: Icon(Icons.search_rounded),
-                  suffixIcon: Padding(
-                    padding: const EdgeInsets.all(6),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        gradient: const LinearGradient(
-                          colors: [AppColors.primary, AppColors.accent],
-                        ),
-                      ),
-                      child: Icon(
-                        Icons.tune_rounded,
-                        size: 18,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 18),
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(18),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(24),
-                  gradient: const LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [AppColors.primary, AppColors.accent],
-                  ),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 6,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.white24,
-                        borderRadius: BorderRadius.circular(999),
-                      ),
-                      child: Text(
-                        'Featured',
+                      Text(
+                        'by $trader',
                         style: TextStyle(
+                          color: AppColors.mutedText,
                           fontSize: 12,
-                          fontWeight: FontWeight.w600,
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 10),
-                    Text(
-                      'Join Trusted Trading Groups',
-                      style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    const SizedBox(height: 6),
-                    Text(
-                      'Connect with verified traders and receive real-time signals',
-                      style: TextStyle(color: Colors.white70),
-                    ),
-                    const SizedBox(height: 14),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: PrimaryButton(
-                            label: 'Explore Groups',
-                            onTap: () => Get.toNamed(AppRoutes.explore),
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 12,
-                              horizontal: 12,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: SecondaryButton(
-                            label: 'Become Trader',
-                            onTap: () => Get.toNamed(AppRoutes.applyTrader),
-                            textColor: Colors.white,
-                            borderColor: Colors.white38,
-                            backgroundColor: Colors.transparent,
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 12,
-                              horizontal: 12,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              const SizedBox(height: 20),
-              Text(
-                'Categories',
-                style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18),
-              ),
-              const SizedBox(height: 10),
-              GridView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: categories.length,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 4,
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
-                  childAspectRatio: 0.8,
+              ],
+            ),
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                Expanded(child: _StatBox(label: 'Members', value: members)),
+                const SizedBox(width: 6),
+                Expanded(child: _StatBox(label: 'ROI', value: roi, isGreen: true)),
+                const SizedBox(width: 6),
+                Expanded(child: _StatBox(label: 'Rating', value: rating, hasStar: true)),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  price,
+                  style: TextStyle(
+                    color: AppColors.primary,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-                itemBuilder: (context, index) {
-                  final c = categories[index];
-                  return Container(
+                InkWell(
+                  onTap: () {}, // TODO: Implement Join Now
+                  borderRadius: BorderRadius.circular(10),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     decoration: BoxDecoration(
-                      color: AppColors.card,
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: AppColors.border),
+                      color: AppColors.primary,
+                      borderRadius: BorderRadius.circular(10),
                     ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          width: 52,
-                          height: 52,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(14),
-                            gradient: const LinearGradient(
-                              colors: [AppColors.primary, AppColors.accent],
-                            ),
-                          ),
-                          child: Center(
-                            child: Text(
-                              c['icon']!,
-                              style: TextStyle(fontSize: 24),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          c['name']!,
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                },
-              ),
-              const SizedBox(height: 20),
-              Text(
-                'Top Trading Groups',
-                style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18),
-              ),
-              const SizedBox(height: 10),
-              ...topGroups.map((group) {
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 10),
-                  child: MarketCard(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Container(
-                              width: 54,
-                              height: 54,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(14),
-                                gradient: const LinearGradient(
-                                  colors: [AppColors.primary, AppColors.accent],
-                                ),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  group['avatar']!,
-                                  style: TextStyle(fontSize: 25),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 10),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    group['name']!,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 2),
-                                  Text(
-                                    'by ${group['trader']}',
-                                    style: TextStyle(
-                                      color: AppColors.mutedText,
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 10),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: _MiniStat(
-                                title: 'Members',
-                                value: group['members']!,
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            Expanded(
-                              child: _MiniStat(
-                                title: 'ROI',
-                                value: group['roi']!,
-                                green: true,
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            Expanded(
-                              child: _MiniStat(
-                                title: 'Rating',
-                                value: group['rating']!,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 10),
-                        Row(
-                          children: [
-                            Text(
-                              group['price']!,
-                              style: TextStyle(
-                                color: AppColors.primary,
-                                fontWeight: FontWeight.w700,
-                                fontSize: 18,
-                              ),
-                            ),
-                            const Spacer(),
-
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 16,
-                                vertical: 8,
-                              ),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                gradient: const LinearGradient(
-                                  colors: [AppColors.primary, AppColors.accent],
-                                ),
-                              ),
-                              child: Text(
-                                'Join Now',
-                                style: TextStyle(fontWeight: FontWeight.w700),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
+                    child: Text(
+                      'Join Now',
+                      style: TextStyle(
+                        color: AppColors.text,
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
-                );
-              }),
-            ],
-          ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );
   }
 }
 
-class _MiniStat extends StatelessWidget {
-  const _MiniStat({
-    required this.title,
-    required this.value,
-    this.green = false,
-  });
-
-  final String title;
+class _StatBox extends StatelessWidget {
+  final String label;
   final String value;
-  final bool green;
+  final bool isGreen;
+  final bool hasStar;
+
+  const _StatBox({
+    required this.label,
+    required this.value,
+    this.isGreen = false,
+    this.hasStar = false,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 7),
+      padding: const EdgeInsets.symmetric(vertical: 8),
       decoration: BoxDecoration(
-        color: green ? const Color(0x1A10B981) : AppColors.background,
-        borderRadius: BorderRadius.circular(10),
+        color: AppColors.backgroundSecondary,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.border),
       ),
       child: Column(
         children: [
           Text(
-            title,
-            style: TextStyle(color: AppColors.mutedText, fontSize: 11),
+            label,
+            style: TextStyle(
+              color: AppColors.mutedText,
+              fontSize: 10,
+            ),
           ),
           const SizedBox(height: 2),
-          Text(
-            value,
-            style: TextStyle(
-              fontWeight: FontWeight.w700,
-              color: green ? AppColors.primary : AppColors.text,
-              fontSize: 12,
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              if (hasStar)
+                const Icon(Icons.star, color: Colors.amber, size: 12),
+              if (hasStar) const SizedBox(width: 4),
+              Text(
+                value,
+                style: TextStyle(
+                  color: isGreen ? AppColors.primary : AppColors.text,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 12,
+                ),
+              ),
+            ],
           ),
         ],
       ),
     );
   }
+}
+
+class _VerifiedTradersList extends StatelessWidget {
+  const _VerifiedTradersList();
+
+  @override
+  Widget build(BuildContext context) {
+    final traders = [
+      {'name': 'Alex Turner', 'category': 'Crypto', 'rating': '4.9', 'roi': '+145%', 'initials': 'AT'},
+      {'name': 'Emma Davis', 'category': 'Forex', 'rating': '4.8', 'roi': '+112%', 'initials': 'ED'},
+      {'name': 'Chris Lee', 'category': 'Stocks', 'rating': '4.7', 'roi': '+89%', 'initials': 'CL'},
+    ];
+
+    return Column(
+      children: traders.map((t) => _TraderCard(
+        name: t['name']!,
+        category: t['category']!,
+        rating: t['rating']!,
+        roi: t['roi']!,
+        initials: t['initials']!,
+      )).toList(),
+    );
+  }
+}
+
+class _TraderCard extends StatelessWidget {
+  final String name;
+  final String category;
+  final String rating;
+  final String roi;
+  final String initials;
+
+  const _TraderCard({
+    required this.name,
+    required this.category,
+    required this.rating,
+    required this.roi,
+    required this.initials,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () => Get.toNamed(AppRoutes.traderProfile, arguments: {'name': name}),
+      borderRadius: BorderRadius.circular(16),
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 10),
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: AppColors.card,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: AppColors.border),
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                color: AppColors.backgroundSecondary,
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: AppColors.border),
+              ),
+              child: Center(
+                child: Text(
+                  initials,
+                  style: TextStyle(
+                    color: AppColors.text,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 13,
+                  ),
+                ),
+              ),
+            ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Text(
+                      name,
+                      style: TextStyle(
+                        color: AppColors.text,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                    const Icon(Icons.verified, color: Color(0xFF14B8A6), size: 14),
+                  ],
+                ),
+                Text(
+                  category,
+                  style: TextStyle(
+                    color: AppColors.mutedText,
+                    fontSize: 12,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Row(
+                children: [
+                  const Icon(Icons.star, color: Colors.amber, size: 14),
+                  const SizedBox(width: 4),
+                  Text(
+                    rating,
+                    style: TextStyle(
+                      color: AppColors.text,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+              Text(
+                roi,
+                style: TextStyle(
+                  color: AppColors.primary,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+      ],
+    ),
+  ),
+);
+}
 }

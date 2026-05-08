@@ -56,6 +56,46 @@ class AuthRemoteDataSource {
     return AuthMessageResponse.fromJson(response);
   }
 
+  Future<AuthMessageResponse> requestForgotPassword({
+    required String email,
+  }) async {
+    final response = await _apiClient.post(
+      ApiEndpoints.forgotPasswordRequest,
+      body: {'email': email},
+    );
+
+    return AuthMessageResponse.fromJson(response);
+  }
+
+  Future<AuthMessageResponse> verifyForgotPasswordOtp({
+    required String email,
+    required String otp,
+  }) async {
+    final response = await _apiClient.post(
+      ApiEndpoints.forgotPasswordVerifyOtp,
+      body: {'email': email, 'otp': otp},
+    );
+
+    return AuthMessageResponse.fromJson(response);
+  }
+
+  Future<AuthMessageResponse> resetForgotPassword({
+    required String email,
+    required String password,
+    required String confirmPassword,
+  }) async {
+    final response = await _apiClient.post(
+      ApiEndpoints.forgotPasswordReset,
+      body: {
+        'email': email,
+        'password': password,
+        'confirm_password': confirmPassword,
+      },
+    );
+
+    return AuthMessageResponse.fromJson(response);
+  }
+
   Future<LoginResponse> login({
     required String email,
     required String password,

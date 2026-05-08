@@ -1,21 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 import '../../../../theme/app_colors.dart';
 import '../../../../widgets/app_loading_overlay.dart';
 import '../../../../widgets/market_ui.dart';
-import '../viewmodel/otp_verification_view_model.dart';
+import '../viewmodel/reset_password_view_model.dart';
 
-class OtpVerificationView extends GetView<OtpVerificationViewModel> {
-  const OtpVerificationView({super.key});
+class ResetPasswordView extends GetView<ResetPasswordViewModel> {
+  const ResetPasswordView({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Obx(
       () => AppLoadingOverlay(
         isLoading: controller.isLoading.value,
-        message: controller.loadingMessage,
+        message: 'Updating password...',
         child: Scaffold(
           backgroundColor: AppColors.background,
           body: Stack(
@@ -102,14 +101,14 @@ class OtpVerificationView extends GetView<OtpVerificationViewModel> {
                                   ],
                                 ),
                                 child: const Icon(
-                                  Icons.mark_email_unread_outlined,
+                                  Icons.lock_reset_rounded,
                                   size: 28,
                                   color: Colors.white,
                                 ),
                               ),
                               const SizedBox(height: 20),
                               Text(
-                                controller.screenTitle,
+                                'Create New Password',
                                 style: TextStyle(
                                   fontSize: 22,
                                   fontWeight: FontWeight.bold,
@@ -118,7 +117,7 @@ class OtpVerificationView extends GetView<OtpVerificationViewModel> {
                               ),
                               const SizedBox(height: 6),
                               Text(
-                                controller.screenSubtitle,
+                                'Set a strong new password for',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   color: AppColors.mutedText,
@@ -129,7 +128,7 @@ class OtpVerificationView extends GetView<OtpVerificationViewModel> {
                               Obx(
                                 () => Text(
                                   controller.email.value.isEmpty
-                                      ? 'your email address'
+                                      ? 'your account'
                                       : controller.email.value,
                                   style: TextStyle(
                                     color: AppColors.text,
@@ -140,86 +139,79 @@ class OtpVerificationView extends GetView<OtpVerificationViewModel> {
                               ),
                               const SizedBox(height: 24),
                               MarketTextInput(
-                                label: 'OTP Code',
-                                hint: 'Enter 6-digit OTP',
-                                controller: controller.otpController,
-                                validator: controller.validateOtp,
-                                keyboardType: TextInputType.number,
-                                textInputAction: TextInputAction.done,
-                                maxLength: 6,
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.digitsOnly,
-                                ],
+                                label: 'New Password',
+                                hint: 'Enter new password',
+                                controller: controller.passwordController,
+                                validator: controller.validatePassword,
+                                obscure: true,
+                                enableObscureToggle: true,
+                                textInputAction: TextInputAction.next,
                                 prefix: const Icon(
-                                  Icons.password_rounded,
+                                  Icons.lock_outline_rounded,
                                   size: 20,
                                 ),
                                 onChanged: (_) =>
                                     controller.formKey.currentState?.validate(),
                               ),
-                              const SizedBox(height: 20),
-                              if (controller.canResendOtp)
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      "Didn't receive code? ",
-                                      style: TextStyle(
-                                        fontSize: 11,
-                                        color: AppColors.mutedText,
-                                      ),
-                                    ),
-                                    InkWell(
-                                      onTap: controller.resendOtp,
-                                      child: Text(
-                                        'Resend Code',
-                                        style: TextStyle(
-                                          color: AppColors.primary,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 11,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
+                              const SizedBox(height: 16),
+                              MarketTextInput(
+                                label: 'Confirm Password',
+                                hint: 'Re-enter new password',
+                                controller: controller.confirmPasswordController,
+                                validator: controller.validateConfirmPassword,
+                                obscure: true,
+                                enableObscureToggle: true,
+                                textInputAction: TextInputAction.done,
+                                prefix: const Icon(
+                                  Icons.verified_user_outlined,
+                                  size: 20,
                                 ),
-                              if (controller.canResendOtp) const SizedBox(height: 24),
+                                onChanged: (_) =>
+                                    controller.formKey.currentState?.validate(),
+                              ),
+                              const SizedBox(height: 24),
                               InkWell(
-                                onTap: controller.verifyOtp,
-                                borderRadius: BorderRadius.circular(14),
+                                onTap: controller.resetPassword,
+                                borderRadius: BorderRadius.circular(16),
                                 child: Container(
-                                  height: 48,
+                                  width: double.infinity,
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 14,
+                                  ),
                                   decoration: BoxDecoration(
-                                    gradient: LinearGradient(
+                                    gradient: const LinearGradient(
                                       colors: [
                                         AppColors.primary,
-                                        AppColors.primary.withValues(alpha: 0.8),
+                                        AppColors.accent,
                                       ],
                                     ),
-                                    borderRadius: BorderRadius.circular(12),
+                                    borderRadius: BorderRadius.circular(16),
                                     boxShadow: [
                                       BoxShadow(
-                                        color: AppColors.primary.withValues(alpha: 0.3),
-                                        blurRadius: 10,
-                                        offset: const Offset(0, 4),
+                                        color: AppColors.primary.withValues(
+                                          alpha: 0.3,
+                                        ),
+                                        blurRadius: 20,
+                                        offset: const Offset(0, 8),
                                       ),
                                     ],
                                   ),
-                                  child: Row(
+                                  child: const Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      const Icon(
-                                        Icons.auto_awesome_rounded,
-                                        color: Colors.white,
-                                        size: 14,
-                                      ),
-                                      const SizedBox(width: 8),
                                       Text(
-                                        controller.actionLabel,
-                                        style: const TextStyle(
+                                        'Reset Password',
+                                        style: TextStyle(
                                           color: Colors.white,
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
                                         ),
+                                      ),
+                                      SizedBox(width: 8),
+                                      Icon(
+                                        Icons.check_circle_outline_rounded,
+                                        color: Colors.white,
+                                        size: 18,
                                       ),
                                     ],
                                   ),
@@ -246,9 +238,7 @@ class OtpVerificationView extends GetView<OtpVerificationViewModel> {
                                     const SizedBox(width: 10),
                                     Expanded(
                                       child: Text(
-                                        controller.canResendOtp
-                                            ? 'Your verification flow is secured before account activation.'
-                                            : 'Your password can only be changed after this verification step.',
+                                        'Use at least 8 characters with uppercase, lowercase, number, and special character.',
                                         style: TextStyle(
                                           color: AppColors.mutedText,
                                           fontSize: 11,

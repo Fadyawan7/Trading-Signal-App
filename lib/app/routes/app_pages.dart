@@ -11,6 +11,8 @@ import '../features/auth/forgot_password/bindings/forgot_password_binding.dart';
 import '../features/auth/forgot_password/views/forgot_password_view.dart';
 import '../features/auth/otp_verification/bindings/otp_verification_binding.dart';
 import '../features/auth/otp_verification/views/otp_verification_view.dart';
+import '../features/auth/reset_password/bindings/reset_password_binding.dart';
+import '../features/auth/reset_password/views/reset_password_view.dart';
 import '../features/auth/role_selection/bindings/role_selection_binding.dart';
 import '../features/auth/role_selection/views/role_selection_view.dart';
 import '../features/home/bindings/home_binding.dart';
@@ -76,6 +78,11 @@ class AppPages {
       name: AppRoutes.otpVerification,
       page: () => const OtpVerificationView(),
       binding: OtpVerificationBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.resetPassword,
+      page: () => const ResetPasswordView(),
+      binding: ResetPasswordBinding(),
     ),
     GetPage(
       name: AppRoutes.roleSelection,

@@ -61,11 +61,4 @@ class LoginViewModel extends BaseViewModel {
       }
     });
   }
-
-  @override
-  void onClose() {
-    emailController.dispose();
-    passwordController.dispose();
-    super.onClose();
-  }
 }

@@ -7,27 +7,29 @@ import '../../../../core/utils/app_validators.dart';
 import '../../../../routes/app_routes.dart';
 import '../../domain/repositories/auth_repository.dart';
 
-class RegisterViewModel extends BaseViewModel {
-  RegisterViewModel({required AuthRepository authRepository})
+class ResetPasswordViewModel extends BaseViewModel {
+  ResetPasswordViewModel({required AuthRepository authRepository})
     : _authRepository = authRepository;
 
   final AuthRepository _authRepository;
 
-  final title = 'Create Account';
-  final subtitle = 'Join premium groups and verified traders.';
-  final cta = 'Register';
-
   final formKey = GlobalKey<FormState>();
-  final nameController = TextEditingController();
-  final emailController = TextEditingController();
-  final referralCodeController = TextEditingController();
+  final email = ''.obs;
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
 
-  String? validateName(String? value) => AppValidators.validateName(value);
-  String? validateEmail(String? value) => AppValidators.validateEmail(value);
+  @override
+  void onInit() {
+    super.onInit();
+    final arguments = Get.arguments;
+    if (arguments is Map && arguments['email'] != null) {
+      email.value = arguments['email'].toString();
+    }
+  }
+
   String? validatePassword(String? value) =>
       AppValidators.validatePassword(value);
+
   String? validateConfirmPassword(String? value) {
     return AppValidators.validateConfirmPassword(
       value,
@@ -35,9 +37,13 @@ class RegisterViewModel extends BaseViewModel {
     );
   }
 
-  Future<void> register() async {
+  Future<void> resetPassword() async {
     final formState = formKey.currentState;
     if (formState == null || !formState.validate()) {
+      return;
+    }
+    if (email.value.isEmpty) {
+      showError('Email is missing. Please restart the forgot password flow.');
       return;
     }
     if (!ensureInternetConnection()) {
@@ -46,23 +52,18 @@ class RegisterViewModel extends BaseViewModel {
 
     await runWithLoading(() async {
       try {
-        final response = await _authRepository.register(
-          name: nameController.text.trim(),
-          email: emailController.text.trim(),
-          referralCode: referralCodeController.text.trim(),
+        final response = await _authRepository.resetForgotPassword(
+          email: email.value,
           password: passwordController.text,
           confirmPassword: confirmPasswordController.text,
         );
 
         showSuccess(response.message);
-        Get.toNamed(
-          AppRoutes.otpVerification,
-          arguments: {'email': emailController.text.trim()},
-        );
+        Get.offAllNamed(AppRoutes.login);
       } on ApiException catch (error) {
         showError(error.message);
       } catch (_) {
-        showError('Registration failed. Please try again.');
+        showError('Password reset failed. Please try again.');
       }
     });
   }

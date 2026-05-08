@@ -17,6 +17,19 @@ abstract class AuthRepository {
 
   Future<AuthMessageResponse> resendRegisterOtp({required String email});
 
+  Future<AuthMessageResponse> requestForgotPassword({required String email});
+
+  Future<AuthMessageResponse> verifyForgotPasswordOtp({
+    required String email,
+    required String otp,
+  });
+
+  Future<AuthMessageResponse> resetForgotPassword({
+    required String email,
+    required String password,
+    required String confirmPassword,
+  });
+
   Future<LoginResponse> login({
     required String email,
     required String password,

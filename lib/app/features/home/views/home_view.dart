@@ -81,7 +81,7 @@ class _Header extends StatelessWidget {
                 'Welcome back,',
                 style: TextStyle(
                   color: AppColors.mutedText,
-                  fontSize: 13,
+                  fontSize: 12,
                 ),
               ),
               const SizedBox(height: 2),
@@ -89,7 +89,7 @@ class _Header extends StatelessWidget {
                 'Alex Smith',
                 style: TextStyle(
                   color: AppColors.text,
-                  fontSize: 20,
+                  fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
               ),

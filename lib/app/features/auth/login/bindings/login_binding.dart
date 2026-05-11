@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 
+import '../../../../core/services/device_service.dart';
 import '../../../../core/services/session_service.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../viewmodel/login_view_model.dart';
@@ -11,6 +12,7 @@ class LoginBinding extends Bindings {
       () => LoginViewModel(
         authRepository: Get.find<AuthRepository>(),
         sessionService: Get.find<SessionService>(),
+        deviceService: Get.find<DeviceService>(),
       ),
     );
   }

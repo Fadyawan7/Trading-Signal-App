@@ -24,4 +24,8 @@ class AppRoutes {
   static const traderEditProfile = '/trader-edit-profile';
   static const traderSubscription = '/trader-subscription';
   static const subscriptionPayment = '/subscription-payment';
+  static const wallet = '/wallet';
+  static const deposit = '/deposit';
+  static const withdraw = '/withdraw';
+  static const history = '/history';
 }

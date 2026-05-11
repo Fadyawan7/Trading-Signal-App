@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 
 import 'app/core/bindings/app_binding.dart';
 import 'app/core/services/connectivity_service.dart';
+import 'app/core/services/device_service.dart';
 import 'app/core/services/session_service.dart';
 import 'app/routes/app_pages.dart';
 import 'app/routes/app_routes.dart';
@@ -16,6 +17,7 @@ Future<void> main() async {
   await Get.putAsync(() => ThemeController().init());
   await Get.putAsync(() => ConnectivityService().init(), permanent: true);
   await Get.putAsync(() => SessionService().init(), permanent: true);
+  await Get.putAsync(() => DeviceService().init(), permanent: true);
   runApp(const TradingGroupsApp());
 }
 

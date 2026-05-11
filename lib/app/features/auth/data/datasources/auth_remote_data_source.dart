@@ -20,6 +20,9 @@ class AuthRemoteDataSource {
     required String referralCode,
     required String password,
     required String confirmPassword,
+    required String deviceName,
+    required String deviceType,
+    required String deviceId,
   }) async {
     final response = await _apiClient.post(
       ApiEndpoints.register,
@@ -29,6 +32,9 @@ class AuthRemoteDataSource {
         'referral_code': referralCode,
         'password': password,
         'confirm_password': confirmPassword,
+        'device_name': deviceName,
+        'device_type': deviceType,
+        'device_id': deviceId,
       },
     );
 
@@ -99,10 +105,19 @@ class AuthRemoteDataSource {
   Future<LoginResponse> login({
     required String email,
     required String password,
+    required String deviceName,
+    required String deviceType,
+    required String deviceId,
   }) async {
     final response = await _apiClient.post(
       ApiEndpoints.login,
-      body: {'email': email, 'password': password},
+      body: {
+        'email': email,
+        'password': password,
+        'device_name': deviceName,
+        'device_type': deviceType,
+        'device_id': deviceId,
+      },
     );
 
     return LoginResponse.fromJson(response);

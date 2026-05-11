@@ -51,6 +51,14 @@ import '../features/trader_subscription/bindings/trader_subscription_binding.dar
 import '../features/trader_subscription/views/trader_subscription_view.dart';
 import '../features/subscription_payment/bindings/subscription_payment_binding.dart';
 import '../features/subscription_payment/views/subscription_payment_view.dart';
+import '../features/wallet/bindings/wallet_binding.dart';
+import '../features/wallet/views/wallet_view.dart';
+import '../features/deposit/bindings/deposit_binding.dart';
+import '../features/deposit/views/deposit_view.dart';
+import '../features/withdraw/bindings/withdraw_binding.dart';
+import '../features/withdraw/views/withdraw_view.dart';
+import '../features/history/bindings/history_binding.dart';
+import '../features/history/views/history_view.dart';
 
 class AppPages {
   static final pages = <GetPage<dynamic>>[
@@ -182,6 +190,27 @@ class AppPages {
       name: AppRoutes.subscriptionPayment,
       page: () => const SubscriptionPaymentView(),
       binding: SubscriptionPaymentBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.wallet,
+      page: () => const WalletView(),
+      binding: WalletBinding(),
+      transition: Transition.noTransition,
+    ),
+    GetPage(
+      name: AppRoutes.deposit,
+      page: () => const DepositView(),
+      binding: DepositBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.withdraw,
+      page: () => const WithdrawView(),
+      binding: WithdrawBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.history,
+      page: () => const HistoryView(),
+      binding: HistoryBinding(),
     ),
   ];
 }

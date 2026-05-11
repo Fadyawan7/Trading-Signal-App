@@ -19,7 +19,7 @@ class UserProfileView extends GetView<UserProfileViewModel> {
         child: Scaffold(
           backgroundColor: AppColors.background,
           extendBody: true,
-          bottomNavigationBar: const MarketBottomNav(currentIndex: 3),
+          bottomNavigationBar: const MarketBottomNav(currentIndex: 4),
           body: Stack(
             children: [
               Positioned.fill(

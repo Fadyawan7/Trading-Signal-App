@@ -8,6 +8,9 @@ abstract class AuthRepository {
     required String referralCode,
     required String password,
     required String confirmPassword,
+    required String deviceName,
+    required String deviceType,
+    required String deviceId,
   });
 
   Future<AuthMessageResponse> verifyRegisterOtp({
@@ -33,6 +36,9 @@ abstract class AuthRepository {
   Future<LoginResponse> login({
     required String email,
     required String password,
+    required String deviceName,
+    required String deviceType,
+    required String deviceId,
   });
 
   Future<AuthMessageResponse> logout();

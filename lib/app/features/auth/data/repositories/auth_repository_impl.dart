@@ -16,6 +16,9 @@ class AuthRepositoryImpl implements AuthRepository {
     required String referralCode,
     required String password,
     required String confirmPassword,
+    required String deviceName,
+    required String deviceType,
+    required String deviceId,
   }) {
     return _remoteDataSource.register(
       name: name,
@@ -23,6 +26,9 @@ class AuthRepositoryImpl implements AuthRepository {
       referralCode: referralCode,
       password: password,
       confirmPassword: confirmPassword,
+      deviceName: deviceName,
+      deviceType: deviceType,
+      deviceId: deviceId,
     );
   }
 
@@ -61,8 +67,17 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<LoginResponse> login({
     required String email,
     required String password,
+    required String deviceName,
+    required String deviceType,
+    required String deviceId,
   }) {
-    return _remoteDataSource.login(email: email, password: password);
+    return _remoteDataSource.login(
+      email: email,
+      password: password,
+      deviceName: deviceName,
+      deviceType: deviceType,
+      deviceId: deviceId,
+    );
   }
 
   @override

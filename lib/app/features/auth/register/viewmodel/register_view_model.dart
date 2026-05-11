@@ -3,15 +3,20 @@ import 'package:get/get.dart';
 
 import '../../../../core/base/base_view_model.dart';
 import '../../../../core/network/api_exception.dart';
+import '../../../../core/services/device_service.dart';
 import '../../../../core/utils/app_validators.dart';
 import '../../../../routes/app_routes.dart';
 import '../../domain/repositories/auth_repository.dart';
 
 class RegisterViewModel extends BaseViewModel {
-  RegisterViewModel({required AuthRepository authRepository})
-    : _authRepository = authRepository;
+  RegisterViewModel({
+    required AuthRepository authRepository,
+    required DeviceService deviceService,
+  }) : _authRepository = authRepository,
+       _deviceService = deviceService;
 
   final AuthRepository _authRepository;
+  final DeviceService _deviceService;
 
   final title = 'Create Account';
   final subtitle = 'Join premium groups and verified traders.';
@@ -46,12 +51,16 @@ class RegisterViewModel extends BaseViewModel {
 
     await runWithLoading(() async {
       try {
+        await _deviceService.refreshDeviceInfo(forceRefresh: true);
         final response = await _authRepository.register(
           name: nameController.text.trim(),
           email: emailController.text.trim(),
           referralCode: referralCodeController.text.trim(),
           password: passwordController.text,
           confirmPassword: confirmPasswordController.text,
+          deviceName: _deviceService.deviceName,
+          deviceType: _deviceService.deviceType,
+          deviceId: _deviceService.deviceId,
         );
 
         showSuccess(response.message);

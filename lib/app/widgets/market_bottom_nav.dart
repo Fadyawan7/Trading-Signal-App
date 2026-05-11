@@ -39,6 +39,11 @@ class MarketBottomNav extends StatelessWidget {
         label: 'Chats',
       ),
       _NavItem(
+        route: AppRoutes.wallet,
+        icon: Icons.account_balance_wallet_outlined,
+        label: 'Wallet',
+      ),
+      _NavItem(
         route: AppRoutes.profile,
         icon: Icons.person_outline,
         label: 'Profile',
@@ -95,7 +100,7 @@ class MarketBottomNav extends StatelessWidget {
                             ),
                             child: Icon(
                               item.icon,
-                              size: active ? 18 : 20,
+                              size: active ? 16 : 18,
                               color: active
                                   ? AppColors.primary
                                   : inactiveItemColor,
@@ -105,7 +110,7 @@ class MarketBottomNav extends StatelessWidget {
                           Text(
                             item.label,
                             style: TextStyle(
-                              fontSize: 11,
+                              fontSize: 10,
                               color: active
                                   ? AppColors.primary
                                   : inactiveItemColor,

@@ -1,8 +1,11 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
+import '../services/session_service.dart';
+import '../../routes/app_routes.dart';
 import '../values/app_constants.dart';
 import 'api_exception.dart';
 
@@ -47,6 +50,85 @@ class ApiClient {
     return _parseResponse(method: 'POST', uri: uri, response: response);
   }
 
+  Future<Map<String, dynamic>> get(
+    String endpoint, {
+    Map<String, String>? headers,
+  }) async {
+    final uri = Uri.parse(AppNetworkConstants.baseUrl).resolve(endpoint);
+
+    _logRequest(method: 'GET', uri: uri, body: {});
+
+    http.Response response;
+    try {
+      response = await _httpClient
+          .get(
+            uri,
+            headers:
+                const {
+                  'Accept': 'application/json',
+                }.map((key, value) => MapEntry(key, value))
+                  ..addAll(headers ?? const <String, String>{}),
+          )
+          .timeout(AppNetworkConstants.requestTimeout);
+    } on http.ClientException catch (error) {
+      _logFailure(method: 'GET', uri: uri, error: error.toString());
+      throw ApiException('Unable to connect to server. Please try again.');
+    } catch (error) {
+      _logFailure(method: 'GET', uri: uri, error: error.toString());
+      throw ApiException('Request failed. Please try again.');
+    }
+
+    return _parseResponse(method: 'GET', uri: uri, response: response);
+  }
+
+  Future<Map<String, dynamic>> postMultipart(
+    String endpoint, {
+    required Map<String, String> fields,
+    Map<String, String>? files,
+    Map<String, String>? headers,
+  }) async {
+    final uri = Uri.parse(AppNetworkConstants.baseUrl).resolve(endpoint);
+
+    _logRequest(method: 'POST MULTIPART', uri: uri, body: fields);
+
+    http.Response response;
+    try {
+      final request = http.MultipartRequest('POST', uri);
+      request.headers.addAll(
+        const {
+          'Accept': 'application/json',
+        }.map((key, value) => MapEntry(key, value))
+          ..addAll(headers ?? const <String, String>{}),
+      );
+      request.fields.addAll(fields);
+
+      if (files != null) {
+        for (final entry in files.entries) {
+          request.files.add(
+            await http.MultipartFile.fromPath(entry.key, entry.value),
+          );
+        }
+      }
+
+      final streamedResponse = await request
+          .send()
+          .timeout(AppNetworkConstants.requestTimeout);
+      response = await http.Response.fromStream(streamedResponse);
+    } on http.ClientException catch (error) {
+      _logFailure(method: 'POST MULTIPART', uri: uri, error: error.toString());
+      throw ApiException('Unable to connect to server. Please try again.');
+    } catch (error) {
+      _logFailure(method: 'POST MULTIPART', uri: uri, error: error.toString());
+      throw ApiException('Request failed. Please try again.');
+    }
+
+    return _parseResponse(
+      method: 'POST MULTIPART',
+      uri: uri,
+      response: response,
+    );
+  }
+
   Map<String, dynamic> _parseResponse({
     required String method,
     required Uri uri,
@@ -70,6 +152,15 @@ class ApiClient {
 
     if (response.statusCode >= 200 && response.statusCode < 300) {
       return payload;
+    }
+
+    if (response.statusCode == 401) {
+      Get.find<SessionService>().clearSession();
+      Get.offAllNamed(AppRoutes.login);
+      throw ApiException(
+        'Session expired. Please login again.',
+        statusCode: 401,
+      );
     }
 
     final message = payload['message']?.toString();

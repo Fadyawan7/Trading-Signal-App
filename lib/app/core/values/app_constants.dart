@@ -17,4 +17,13 @@ class ApiEndpoints {
   static const forgotPasswordVerifyOtp = 'api/auth/forgot-password/verify-otp';
   static const forgotPasswordReset = 'api/auth/forgot-password/reset';
   static const logout = 'api/logout';
+  static const getProfile = 'api/profile/get';
+  static const updateProfile = 'api/profile/update';
+
+  // Trader Endpoints
+  static const applyTrader = 'api/trader/apply';
+  static const getTraderSubscriptions = 'api/trader/subscription-plan/get';
+  static const buyTraderSubscription = 'api/trader/subscription-plan/buy';
+  static const getMyTraderSubscription = 'api/trader/subscription-plan/my-subscription';
 }
+

@@ -1,25 +1,25 @@
 class AuthRole {
   AuthRole({
-    required this.id,
+    this.id,
     required this.name,
     required this.displayName,
-    required this.createdAt,
-    required this.updatedAt,
+    this.createdAt,
+    this.updatedAt,
   });
 
-  final int id;
+  final int? id;
   final String name;
   final String displayName;
-  final String createdAt;
-  final String updatedAt;
+  final String? createdAt;
+  final String? updatedAt;
 
   factory AuthRole.fromJson(Map<String, dynamic> json) {
     return AuthRole(
-      id: json['id'] as int? ?? 0,
+      id: json['id'] as int?,
       name: json['name']?.toString() ?? '',
       displayName: json['display_name']?.toString() ?? '',
-      createdAt: json['created_at']?.toString() ?? '',
-      updatedAt: json['updated_at']?.toString() ?? '',
+      createdAt: json['created_at']?.toString(),
+      updatedAt: json['updated_at']?.toString(),
     );
   }
 

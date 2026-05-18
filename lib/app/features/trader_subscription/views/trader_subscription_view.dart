@@ -3,145 +3,132 @@ import 'package:get/get.dart';
 
 import '../../../routes/app_routes.dart';
 import '../../../theme/app_colors.dart';
+import '../../../widgets/app_loading_overlay.dart';
 import '../viewmodel/trader_subscription_view_model.dart';
+import '../../apply_trader/data/models/subscription_plan.dart';
 
 class TraderSubscriptionView extends GetView<TraderSubscriptionViewModel> {
   const TraderSubscriptionView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const _SubscriptionBody();
-  }
-}
-
-class _SubscriptionBody extends StatefulWidget {
-  const _SubscriptionBody();
-
-  @override
-  State<_SubscriptionBody> createState() => _SubscriptionBodyState();
-}
-
-class _SubscriptionBodyState extends State<_SubscriptionBody> {
-  String? selectedPlan;
-  String billing = 'monthly';
-
-  final List<Map<String, dynamic>> plans = [
-    {
-      'id': 'basic',
-      'name': 'Basic',
-      'monthly': '\$29',
-      'yearly': '\$290',
-      'groups': '1',
-      'members': '500',
-      'features': [
-        'Create 1 Trading Group',
-        'Up to 500 Members',
-        'Basic Analytics',
-        'Email Support',
-        'Monthly Reports',
-      ],
-      'recommended': false,
-      'isPremium': false,
-      'icon': Icons.bolt_rounded,
-      'color': const Color(0xFF14B8A6),
-    },
-    {
-      'id': 'pro',
-      'name': 'Pro',
-      'monthly': '\$79',
-      'yearly': '\$790',
-      'groups': '3',
-      'members': '2,000',
-      'features': [
-        'Create 3 Trading Groups',
-        'Up to 2,000 Members',
-        'Advanced Analytics',
-        'Priority Support',
-        'Weekly Reports',
-        'Custom Branding',
-        'API Access',
-      ],
-      'recommended': true,
-      'isPremium': false,
-      'icon': Icons.workspace_premium_rounded,
-      'color': const Color(0xFF14B8A6),
-    },
-    {
-      'id': 'premium',
-      'name': 'Premium',
-      'monthly': '\$199',
-      'yearly': '\$1,990',
-      'groups': 'Unlimited',
-      'members': 'Unlimited',
-      'features': [
-        'Unlimited Trading Groups',
-        'Unlimited Members',
-        'Real-time Analytics',
-        '24/7 Premium Support',
-        'Daily Reports',
-        'Full Customization',
-        'API Access',
-        'Dedicated Account Manager',
-        'Early Access to Features',
-      ],
-      'recommended': false,
-      'isPremium': true,
-      'icon': Icons.rocket_launch_rounded,
-      'color': const Color(0xFFF59E0B),
-    },
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    return Obx(() {
-      final bgColor = AppColors.background;
-      return Scaffold(
-        backgroundColor: bgColor,
-        body: SafeArea(
-          child: Column(
+    return Obx(
+      () => AppLoadingOverlay(
+        isLoading: controller.isLoading.value,
+        message: 'Loading plans...',
+        child: Scaffold(
+          backgroundColor: AppColors.background,
+          body: Stack(
             children: [
-              _Header(),
-              Expanded(
-                child: ListView(
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                  children: [
-                    _IntroCard(),
-                    const SizedBox(height: 24),
-                    _BillingToggle(
-                      current: billing,
-                      onChanged: (v) => setState(() => billing = v),
+              // Background Gradient
+              Positioned.fill(
+                child: Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        AppColors.backgroundSecondary,
+                        AppColors.background,
+                      ],
                     ),
-                    const SizedBox(height: 24),
-                    ...plans.map((p) => _PlanCard(
-                          plan: p,
-                          billing: billing,
-                          isSelected: selectedPlan == p['id'],
-                          onSelect: () => setState(() => selectedPlan = p['id'] as String),
-                        )),
-                    const SizedBox(height: 30),
-                  ],
+                  ),
                 ),
               ),
-              if (selectedPlan != null) _BottomAction(
-                planName: plans.firstWhere((p) => p['id'] == selectedPlan)['name'] as String,
-                onTap: () {
-                  final p = plans.firstWhere((x) => x['id'] == selectedPlan);
-                  Get.toNamed(AppRoutes.subscriptionPayment, arguments: {
-                    'plan': p['name'],
-                    'price': billing == 'monthly' ? p['monthly'] : p['yearly'],
-                    'billing': billing,
-                  });
-                },
-              ),
+              const _SubscriptionBody(),
             ],
           ),
         ),
-      );
-    });
+      ),
+    );
+  }
+}
+
+class _SubscriptionBody extends GetView<TraderSubscriptionViewModel> {
+  const _SubscriptionBody();
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Column(
+        children: [
+          const _Header(),
+          Expanded(
+            child: Obx(() {
+              final activeCycle = controller.billingCycle.value;
+              final list = controller.plans;
+
+              return ListView(
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                children: [
+                  const _IntroCard(),
+                  const SizedBox(height: 24),
+                  _BillingToggle(
+                    current: activeCycle,
+                    onChanged: (v) => controller.setBillingCycle(v),
+                  ),
+                  const SizedBox(height: 24),
+                  
+                  if (list.isEmpty && !controller.isLoading.value)
+                    Center(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 40),
+                        child: Column(
+                          children: [
+                            Icon(Icons.layers_clear_outlined, color: AppColors.mutedText, size: 48),
+                            const SizedBox(height: 16),
+                            Text(
+                              'No subscription plans available for this tier.',
+                              style: TextStyle(color: AppColors.mutedText, fontSize: 14),
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
+                  else
+                    ...list.map((plan) {
+                      final isSelected = controller.selectedPlanId.value == plan.id;
+                      return _PlanCard(
+                        plan: plan,
+                        billing: activeCycle,
+                        isSelected: isSelected,
+                        onSelect: () => controller.selectedPlanId.value = plan.id,
+                      );
+                    }),
+                  const SizedBox(height: 30),
+                ],
+              );
+            }),
+          ),
+          Obx(() {
+            final selId = controller.selectedPlanId.value;
+            if (selId == null || controller.plans.isEmpty) {
+              return const SizedBox.shrink();
+            }
+            final selectedPlan = controller.plans.firstWhereOrNull((p) => p.id == selId);
+            if (selectedPlan == null) return const SizedBox.shrink();
+
+            return _BottomAction(
+              planName: selectedPlan.name,
+              onTap: () {
+                Get.toNamed(AppRoutes.subscriptionPayment, arguments: {
+                  'plan_id': selectedPlan.id.toString(),
+                  'plan': selectedPlan.name,
+                  'price': '\$${selectedPlan.price.toStringAsFixed(0)}',
+                  'billing': selectedPlan.type,
+                });
+              },
+            );
+          }),
+        ],
+      ),
+    );
   }
 }
 
 class _Header extends StatelessWidget {
+  const _Header();
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -174,14 +161,16 @@ class _Header extends StatelessWidget {
 }
 
 class _IntroCard extends StatelessWidget {
+  const _IntroCard();
+
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xFF14B8A6).withOpacity(0.05),
+        color: const Color(0xFF14B8A6).withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFF14B8A6).withOpacity(0.1)),
+        border: Border.all(color: const Color(0xFF14B8A6).withValues(alpha: 0.1)),
       ),
       child: Row(
         children: [
@@ -226,6 +215,7 @@ class _BillingToggle extends StatelessWidget {
       ),
       child: Row(
         children: [
+          Expanded(child: _toggleItem('weekly', 'Weekly')),
           Expanded(child: _toggleItem('monthly', 'Monthly')),
           Expanded(child: _toggleItem('yearly', 'Yearly', badge: 'Save 20%')),
         ],
@@ -274,7 +264,7 @@ class _BillingToggle extends StatelessWidget {
 }
 
 class _PlanCard extends StatelessWidget {
-  final Map<String, dynamic> plan;
+  final SubscriptionPlan plan;
   final String billing;
   final bool isSelected;
   final VoidCallback onSelect;
@@ -283,10 +273,9 @@ class _PlanCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isPremium = plan['isPremium'] == true;
-    final isRecommended = plan['recommended'] == true;
-    final Color color = plan['color'] as Color? ?? const Color(0xFF14B8A6);
-    final price = billing == 'monthly' ? plan['monthly'] : plan['yearly'];
+    final isPremium = plan.price >= 100.0;
+    final isRecommended = plan.name.toLowerCase().contains('pro') || plan.name.toLowerCase().contains('test 1');
+    final Color color = isPremium ? const Color(0xFFF59E0B) : const Color(0xFF14B8A6);
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 20),
@@ -318,7 +307,24 @@ class _PlanCard extends StatelessWidget {
                           color: color.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(16),
                         ),
-                        child: Icon(plan['icon'] as IconData? ?? Icons.star_rounded, color: color, size: 28),
+                        child: plan.icon.isNotEmpty
+                            ? ClipRRect(
+                                borderRadius: BorderRadius.circular(16),
+                                child: Image.network(
+                                  plan.icon,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (_, __, ___) => Icon(
+                                    isPremium ? Icons.rocket_launch_rounded : Icons.workspace_premium_rounded,
+                                    color: color,
+                                    size: 28,
+                                  ),
+                                ),
+                              )
+                            : Icon(
+                                isPremium ? Icons.rocket_launch_rounded : Icons.workspace_premium_rounded,
+                                color: color,
+                                size: 28,
+                              ),
                       ),
                       const SizedBox(width: 16),
                       Expanded(
@@ -326,11 +332,11 @@ class _PlanCard extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              plan['name']?.toString() ?? 'Plan',
+                              plan.name,
                               style: TextStyle(color: AppColors.text, fontSize: 20, fontWeight: FontWeight.bold),
                             ),
                             Text(
-                              'For ${plan['name']?.toString().toLowerCase() ?? ""} traders',
+                              'For ${plan.name.toLowerCase()} traders',
                               style: TextStyle(color: AppColors.mutedText, fontSize: 12),
                             ),
                           ],
@@ -344,14 +350,14 @@ class _PlanCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text(
-                        price?.toString() ?? '\$0',
+                        '\$${plan.price.toStringAsFixed(0)}',
                         style: TextStyle(color: AppColors.text, fontSize: 32, fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(width: 4),
                       Padding(
                         padding: const EdgeInsets.only(bottom: 6),
                         child: Text(
-                          '/${billing == 'monthly' ? 'month' : 'year'}',
+                          '/$billing',
                           style: TextStyle(color: AppColors.mutedText, fontSize: 14),
                         ),
                       ),
@@ -360,20 +366,39 @@ class _PlanCard extends StatelessWidget {
                   const SizedBox(height: 20),
                   Row(
                     children: [
-                      Expanded(child: _StatBox(label: 'Groups', value: plan['groups']?.toString() ?? '0', icon: Icons.layers_outlined, color: color)),
+                      Expanded(
+                        child: _StatBox(
+                          label: 'Groups Limit',
+                          value: plan.is_unlimited_groups ? 'Unlimited' : plan.allow_groups.toString(),
+                          icon: Icons.layers_outlined,
+                          color: color,
+                        ),
+                      ),
                       const SizedBox(width: 12),
-                      Expanded(child: _StatBox(label: 'Members', value: plan['members']?.toString() ?? '0', icon: Icons.people_outline_rounded, color: color)),
+                      Expanded(
+                        child: _StatBox(
+                          label: 'Members Limit',
+                          value: plan.is_unlimited_members ? 'Unlimited' : plan.allow_members.toString(),
+                          icon: Icons.people_outline_rounded,
+                          color: color,
+                        ),
+                      ),
                     ],
                   ),
                   const SizedBox(height: 24),
-                  if (plan['features'] != null)
-                    ...(plan['features'] as List<String>).map((f) => Padding(
+                  if (plan.description.isNotEmpty)
+                    ...plan.description.map((f) => Padding(
                       padding: const EdgeInsets.only(bottom: 12),
                       child: Row(
                         children: [
                           Icon(Icons.check_circle_rounded, color: color, size: 18),
                           const SizedBox(width: 12),
-                          Expanded(child: Text(f, style: TextStyle(color: AppColors.text, fontSize: 13, fontWeight: FontWeight.w500))),
+                          Expanded(
+                            child: Text(
+                              f,
+                              style: TextStyle(color: AppColors.text, fontSize: 13, fontWeight: FontWeight.w500),
+                            ),
+                          ),
                         ],
                       ),
                     )),

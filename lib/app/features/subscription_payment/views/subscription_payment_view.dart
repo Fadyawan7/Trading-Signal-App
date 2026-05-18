@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../routes/app_routes.dart';
 import '../../../theme/app_colors.dart';
+import '../../../widgets/app_loading_overlay.dart';
+
 import '../viewmodel/subscription_payment_view_model.dart';
 
 class SubscriptionPaymentView extends GetView<SubscriptionPaymentViewModel> {
@@ -10,7 +11,13 @@ class SubscriptionPaymentView extends GetView<SubscriptionPaymentViewModel> {
 
   @override
   Widget build(BuildContext context) {
-    return const _SubscriptionPaymentBody();
+    return Obx(
+      () => AppLoadingOverlay(
+        isLoading: controller.isLoading.value,
+        message: 'Processing subscription...',
+        child: const _SubscriptionPaymentBody(),
+      ),
+    );
   }
 }
 
@@ -28,8 +35,9 @@ class _SubscriptionPaymentBodyState extends State<_SubscriptionPaymentBody> {
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.find<SubscriptionPaymentViewModel>();
     final args = (Get.arguments as Map<String, dynamic>?) ??
-        {'plan': 'Pro', 'price': '\$79', 'billing': 'monthly'};
+        {'plan': 'Pro', 'price': '\$79', 'billing': 'weekly', 'plan_id': '9'};
         
     final List<Map<String, dynamic>> cryptos = [
       {'id': 'btc', 'name': 'Bitcoin', 'symbol': 'BTC', 'icon': Icons.currency_bitcoin_rounded, 'color': const Color(0xFFF7931A)},
@@ -160,7 +168,7 @@ class _SubscriptionPaymentBodyState extends State<_SubscriptionPaymentBody> {
               if (method != null) _BottomAction(
                 price: args['price'] as String,
                 onTap: (method != 'crypto' || crypto != null)
-                    ? () => Get.offAllNamed(AppRoutes.traderDashboard)
+                    ? () => controller.purchaseSubscription(args['plan_id']?.toString() ?? '')
                     : null,
               ),
             ],
@@ -172,6 +180,7 @@ class _SubscriptionPaymentBodyState extends State<_SubscriptionPaymentBody> {
 }
 
 class _Header extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
     return Padding(

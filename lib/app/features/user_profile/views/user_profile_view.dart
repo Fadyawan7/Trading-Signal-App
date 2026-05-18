@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../core/services/session_service.dart';
 import '../../../routes/app_routes.dart';
 import '../../../theme/app_colors.dart';
 import '../../../widgets/app_loading_overlay.dart';
@@ -15,7 +16,7 @@ class UserProfileView extends GetView<UserProfileViewModel> {
     return Obx(
       () => AppLoadingOverlay(
         isLoading: controller.isLoading.value,
-        message: 'Signing you out...',
+        message: controller.loadingMessage.value,
         child: Scaffold(
           backgroundColor: AppColors.background,
           extendBody: true,
@@ -39,21 +40,26 @@ class UserProfileView extends GetView<UserProfileViewModel> {
               SafeArea(
                 child: Column(
                   children: [
-                    _Header(),
+                    const _Header(),
                     Expanded(
-                      child: ListView(
-                        padding: const EdgeInsets.fromLTRB(20, 12, 20, 100),
-                        children: [
-                          _ProfileCard(),
-                          const SizedBox(height: 24),
-                          _MyGroupsSection(),
-                          const SizedBox(height: 24),
-                          _QuickActionsSection(),
-                          const SizedBox(height: 24),
-                          _SettingsSection(),
-                          const SizedBox(height: 24),
-                          _LogoutButton(),
-                        ],
+                      child: RefreshIndicator(
+                        onRefresh: () => controller.getProfile(showLoading: false),
+                        color: AppColors.primary,
+                        backgroundColor: AppColors.card,
+                        child: ListView(
+                          padding: const EdgeInsets.fromLTRB(20, 12, 20, 100),
+                          children: const [
+                            _ProfileCard(),
+                            SizedBox(height: 24),
+                            _MyGroupsSection(),
+                            SizedBox(height: 24),
+                            _QuickActionsSection(),
+                            SizedBox(height: 24),
+                            _SettingsSection(),
+                            SizedBox(height: 24),
+                            _LogoutButton(),
+                          ],
+                        ),
                       ),
                     ),
                   ],
@@ -110,151 +116,169 @@ class _Header extends StatelessWidget {
   }
 }
 
-class _ProfileCard extends StatelessWidget {
+class _ProfileCard extends GetView<UserProfileViewModel> {
   const _ProfileCard();
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: AppColors.card,
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: AppColors.border),
-      ),
-      child: Column(
-        children: [
-          Row(
+    final session = Get.find<SessionService>();
+    return Obx(
+      () {
+        final user = session.user;
+        final initials =
+            user != null && user.name.isNotEmpty
+                ? user.name
+                    .trim()
+                    .split(' ')
+                    .map((e) => e[0])
+                    .take(2)
+                    .join()
+                    .toUpperCase()
+                : '??';
+
+        return Container(
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: AppColors.card,
+            borderRadius: BorderRadius.circular(24),
+            border: Border.all(color: AppColors.border),
+          ),
+          child: Column(
             children: [
-              Stack(
+              Row(
                 children: [
-                  Container(
-                    width: 80,
-                    height: 80,
-                    decoration: BoxDecoration(
-                      color: AppColors.backgroundSecondary,
-                      borderRadius: BorderRadius.circular(24),
-                      border: Border.all(color: AppColors.border),
-                    ),
-                    child: Center(
-                      child: Text(
-                        'AS',
-                        style: TextStyle(
-                          color: AppColors.text,
-                          fontSize: 28,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    right: 0,
-                    bottom: 0,
-                    child: InkWell(
-                      onTap: () => Get.toNamed(AppRoutes.editProfile),
-                      borderRadius: BorderRadius.circular(8),
-                      child: Container(
-                        width: 28,
-                        height: 28,
+                  Stack(
+                    children: [
+                      Container(
+                        width: 80,
+                        height: 80,
                         decoration: BoxDecoration(
-                          color: AppColors.primary,
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(
-                            color: AppColors.backgroundSecondary,
-                            width: 2,
+                          color: AppColors.backgroundSecondary,
+                          borderRadius: BorderRadius.circular(24),
+                          border: Border.all(color: AppColors.border),
+                        ),
+                        child: Center(
+                          child: Text(
+                            user?.avatar != null && user!.avatar!.isNotEmpty
+                                ? user.avatar!
+                                : initials,
+                            style: TextStyle(
+                              color: AppColors.text,
+                              fontSize: user?.avatar != null ? 40 : 28,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
-                        child: Icon(
-                          Icons.edit,
-                          color: AppColors.buttonText,
-                          size: 14,
+                      ),
+                      Positioned(
+                        right: 0,
+                        bottom: 0,
+                        child: InkWell(
+                          onTap: () => Get.toNamed(AppRoutes.editProfile),
+                          borderRadius: BorderRadius.circular(8),
+                          child: Container(
+                            width: 28,
+                            height: 28,
+                            decoration: BoxDecoration(
+                              color: AppColors.primary,
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(
+                                color: AppColors.backgroundSecondary,
+                                width: 2,
+                              ),
+                            ),
+                            child: Icon(
+                              Icons.edit,
+                              color: AppColors.buttonText,
+                              size: 14,
+                            ),
+                          ),
                         ),
                       ),
+                    ],
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          user?.name ?? 'Loading...',
+                          style: TextStyle(
+                            color: AppColors.text,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          user?.email ?? '',
+                          style: TextStyle(
+                            color: AppColors.mutedText,
+                            fontSize: 14,
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: AppColors.primary.withValues(alpha: 0.1),
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(
+                              color: AppColors.primary.withValues(alpha: 0.3),
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Icons.person_outline,
+                                color: AppColors.primary,
+                                size: 14,
+                              ),
+                              const SizedBox(width: 6),
+                              Text(
+                                user?.roles
+                                        .map((e) => e.displayName)
+                                        .join(', ') ??
+                                    'User Member',
+                                style: TextStyle(
+                                  color: AppColors.primary,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
               ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Alex Smith',
-                      style: TextStyle(
-                        color: AppColors.text,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
+              const SizedBox(height: 24),
+              Row(
+                children: [
+                  const Expanded(child: _MetricItem(value: '3', label: 'Groups')),
+                  const SizedBox(width: 12),
+                  const Expanded(
+                    child: _MetricItem(
+                      value: '+47%',
+                      label: 'ROI',
+                      isHighlight: true,
                     ),
-                    const SizedBox(height: 4),
-                    Text(
-                      'alex.smith@email.com',
-                      style: TextStyle(
-                        color: AppColors.mutedText,
-                        fontSize: 14,
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 4,
-                      ),
-                      decoration: BoxDecoration(
-                        color: AppColors.primary.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(
-                          color: AppColors.primary.withValues(alpha: 0.3),
-                        ),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            Icons.person_outline,
-                            color: AppColors.primary,
-                            size: 14,
-                          ),
-                          const SizedBox(width: 6),
-                          Text(
-                            'User Member',
-                            style: TextStyle(
-                              color: AppColors.primary,
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                  const SizedBox(width: 12),
+                  const Expanded(child: _MetricItem(value: '156', label: 'Signals')),
+                ],
               ),
             ],
           ),
-          const SizedBox(height: 24),
-          Row(
-            children: [
-              Expanded(
-                child: _MetricItem(value: '3', label: 'Groups'),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: _MetricItem(
-                  value: '+47%',
-                  label: 'ROI',
-                  isHighlight: true,
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: _MetricItem(value: '156', label: 'Signals'),
-              ),
-            ],
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
@@ -338,17 +362,17 @@ class _MyGroupsSection extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 16),
-        _GroupItem(
+        const _GroupItem(
           name: 'Crypto Elite Signals',
           date: 'Joined Jan 2026',
           icon: Icons.rocket_launch_rounded,
         ),
-        _GroupItem(
+        const _GroupItem(
           name: 'Forex Masters Club',
           date: 'Joined Feb 2026',
           icon: Icons.payments_rounded,
         ),
-        _GroupItem(
+        const _GroupItem(
           name: 'Gold Trading Pro',
           date: 'Joined Mar 2026',
           icon: Icons.emoji_events_rounded,
@@ -500,12 +524,12 @@ class _SettingsSection extends StatelessWidget {
           ),
           child: Column(
             children: [
-              _SettingItem(
+              const _SettingItem(
                 icon: Icons.notifications_none_rounded,
                 label: 'Notifications',
               ),
-              _SettingItem(icon: Icons.security_rounded, label: 'Security'),
-              _SettingItem(
+              const _SettingItem(icon: Icons.security_rounded, label: 'Security'),
+              const _SettingItem(
                 icon: Icons.help_outline_rounded,
                 label: 'Help & Support',
                 isLast: true,

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../routes/app_routes.dart';
 import '../../../theme/app_colors.dart';
+import '../../../widgets/app_loading_overlay.dart';
 import '../viewmodel/edit_profile_view_model.dart';
 
 class EditProfileView extends GetView<EditProfileViewModel> {
@@ -11,119 +11,112 @@ class EditProfileView extends GetView<EditProfileViewModel> {
   @override
   Widget build(BuildContext context) {
     return Obx(
-      () => Scaffold(
-        backgroundColor: AppColors.background,
-        body: Stack(
-          children: [
-            // Background Gradient
-            Positioned.fill(
-              child: Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      AppColors.backgroundSecondary,
-                      AppColors.background,
-                    ],
+      () => AppLoadingOverlay(
+        isLoading: controller.isLoading.value,
+        message: 'Updating profile...',
+        child: Scaffold(
+          backgroundColor: AppColors.background,
+          body: Stack(
+            children: [
+              // Background Gradient
+              Positioned.fill(
+                child: Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        AppColors.backgroundSecondary,
+                        AppColors.background,
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-            const _EditProfileBody(),
-          ],
+              const _EditProfileBody(),
+            ],
+          ),
         ),
       ),
     );
   }
 }
 
-class _EditProfileBody extends StatefulWidget {
+class _EditProfileBody extends StatelessWidget {
   const _EditProfileBody();
 
   @override
-  State<_EditProfileBody> createState() => _EditProfileBodyState();
-}
-
-class _EditProfileBodyState extends State<_EditProfileBody> {
-  String avatar = '👤';
-  final avatars = [
-    '👤', '👨', '👩', '🧑', '👨‍💼', '👩‍💼', '🧑‍💼', '😎',
-    '🤵', '👔', '💼', '🎯', '🚀', '💎', '⚡', '🔥',
-  ];
-
-  final nameController = TextEditingController(text: 'Alex Smith');
-  final emailController = TextEditingController(text: 'alex.smith@email.com');
-  final phoneController = TextEditingController(text: '+92 300 1234567');
-  final bioController = TextEditingController(
-    text: 'Passionate trader exploring crypto and forex markets.',
-  );
-
-  @override
-  void dispose() {
-    nameController.dispose();
-    emailController.dispose();
-    phoneController.dispose();
-    bioController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final controller = Get.find<EditProfileViewModel>();
+    final avatars = [
+      '👤',
+      '👨',
+      '👩',
+      '🧑',
+      '👨‍💼',
+      '👩‍💼',
+      '🧑‍💼',
+      '😎',
+      '🤵',
+      '👔',
+      '💼',
+      '🎯',
+      '🚀',
+      '💎',
+      '⚡',
+      '🔥',
+    ];
+
     return SafeArea(
       child: Column(
         children: [
-          _Header(onSave: () => Get.offNamed(AppRoutes.profile)),
+          _Header(onSave: () => controller.updateProfile()),
           Expanded(
             child: ListView(
               padding: const EdgeInsets.fromLTRB(20, 8, 20, 30),
               children: [
                 // Avatar Selection
-                _AvatarSection(
-                  currentAvatar: avatar,
-                  onAvatarSelected: (a) => setState(() => avatar = a),
-                  avatars: avatars,
+                Obx(
+                  () => _AvatarSection(
+                    currentAvatar: controller.avatar.value,
+                    onAvatarSelected: (a) => controller.avatar.value = a,
+                    avatars: avatars,
+                  ),
                 ),
                 const SizedBox(height: 24),
-                
+
                 // Form Fields
                 _InputField(
                   label: 'Full Name',
                   icon: Icons.person_outline_rounded,
-                  controller: nameController,
+                  controller: controller.nameController,
                   hint: 'Enter your name',
-                ),
-                const SizedBox(height: 16),
-                _InputField(
-                  label: 'Email Address',
-                  icon: Icons.email_outlined,
-                  controller: emailController,
-                  hint: 'Enter your email',
-                ),
-                const SizedBox(height: 16),
-                _InputField(
-                  label: 'Phone Number',
-                  icon: Icons.phone_outlined,
-                  controller: phoneController,
-                  hint: 'Enter phone number',
                 ),
                 const SizedBox(height: 16),
                 _InputField(
                   label: 'Bio',
                   icon: Icons.message_outlined,
-                  controller: bioController,
+                  controller: controller.bioController,
                   hint: 'Tell us about yourself',
                   maxLines: 3,
                 ),
                 const SizedBox(height: 4),
                 Align(
                   alignment: Alignment.centerRight,
-                  child: Text(
-                    '${bioController.text.length}/200 characters',
-                    style: TextStyle(color: AppColors.mutedText, fontSize: 10),
+                  child: ValueListenableBuilder<TextEditingValue>(
+                    valueListenable: controller.bioController,
+                    builder: (context, value, _) {
+                      return Text(
+                        '${value.text.length}/200 characters',
+                        style: TextStyle(
+                          color: AppColors.mutedText,
+                          fontSize: 10,
+                        ),
+                      );
+                    },
                   ),
                 ),
-                
+
                 const SizedBox(height: 24),
                 Text(
                   'Account Information',
@@ -140,11 +133,16 @@ class _EditProfileBodyState extends State<_EditProfileBody> {
                   label: 'Account Status',
                   value: 'Active User',
                   trailing: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 3,
+                    ),
                     decoration: BoxDecoration(
                       color: const Color(0xFF14B8A6).withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(6),
-                      border: Border.all(color: const Color(0xFF14B8A6).withValues(alpha: 0.2)),
+                      border: Border.all(
+                        color: const Color(0xFF14B8A6).withValues(alpha: 0.2),
+                      ),
                     ),
                     child: const Row(
                       mainAxisSize: MainAxisSize.min,
@@ -158,19 +156,23 @@ class _EditProfileBodyState extends State<_EditProfileBody> {
                           ),
                         ),
                         SizedBox(width: 4),
-                        Icon(Icons.check_circle_outline, color: Color(0xFF14B8A6), size: 12),
+                        Icon(
+                          Icons.check_circle_outline,
+                          color: Color(0xFF14B8A6),
+                          size: 12,
+                        ),
                       ],
                     ),
                   ),
                 ),
-                
+
                 const SizedBox(height: 24),
                 // Buttons
                 _ActionButton(
                   label: 'Save Changes',
                   icon: Icons.save_rounded,
                   isPrimary: true,
-                  onTap: () => Get.offNamed(AppRoutes.profile),
+                  onTap: () => controller.updateProfile(),
                 ),
                 const SizedBox(height: 10),
                 _ActionButton(
@@ -209,7 +211,11 @@ class _Header extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(color: AppColors.border),
               ),
-              child: Icon(Icons.arrow_back_ios_new_rounded, color: AppColors.text, size: 18),
+              child: Icon(
+                Icons.arrow_back_ios_new_rounded,
+                color: AppColors.text,
+                size: 18,
+              ),
             ),
           ),
           Text(
@@ -237,7 +243,11 @@ class _Header extends StatelessWidget {
                   ),
                 ],
               ),
-              child: const Icon(Icons.save_as_rounded, color: Colors.white, size: 20),
+              child: const Icon(
+                Icons.save_as_rounded,
+                color: Colors.white,
+                size: 20,
+              ),
             ),
           ),
         ],
@@ -297,7 +307,11 @@ class _AvatarSection extends StatelessWidget {
                     ),
                   ],
                 ),
-                child: Icon(Icons.camera_alt_outlined, color: AppColors.text, size: 16),
+                child: Icon(
+                  Icons.camera_alt_outlined,
+                  color: AppColors.text,
+                  size: 16,
+                ),
               ),
             ),
           ],
@@ -331,7 +345,9 @@ class _AvatarSection extends StatelessWidget {
                 borderRadius: BorderRadius.circular(10),
                 child: Container(
                   decoration: BoxDecoration(
-                    color: isSelected ? AppColors.primary.withValues(alpha: 0.1) : AppColors.card,
+                    color: isSelected
+                        ? AppColors.primary.withValues(alpha: 0.1)
+                        : AppColors.card,
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(
                       color: isSelected ? AppColors.primary : AppColors.border,
@@ -389,7 +405,11 @@ class _InputField extends StatelessWidget {
         TextField(
           controller: controller,
           maxLines: maxLines,
-          style: TextStyle(color: AppColors.text, fontSize: 14, fontWeight: FontWeight.w500),
+          style: TextStyle(
+            color: AppColors.text,
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+          ),
           decoration: InputDecoration(
             hintText: hint,
             hintStyle: TextStyle(color: AppColors.mutedText, fontSize: 13),
@@ -428,6 +448,7 @@ class _AccountInfoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final trailingWidget = trailing;
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
@@ -452,14 +473,11 @@ class _AccountInfoCard extends StatelessWidget {
               const SizedBox(height: 4),
               Text(
                 value,
-                style: TextStyle(
-                  color: AppColors.mutedText,
-                  fontSize: 11,
-                ),
+                style: TextStyle(color: AppColors.mutedText, fontSize: 11),
               ),
             ],
           ),
-          if (trailing != null) trailing!,
+          if (trailingWidget != null) trailingWidget,
         ],
       ),
     );

@@ -12,6 +12,8 @@ class SessionService extends GetxService {
   late SharedPreferences _preferences;
   final Rxn<AuthUser> currentUser = Rxn<AuthUser>();
 
+  AuthUser? get user => currentUser.value;
+
   Future<SessionService> init() async {
     _preferences = await SharedPreferences.getInstance();
     final userJson = _preferences.getString(_userKey);
@@ -33,7 +35,15 @@ class SessionService extends GetxService {
   Future<void> saveUser(AuthUser user) async {
     currentUser.value = user;
     await _preferences.setString(_userKey, jsonEncode(user.toJson()));
-    await _preferences.setBool(_roleSelectionCompletedKey, false);
+  }
+
+  Future<void> updateUser(AuthUser user) async {
+    final currentToken = currentUser.value?.token;
+    final updatedUser = AuthUser.fromJson({
+      ...user.toJson(),
+      if (currentToken != null && (user.token.isEmpty)) 'token': currentToken,
+    });
+    await saveUser(updatedUser);
   }
 
   Future<void> completeRoleSelection() async {

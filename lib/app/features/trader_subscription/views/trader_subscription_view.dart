@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import '../../../routes/app_routes.dart';
 import '../../../theme/app_colors.dart';
 import '../../../widgets/app_loading_overlay.dart';
+import '../../../widgets/market_bottom_nav.dart';
 import '../viewmodel/trader_subscription_view_model.dart';
 import '../../apply_trader/data/models/subscription_plan.dart';
 
@@ -18,6 +19,8 @@ class TraderSubscriptionView extends GetView<TraderSubscriptionViewModel> {
         message: 'Loading plans...',
         child: Scaffold(
           backgroundColor: AppColors.background,
+          extendBody: true,
+          bottomNavigationBar: const MarketBottomNav(currentIndex: 0),
           body: Stack(
             children: [
               // Background Gradient
@@ -43,6 +46,7 @@ class TraderSubscriptionView extends GetView<TraderSubscriptionViewModel> {
     );
   }
 }
+
 
 class _SubscriptionBody extends GetView<TraderSubscriptionViewModel> {
   const _SubscriptionBody();
@@ -110,14 +114,7 @@ class _SubscriptionBody extends GetView<TraderSubscriptionViewModel> {
 
             return _BottomAction(
               planName: selectedPlan.name,
-              onTap: () {
-                Get.toNamed(AppRoutes.subscriptionPayment, arguments: {
-                  'plan_id': selectedPlan.id.toString(),
-                  'plan': selectedPlan.name,
-                  'price': '\$${selectedPlan.price.toStringAsFixed(0)}',
-                  'billing': selectedPlan.type,
-                });
-              },
+              onTap: () => controller.buySubscriptionPlan(selectedPlan.id),
             );
           }),
         ],

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../core/services/session_service.dart';
 import '../../../routes/app_routes.dart';
 import '../../../theme/app_colors.dart';
 import '../../../widgets/market_bottom_nav.dart';
+import '../../trader_dashboard/views/trader_dashboard_view.dart';
+import '../../trader_subscription/views/trader_subscription_view.dart';
 import '../viewmodel/home_view_model.dart';
 
 class HomeView extends GetView<HomeViewModel> {
@@ -11,12 +14,22 @@ class HomeView extends GetView<HomeViewModel> {
 
   @override
   Widget build(BuildContext context) {
+    final sessionService = Get.find<SessionService>();
     return Obx(
-      () => Scaffold(
-        backgroundColor: AppColors.background,
-        extendBody: true,
-        bottomNavigationBar: const MarketBottomNav(currentIndex: 0),
-        body: Stack(
+      () {
+        if (sessionService.isActiveRoleTrader) {
+          if (!sessionService.rxIsSubscription.value) {
+            return const TraderSubscriptionView();
+          } else {
+            return const TraderDashboardView();
+          }
+        }
+
+        return Scaffold(
+          backgroundColor: AppColors.background,
+          extendBody: true,
+          bottomNavigationBar: const MarketBottomNav(currentIndex: 0),
+          body: Stack(
           children: [
             Positioned.fill(
               child: Container(
@@ -33,36 +46,42 @@ class HomeView extends GetView<HomeViewModel> {
               ),
             ),
             SafeArea(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.fromLTRB(20, 16, 20, 80),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const _Header(),
-                    const SizedBox(height: 16),
-                    const _SearchBar(),
-                    const SizedBox(height: 20),
-                    const _FeaturedCard(),
-                    const SizedBox(height: 24),
-                    const _SectionHeader(title: 'Categories'),
-                    const SizedBox(height: 12),
-                    const _CategoriesGrid(),
-                    const SizedBox(height: 24),
-                    const _SectionHeader(title: 'Top Trading Groups'),
-                    const SizedBox(height: 12),
-                    const _TradingGroupsList(),
-                    const SizedBox(height: 24),
-                    const _SectionHeader(title: 'Verified Traders'),
-                    const SizedBox(height: 12),
-                    const _VerifiedTradersList(),
-                  ],
+              child: RefreshIndicator(
+                color: AppColors.primary,
+                backgroundColor: AppColors.card,
+                onRefresh: () => controller.refreshHome(),
+                child: SingleChildScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  padding: const EdgeInsets.fromLTRB(20, 16, 20, 80),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const _Header(),
+                      const SizedBox(height: 16),
+                      const _SearchBar(),
+                      const SizedBox(height: 20),
+                      const _FeaturedCard(),
+                      const SizedBox(height: 24),
+                      const _SectionHeader(title: 'Categories'),
+                      const SizedBox(height: 12),
+                      const _CategoriesGrid(),
+                      const SizedBox(height: 24),
+                      const _SectionHeader(title: 'Top Trading Groups'),
+                      const SizedBox(height: 12),
+                      const _TradingGroupsList(),
+                      const SizedBox(height: 24),
+                      const _SectionHeader(title: 'Verified Traders'),
+                      const SizedBox(height: 12),
+                      const _VerifiedTradersList(),
+                    ],
+                  ),
                 ),
               ),
             ),
           ],
         ),
-      ),
-    );
+      );
+    });
   }
 }
 
@@ -194,6 +213,7 @@ class _FeaturedCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final sessionService = Get.find<SessionService>();
     return InkWell(
       onTap: () => Get.toNamed(AppRoutes.explore),
       borderRadius: BorderRadius.circular(24),
@@ -255,64 +275,88 @@ class _FeaturedCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 20),
-          Row(
-            children: [
-              Expanded(
-                child: InkWell(
-                  onTap: () => Get.toNamed('/explore'),
-                  borderRadius: BorderRadius.circular(12),
-                  child: Container(
-                    height: 42,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: const Center(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Explore Groups',
-                            style: TextStyle(
-                              color: Color(0xFF14B8A6),
-                              fontWeight: FontWeight.bold,
-                              fontSize: 13,
-                            ),
-                          ),
-                          SizedBox(width: 4),
-                          Icon(Icons.arrow_forward, color: Color(0xFF14B8A6), size: 12),
-                        ],
+          Obx(() {
+            final isTrader = sessionService.isTrader;
+            final isApplied = sessionService.rxTraderStatus.value == 'applied';
+
+            return Row(
+              children: [
+                Expanded(
+                  child: InkWell(
+                    onTap: () => Get.toNamed('/explore'),
+                    borderRadius: BorderRadius.circular(12),
+                    child: Container(
+                      height: 42,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12),
                       ),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: InkWell(
-                  onTap: () => Get.toNamed('/apply-trader'),
-                  borderRadius: BorderRadius.circular(12),
-                  child: Container(
-                    height: 42,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: Colors.white.withOpacity(0.4)),
-                    ),
-                    child: const Center(
-                      child: Text(
-                        'Become a Trader',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 13,
+                      child: const Center(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Explore Groups',
+                              style: TextStyle(
+                                color: Color(0xFF14B8A6),
+                                fontWeight: FontWeight.bold,
+                                fontSize: 13,
+                              ),
+                            ),
+                            SizedBox(width: 4),
+                            Icon(Icons.arrow_forward, color: Color(0xFF14B8A6), size: 12),
+                          ],
                         ),
                       ),
                     ),
                   ),
                 ),
-              ),
-            ],
-          ),
+                if (!isTrader) ...[
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: InkWell(
+                      onTap: () {
+                        if (isApplied) {
+                          Get.defaultDialog(
+                            title: 'Application Under Review',
+                            titleStyle: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
+                            backgroundColor: const Color(0xFF1E293B),
+                            contentPadding: const EdgeInsets.all(20),
+                            middleText: 'Your trader application has been submitted successfully and is currently under review by our admin team. We will notify you once your application has been approved!',
+                            middleTextStyle: const TextStyle(color: Color(0xFF94A3B8), fontSize: 14),
+                            textConfirm: 'Okay',
+                            confirmTextColor: Colors.white,
+                            buttonColor: const Color(0xFF14B8A6),
+                            onConfirm: () => Get.back(),
+                          );
+                        } else {
+                          Get.toNamed('/apply-trader');
+                        }
+                      },
+                      borderRadius: BorderRadius.circular(12),
+                      child: Container(
+                        height: 42,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: Colors.white.withOpacity(0.4)),
+                        ),
+                        child: Center(
+                          child: Text(
+                            isApplied ? 'Pending Review' : 'Become a Trader',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ],
+            );
+          }),
         ],
       ),
     ),

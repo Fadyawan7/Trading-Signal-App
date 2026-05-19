@@ -81,6 +81,41 @@ class ApiClient {
     return _parseResponse(method: 'GET', uri: uri, response: response);
   }
 
+  Future<Map<String, dynamic>> delete(
+    String endpoint, {
+    Map<String, dynamic>? body,
+    Map<String, String>? headers,
+  }) async {
+    final uri = Uri.parse(AppNetworkConstants.baseUrl).resolve(endpoint);
+    final requestBody = body ?? <String, dynamic>{};
+
+    _logRequest(method: 'DELETE', uri: uri, body: requestBody);
+
+    http.Response response;
+    try {
+      response = await _httpClient
+          .delete(
+            uri,
+            headers:
+                const {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                  }.map((key, value) => MapEntry(key, value))
+                  ..addAll(headers ?? const <String, String>{}),
+            body: jsonEncode(requestBody),
+          )
+          .timeout(AppNetworkConstants.requestTimeout);
+    } on http.ClientException catch (error) {
+      _logFailure(method: 'DELETE', uri: uri, error: error.toString());
+      throw ApiException('Unable to connect to server. Please try again.');
+    } catch (error) {
+      _logFailure(method: 'DELETE', uri: uri, error: error.toString());
+      throw ApiException('Request failed. Please try again.');
+    }
+
+    return _parseResponse(method: 'DELETE', uri: uri, response: response);
+  }
+
   Future<Map<String, dynamic>> postMultipart(
     String endpoint, {
     required Map<String, String> fields,

@@ -7,6 +7,8 @@ import '../../../core/base/base_view_model.dart';
 import '../../../core/network/api_exception.dart';
 import '../../../core/services/session_service.dart';
 import '../../apply_trader/domain/repositories/trader_repository.dart';
+import '../../user_profile/domain/repositories/profile_repository.dart';
+
 
 
 class ApplyTraderViewModel extends BaseViewModel {
@@ -259,6 +261,22 @@ class ApplyTraderViewModel extends BaseViewModel {
     });
 
     if (isSuccess) {
+      try {
+        final profileRepository = Get.find<ProfileRepository>();
+        final rolesResponse = await profileRepository.getUserRoles();
+        if (rolesResponse.status && rolesResponse.data != null) {
+          final data = rolesResponse.data!;
+          final roles = data.roles.map((e) => e.name).toList();
+          await _sessionService.saveRolesData(
+            roles: roles,
+            traderStatus: data.traderStatus,
+            isSubscription: data.isSubscription,
+          );
+        }
+      } catch (e) {
+        debugPrint('Error updating roles after application: $e');
+      }
+
       showSuccess(successMessage ?? 'Trader application submitted successfully');
       // Proceed to subscriptions
       Get.toNamed('/trader-subscription');

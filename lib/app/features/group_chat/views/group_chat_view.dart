@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import '../../../routes/app_routes.dart';
 import '../../../theme/app_colors.dart';
 import '../viewmodel/group_chat_view_model.dart';
+import 'group_members_view.dart';
 
 class GroupChatView extends GetView<GroupChatViewModel> {
   const GroupChatView({super.key});
@@ -144,7 +145,7 @@ class _GroupChatBodyState extends State<_GroupChatBody> {
   }
 }
 
-class _ChatHeader extends StatelessWidget {
+class _ChatHeader extends GetView<GroupChatViewModel> {
   final bool isAdmin;
   final bool showSettings;
   final VoidCallback onSettingsToggle;
@@ -170,41 +171,97 @@ class _ChatHeader extends StatelessWidget {
             onTap: () => Get.back(),
           ),
           const SizedBox(width: 12),
-          Container(
-            width: 44,
-            height: 44,
-            decoration: BoxDecoration(
-              color: const Color(0xFF13242C),
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: AppColors.border),
-            ),
-            child: const Center(
-              child: Icon(Icons.rocket_launch_rounded, color: Color(0xFF14B8A6), size: 24),
-            ),
-          ),
-          const SizedBox(width: 12),
           Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Crypto Elite Signals',
-                  style: TextStyle(
-                    color: AppColors.text,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
+            child: Obx(() {
+              final group = controller.rxGroup.value;
+              final String name = group?.groupName ?? 'Loading chat...';
+              final String membersCount = group != null ? '${group.membersCount} members' : 'Loading details...';
+              final String? icon = group?.groupIcon;
+              final bool isUrl = icon != null &&
+                  (icon.startsWith('http://') ||
+                      icon.startsWith('https://') ||
+                      icon.contains('/'));
+
+              return InkWell(
+                onTap: () {
+                  if (group != null) {
+                    Get.to(() => const GroupMembersView());
+                  }
+                },
+                borderRadius: BorderRadius.circular(12),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 4),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 40,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          color: AppColors.primary.withValues(alpha: 0.15),
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(color: AppColors.border),
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(9),
+                          child: Center(
+                            child: icon != null && icon.isNotEmpty
+                                ? (isUrl
+                                    ? Image.network(
+                                        icon,
+                                        fit: BoxFit.cover,
+                                        width: 40,
+                                        height: 40,
+                                        errorBuilder: (_, __, ___) => Icon(
+                                          Icons.rocket_launch_rounded,
+                                          color: AppColors.primary,
+                                          size: 20,
+                                        ),
+                                      )
+                                    : Text(
+                                        icon,
+                                        style: const TextStyle(fontSize: 20),
+                                      ))
+                                : Icon(
+                                    Icons.rocket_launch_rounded,
+                                    color: AppColors.primary,
+                                    size: 20,
+                                  ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              name,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                color: AppColors.text,
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 2),
+                            Text(
+                              membersCount,
+                              style: TextStyle(
+                                color: AppColors.mutedText,
+                                fontSize: 11,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                Text(
-                  'John Martinez • 850 members',
-                  style: TextStyle(
-                    color: AppColors.mutedText,
-                    fontSize: 12,
-                  ),
-                ),
-              ],
-            ),
+              );
+            }),
           ),
+          const SizedBox(width: 8),
           if (isAdmin)
             _IconButton(
               icon: Icons.settings_outlined,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../core/services/session_service.dart';
 import '../../../routes/app_routes.dart';
 import '../../../theme/app_colors.dart';
 import '../../../widgets/market_bottom_nav.dart';
@@ -12,64 +13,22 @@ class TraderDashboardView extends GetView<TraderDashboardViewModel> {
 
   @override
   Widget build(BuildContext context) {
-    const stats = [
-      {
-        'label': 'Total Members',
-        'value': '1,270',
-        'icon': Icons.groups,
-      },
-      {
-        'label': 'Monthly Revenue',
-        'value': '\$14,715',
-        'icon': Icons.attach_money,
-      },
-      {
-        'label': 'Avg. ROI',
-        'value': '+94%',
-        'icon': Icons.trending_up,
-      },
-      {
-        'label': 'Success Rate',
-        'value': '78%',
-        'icon': Icons.bar_chart,
-      },
-    ];
-
-    const groups = [
-      {
-        'id': '1',
-        'name': 'Crypto Elite Signals',
-        'avatar': Icons.currency_bitcoin,
-        'members': '850/1000',
-        'revenue': '\$8,415',
-        'growth': '+12%',
-      },
-      {
-        'id': '2',
-        'name': 'Advanced Crypto Pro',
-        'avatar': Icons.currency_bitcoin,
-        'members': '420/500',
-        'revenue': '\$6,300',
-        'growth': '+8%',
-      },
-    ];
-
     const activity = [
       {
         'title': 'New member joined',
-        'group': 'Crypto Elite Signals',
+        'group': 'Gold Trading Group',
         'time': '2 hours ago',
         'icon': Icons.person_add,
       },
       {
         'title': 'Signal sent',
-        'group': 'Advanced Crypto Pro',
+        'group': 'Gold Trading Group',
         'time': '4 hours ago',
         'icon': Icons.trending_up,
       },
       {
         'title': 'Subscription renewed',
-        'group': 'Crypto Elite Signals',
+        'group': 'Gold Trading Group',
         'time': '1 day ago',
         'icon': Icons.attach_money,
       },
@@ -81,223 +40,424 @@ class TraderDashboardView extends GetView<TraderDashboardViewModel> {
       bottomNavigationBar: const MarketBottomNav(currentIndex: 0),
       body: SafeArea(
         bottom: false,
-        child: ListView(
-          padding: const EdgeInsets.fromLTRB(24, 16, 24, 90),
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        child: RefreshIndicator(
+          color: AppColors.primary,
+          backgroundColor: AppColors.card,
+          onRefresh: () => controller.fetchDashboardData(),
+          child: Obx(() {
+            final data = controller.rxDashboardData.value;
+            if (data == null) {
+              return const Center(
+                child: CircularProgressIndicator(color: AppColors.primary),
+              );
+            }
+
+            final user = data.user;
+            final statsInfo = data.stats;
+            final subInfo = data.subscription;
+            final groupList = data.groups;
+
+            final stats = [
+              {
+                'label': 'Total Members',
+                'value': statsInfo.totalMembers.toString(),
+                'icon': Icons.groups,
+              },
+              {
+                'label': 'Monthly Revenue',
+                'value': '\$${statsInfo.monthlyRevenue}',
+                'icon': Icons.attach_money,
+              },
+              {
+                'label': 'Total Signals',
+                'value': statsInfo.totalSignals.toString(),
+                'icon': Icons.trending_up,
+              },
+              {
+                'label': 'Success Rate',
+                'value': '${statsInfo.successRate}%',
+                'icon': Icons.bar_chart,
+              },
+            ];
+
+            final session = Get.find<SessionService>();
+            final sessionUser = session.currentUser.value;
+            final avatarUrl = sessionUser?.profileImage ?? sessionUser?.avatar ?? user.profileImage ?? user.avatar;
+
+            return ListView(
+              padding: const EdgeInsets.fromLTRB(24, 16, 24, 90),
               children: [
-                InkWell(
-                  onTap: () => Get.toNamed(AppRoutes.traderAccount),
-                  child: Row(
-                    children: [
-                      _Avatar(),
-                      SizedBox(width: 10),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    InkWell(
+                      onTap: () => Get.toNamed(AppRoutes.traderAccount),
+                      child: Row(
                         children: [
-                          Text(
-                            'Trader Dashboard',
-                            style: TextStyle(
-                              fontSize: 11,
-                              color: AppColors.mutedText,
-                            ),
-                          ),
-                          Text(
-                            'John Martinez',
-                            style: TextStyle(fontWeight: FontWeight.w600),
+                          _Avatar(avatarUrl: avatarUrl),
+                          const SizedBox(width: 10),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Trader Dashboard',
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  color: AppColors.mutedText,
+                                ),
+                              ),
+                              Text(
+                                user.name.isNotEmpty ? user.name : 'Trader',
+                                style: const TextStyle(fontWeight: FontWeight.w600),
+                              ),
+                            ],
                           ),
                         ],
                       ),
-                    ],
-                  ),
-                ),
-                Row(
-                  children: [
-                    GestureDetector(
-                      //   onTap: () => Get.offNamed(AppRoutes.chats),
-                      child: Icon(
-                        Icons.notifications_none,
-                        size: 20,
-                        color: AppColors.mutedText,
-                      ),
                     ),
-                    SizedBox(width: 10),
-                    GestureDetector(
-                      //  onTap: () => Get.offNamed(AppRoutes.chats),
-                      child: Icon(
-                        Icons.settings,
-                        size: 20,
-                        color: AppColors.mutedText,
-                      ),
+                    Row(
+                      children: [
+                        GestureDetector(
+                          child: Icon(
+                            Icons.notifications_none,
+                            size: 20,
+                            color: AppColors.mutedText,
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        GestureDetector(
+                          child: Icon(
+                            Icons.settings,
+                            size: 20,
+                            color: AppColors.mutedText,
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            GridView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: stats.length,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                mainAxisSpacing: 10,
-                crossAxisSpacing: 10,
-                childAspectRatio: 1.2,
-              ),
-              itemBuilder: (_, i) {
-                final s = stats[i];
-                return MarketPanel(
-                  radius: 16,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        width: 44,
-                        height: 44,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          color: AppColors.primary.withValues(alpha: 0.15),
-                        ),
-                        child: Icon(s['icon']! as IconData, color: AppColors.primary),
-                      ),
-                      const Spacer(),
-                      Text(
-                        s['value']! as String,
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      Text(
-                        s['label']! as String,
-                        style: TextStyle(
-                          fontSize: 11,
-                          color: AppColors.mutedText,
-                        ),
-                      ),
-                    ],
+                const SizedBox(height: 10),
+                GridView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  padding: EdgeInsets.zero,
+                  itemCount: stats.length,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    mainAxisSpacing: 10,
+                    crossAxisSpacing: 10,
+                    childAspectRatio: 1.2,
                   ),
-                );
-              },
-            ),
-            const SizedBox(height: 12),
-            InkWell(
-              onTap: () => Get.toNamed(AppRoutes.traderAccount),
-              child: MarketPanel(
-                radius: 16,
-                color: AppColors.card,
-                child: Row(
-                  children: [
-                    _Crown(),
-                    SizedBox(width: 10),
-                    Expanded(
+                  itemBuilder: (_, i) {
+                    final s = stats[i];
+                    return MarketPanel(
+                      radius: 16,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          Container(
+                            width: 44,
+                            height: 44,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12),
+                              color: AppColors.primary.withValues(alpha: 0.15),
+                            ),
+                            child: Icon(s['icon']! as IconData, color: AppColors.primary),
+                          ),
+                          const Spacer(),
                           Text(
-                            'Pro Plan Active',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 13,
+                            s['value']! as String,
+                            style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w700,
                             ),
                           ),
                           Text(
-                            '2 of 3 groups • 1,270 of 2,000 members',
+                            s['label']! as String,
                             style: TextStyle(
-                              color: AppColors.mutedText,
                               fontSize: 11,
+                              color: AppColors.mutedText,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+                if (subInfo != null) ...[
+                  const SizedBox(height: 10),
+                  InkWell(
+                    onTap: () => Get.toNamed(AppRoutes.traderAccount),
+                    child: MarketPanel(
+                      radius: 16,
+                      color: AppColors.card,
+                      child: Row(
+                        children: [
+                          const _Crown(),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  '${subInfo.planName} Plan Active',
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 13,
+                                  ),
+                                ),
+                                Text(
+                                  subInfo.isUnlimitedGroups 
+                                    ? '${subInfo.activeGroups} groups • ${subInfo.totalMembers} of ${subInfo.isUnlimitedMembers ? 'Unlimited' : subInfo.membersLimit} members'
+                                    : '${subInfo.activeGroups} of ${subInfo.totalGroupsLimit} groups • ${subInfo.totalMembers} of ${subInfo.isUnlimitedMembers ? 'Unlimited' : subInfo.membersLimit} members',
+                                  style: TextStyle(
+                                    color: AppColors.mutedText,
+                                    fontSize: 11,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Text(
+                            '${subInfo.daysLeft} days left',
+                            style: TextStyle(
+                              color: AppColors.primary,
+                              fontSize: 11,
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
                         ],
                       ),
                     ),
-                    Text(
-                      '26 days left',
-                      style: TextStyle(
-                        color: AppColors.primary,
-                        fontSize: 11,
-                        fontWeight: FontWeight.w600,
+                  ),
+                ],
+                const SizedBox(height: 12),
+                Row(
+                  children: [
+                    Expanded(
+                      child: PrimaryButton(
+                        label: 'Create Group',
+                        icon: const Icon(Icons.add, size: 16),
+                        onTap: () => Get.toNamed(AppRoutes.createGroup),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: InkWell(
+                        onTap: () {},
+                        child: MarketPanel(
+                          radius: 12,
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          child: const Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.bar_chart, color: AppColors.primary),
+                              SizedBox(width: 6),
+                              Text(
+                                'Analytics',
+                                style: TextStyle(fontWeight: FontWeight.w600),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                     ),
                   ],
                 ),
-              ),
-            ),
-            const SizedBox(height: 12),
-            Row(
-              children: [
-                Expanded(
-                  child: PrimaryButton(
-                    label: 'Create Group',
-                    icon: Icon(Icons.add, size: 16),
-                    onTap: () => Get.toNamed(AppRoutes.createGroup),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: InkWell(
-                    onTap: () {},
-                    child: MarketPanel(
-                      radius: 12,
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.bar_chart, color: AppColors.primary),
-                          SizedBox(width: 6),
-                          Text(
-                            'Analytics',
-                            style: TextStyle(fontWeight: FontWeight.w600),
-                          ),
-                        ],
+                const SizedBox(height: 12),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      'My Trading Groups',
+                      style: TextStyle(fontWeight: FontWeight.w600),
+                    ),
+                    InkWell(
+                      onTap: () => Get.toNamed(AppRoutes.createGroup),
+                      child: const Text(
+                        '+ New Group',
+                        style: TextStyle(color: AppColors.accent, fontSize: 12),
                       ),
                     ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                if (groupList.isEmpty)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 24),
+                    child: Center(
+                      child: Text(
+                        'No trading groups created yet.',
+                        style: TextStyle(color: AppColors.mutedText, fontSize: 13),
+                      ),
+                    ),
+                  )
+                else
+                  ...groupList.map(
+                    (g) {
+                      final double growthRate = (g.growthRate is num) ? (g.growthRate as num).toDouble() : 0.0;
+                      final growthText = growthRate >= 0 ? '+${growthRate.toStringAsFixed(0)}%' : '${growthRate.toStringAsFixed(0)}%';
+
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 10),
+                        child: MarketPanel(
+                          radius: 16,
+                          child: Column(
+                            children: [
+                              Row(
+                                children: [
+                                  Container(
+                                    width: 52,
+                                    height: 52,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(14),
+                                      color: AppColors.primary.withValues(alpha: 0.15),
+                                      border: Border.all(color: AppColors.border),
+                                    ),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(14),
+                                      child: g.groupIcon != null && g.groupIcon!.isNotEmpty
+                                          ? Image.network(
+                                              g.groupIcon!,
+                                              fit: BoxFit.cover,
+                                              errorBuilder: (_, __, ___) => const Icon(
+                                                Icons.group,
+                                                size: 24,
+                                                color: AppColors.primary,
+                                              ),
+                                            )
+                                          : const Icon(
+                                              Icons.group,
+                                              size: 24,
+                                              color: AppColors.primary,
+                                            ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 10),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          g.name,
+                                          style: const TextStyle(fontWeight: FontWeight.w600),
+                                        ),
+                                        Text(
+                                          '${g.members} members (Limit: ${g.limit})',
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            color: AppColors.mutedText,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  InkWell(
+                                    onTap: () => Get.toNamed(
+                                      AppRoutes.groupChat,
+                                      arguments: {'groupId': g.id.toString()},
+                                    ),
+                                    child: Container(
+                                      padding: const EdgeInsets.all(8),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: AppColors.primary.withValues(alpha: 0.15),
+                                      ),
+                                      child: const Icon(
+                                        Icons.message,
+                                        size: 16,
+                                        color: AppColors.primary,
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  InkWell(
+                                    onTap: () => controller.showDeleteGroupDialog(context, g.id),
+                                    child: Container(
+                                      padding: const EdgeInsets.all(8),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: Colors.red.withValues(alpha: 0.15),
+                                      ),
+                                      child: const Icon(
+                                        Icons.delete_outline_rounded,
+                                        size: 16,
+                                        color: Colors.red,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 10),
+                              Container(
+                                height: 8,
+                                decoration: BoxDecoration(
+                                  color: AppColors.background,
+                                  borderRadius: BorderRadius.circular(999),
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: _tile(
+                                      '\$${g.monthlyRevenue}',
+                                      'Monthly Revenue',
+                                      true,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Expanded(
+                                    child: _tile(
+                                      growthText,
+                                      'Growth Rate',
+                                      growthRate >= 0,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
                   ),
+                const SizedBox(height: 8),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      'Recent Activity',
+                      style: TextStyle(fontWeight: FontWeight.w600),
+                    ),
+                    InkWell(
+                      onTap: () => Get.toNamed(AppRoutes.traderInbox),
+                      child: const Text(
+                        'View All →',
+                        style: TextStyle(color: AppColors.accent, fontSize: 12),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'My Trading Groups',
-                  style: TextStyle(fontWeight: FontWeight.w600),
-                ),
-                InkWell(
-                  onTap: () => Get.toNamed(AppRoutes.createGroup),
-                  child: Text(
-                    '+ New Group',
-                    style: TextStyle(color: AppColors.accent, fontSize: 12),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            ...groups.map(
-              (g) => Padding(
-                padding: const EdgeInsets.only(bottom: 10),
-                child: MarketPanel(
-                  radius: 16,
-                  child: Column(
-                    children: [
-                      Row(
+                const SizedBox(height: 8),
+                ...activity.map(
+                  (a) => Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: MarketPanel(
+                      radius: 14,
+                      padding: const EdgeInsets.all(12),
+                      child: Row(
                         children: [
                           Container(
-                            width: 52,
-                            height: 52,
-                            alignment: Alignment.center,
+                            width: 40,
+                            height: 40,
                             decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(14),
-                              color: AppColors.primary.withValues(alpha: 0.15),
+                              borderRadius: BorderRadius.circular(10),
+                              gradient: const LinearGradient(
+                                colors: [AppColors.primary, AppColors.accent],
+                              ),
                             ),
-                            child: Icon(
-                              g['avatar']! as IconData,
-                              size: 28,
-                              color: AppColors.primary,
-                            ),
+                            child: Icon(a['icon']! as IconData, size: 18),
                           ),
                           const SizedBox(width: 10),
                           Expanded(
@@ -305,157 +465,37 @@ class TraderDashboardView extends GetView<TraderDashboardViewModel> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  g['name']! as String,
-                                  style: TextStyle(fontWeight: FontWeight.w600),
+                                  a['title']! as String,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 13,
+                                  ),
                                 ),
                                 Text(
-                                  g['members']! as String,
+                                  a['group']! as String,
                                   style: TextStyle(
-                                    fontSize: 12,
                                     color: AppColors.mutedText,
+                                    fontSize: 11,
                                   ),
                                 ),
                               ],
                             ),
                           ),
-                          InkWell(
-                            onTap: () => Get.toNamed(
-                              AppRoutes.groupChat,
-                              arguments: {'groupId': g['id']},
-                            ),
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 10,
-                                vertical: 8,
-                              ),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                gradient: const LinearGradient(
-                                  colors: [AppColors.primary, AppColors.accent],
-                                ),
-                              ),
-                              child: Row(
-                                children: [
-                                  Icon(Icons.message, size: 14),
-                                  SizedBox(width: 4),
-                                  Text(
-                                    'Manage',
-                                    style: TextStyle(
-                                      fontSize: 11,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ],
-                              ),
+                          Text(
+                            a['time']! as String,
+                            style: TextStyle(
+                              color: AppColors.mutedText,
+                              fontSize: 10,
                             ),
                           ),
                         ],
                       ),
-                      const SizedBox(height: 10),
-                      Container(
-                        height: 8,
-                        decoration: BoxDecoration(
-                          color: AppColors.background,
-                          borderRadius: BorderRadius.circular(999),
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: _tile(
-                              g['revenue']! as String,
-                              'Monthly Revenue',
-                              true,
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: _tile(
-                              g['growth']! as String,
-                              'Growth Rate',
-                              false,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 8),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Recent Activity',
-                  style: TextStyle(fontWeight: FontWeight.w600),
-                ),
-                InkWell(
-                  onTap: () => Get.toNamed(AppRoutes.traderInbox),
-                  child: Text(
-                    'View All →',
-                    style: TextStyle(color: AppColors.accent, fontSize: 12),
+                    ),
                   ),
                 ),
               ],
-            ),
-            const SizedBox(height: 8),
-            ...activity.map(
-              (a) => Padding(
-                padding: const EdgeInsets.only(bottom: 8),
-                child: MarketPanel(
-                  radius: 14,
-                  padding: const EdgeInsets.all(12),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 40,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          gradient: const LinearGradient(
-                            colors: [AppColors.primary, AppColors.accent],
-                          ),
-                        ),
-                        child: Icon(a['icon']! as IconData, size: 18),
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              a['title']! as String,
-                              style: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 13,
-                              ),
-                            ),
-                            Text(
-                              a['group']! as String,
-                              style: TextStyle(
-                                color: AppColors.mutedText,
-                                fontSize: 11,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Text(
-                        a['time']! as String,
-                        style: TextStyle(
-                          color: AppColors.mutedText,
-                          fontSize: 10,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ],
+            );
+          }),
         ),
       ),
     );
@@ -491,18 +531,39 @@ class TraderDashboardView extends GetView<TraderDashboardViewModel> {
 }
 
 class _Avatar extends StatelessWidget {
-  const _Avatar();
+  final String? avatarUrl;
+  const _Avatar({this.avatarUrl});
+
   @override
   Widget build(BuildContext context) {
+    final bool isUrl = avatarUrl != null &&
+        (avatarUrl!.startsWith('http://') || avatarUrl!.startsWith('https://') || avatarUrl!.contains('/'));
+
     return Container(
       width: 40,
       height: 40,
-      alignment: Alignment.center,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(14),
         color: AppColors.primary.withValues(alpha: 0.15),
+        border: Border.all(color: AppColors.border),
       ),
-      child: Icon(Icons.person, size: 24, color: AppColors.primary),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(14),
+        child: Center(
+          child: avatarUrl != null && avatarUrl!.isNotEmpty
+              ? (isUrl
+                  ? Image.network(
+                      avatarUrl!,
+                      fit: BoxFit.cover,
+                      errorBuilder: (_, __, ___) => const Icon(Icons.person, size: 20, color: AppColors.primary),
+                    )
+                  : Text(
+                      avatarUrl!,
+                      style: const TextStyle(fontSize: 22),
+                    ))
+              : const Icon(Icons.person, size: 20, color: AppColors.primary),
+        ),
+      ),
     );
   }
 }

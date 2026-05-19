@@ -48,16 +48,18 @@ class UserProfileView extends GetView<UserProfileViewModel> {
                         backgroundColor: AppColors.card,
                         child: ListView(
                           padding: const EdgeInsets.fromLTRB(20, 12, 20, 100),
-                          children: const [
-                            _ProfileCard(),
-                            SizedBox(height: 24),
-                            _MyGroupsSection(),
-                            SizedBox(height: 24),
-                            _QuickActionsSection(),
-                            SizedBox(height: 24),
-                            _SettingsSection(),
-                            SizedBox(height: 24),
-                            _LogoutButton(),
+                          children: [
+                            const _ProfileCard(),
+                            const SizedBox(height: 16),
+                            const _RoleSwitchSection(),
+                            const SizedBox(height: 16),
+                            const _MyGroupsSection(),
+                            const SizedBox(height: 24),
+                            const _QuickActionsSection(),
+                            const SizedBox(height: 24),
+                            const _SettingsSection(),
+                            const SizedBox(height: 24),
+                            const _LogoutButton(),
                           ],
                         ),
                       ),
@@ -387,6 +389,7 @@ class _QuickActionsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final session = Get.find<SessionService>();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -399,26 +402,62 @@ class _QuickActionsSection extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 16),
-        Row(
-          children: [
-            Expanded(
-              child: _ActionCard(
-                title: 'Explore Groups',
-                icon: Icons.groups_outlined,
-                onTap: () => Get.toNamed(AppRoutes.explore),
+        Obx(() {
+          final isTrader = session.isTrader;
+          final isApplied = session.rxTraderStatus.value == 'applied';
+
+          if (isTrader) {
+            return Row(
+              children: [
+                Expanded(
+                  child: _ActionCard(
+                    title: 'Explore Groups',
+                    icon: Icons.groups_outlined,
+                    onTap: () => Get.toNamed(AppRoutes.explore),
+                  ),
+                ),
+              ],
+            );
+          }
+
+          return Row(
+            children: [
+              Expanded(
+                child: _ActionCard(
+                  title: 'Explore Groups',
+                  icon: Icons.groups_outlined,
+                  onTap: () => Get.toNamed(AppRoutes.explore),
+                ),
               ),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: _ActionCard(
-                title: 'Become Trader',
-                icon: Icons.trending_up_rounded,
-                hasNotification: true,
-                onTap: () => Get.toNamed(AppRoutes.applyTrader),
+              const SizedBox(width: 16),
+              Expanded(
+                child: _ActionCard(
+                  title: isApplied ? 'Pending Review' : 'Become Trader',
+                  icon: Icons.trending_up_rounded,
+                  hasNotification: isApplied,
+                  onTap: () {
+                    if (isApplied) {
+                      Get.defaultDialog(
+                        title: 'Application Under Review',
+                        titleStyle: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
+                        backgroundColor: const Color(0xFF1E293B),
+                        contentPadding: const EdgeInsets.all(20),
+                        middleText: 'Your trader application has been submitted successfully and is currently under review by our admin team. We will notify you once your application has been approved!',
+                        middleTextStyle: const TextStyle(color: Color(0xFF94A3B8), fontSize: 14),
+                        textConfirm: 'Okay',
+                        confirmTextColor: Colors.white,
+                        buttonColor: const Color(0xFF14B8A6),
+                        onConfirm: () => Get.back(),
+                      );
+                    } else {
+                      Get.toNamed(AppRoutes.applyTrader);
+                    }
+                  },
+                ),
               ),
-            ),
-          ],
-        ),
+            ],
+          );
+        }),
       ],
     );
   }
@@ -700,5 +739,75 @@ class _GroupItem extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class _RoleSwitchSection extends StatelessWidget {
+  const _RoleSwitchSection();
+
+  @override
+  Widget build(BuildContext context) {
+    final session = Get.find<SessionService>();
+    return Obx(() {
+      if (!session.isTrader || !session.isUser) {
+        return const SizedBox.shrink();
+      }
+      final isTraderActive = session.isActiveRoleTrader;
+      return Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: AppColors.primary.withValues(alpha: 0.08),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: AppColors.primary.withValues(alpha: 0.2),
+            width: 1,
+          ),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Active View Mode',
+                    style: TextStyle(
+                      color: AppColors.text,
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    isTraderActive ? 'Viewing as Trader Perspective' : 'Viewing as User Perspective',
+                    style: TextStyle(
+                      color: AppColors.mutedText,
+                      fontSize: 12,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Switch.adaptive(
+              activeColor: AppColors.primary,
+              value: isTraderActive,
+              onChanged: (val) async {
+                final newRole = val ? 'trader' : 'user';
+                await session.setActiveRole(newRole);
+                Get.snackbar(
+                  'Role Switched',
+                  'Switched to ${newRole.capitalizeFirst} perspective successfully!',
+                  backgroundColor: const Color(0xFF1E293B),
+                  colorText: Colors.white,
+                  snackPosition: SnackPosition.TOP,
+                  duration: const Duration(seconds: 2),
+                );
+              },
+            ),
+          ],
+        ),
+      );
+    });
   }
 }

@@ -7,7 +7,9 @@ import '../../../../core/services/device_service.dart';
 import '../../../../core/services/session_service.dart';
 import '../../../../core/utils/app_validators.dart';
 import '../../../../routes/app_routes.dart';
+import '../../../user_profile/domain/repositories/profile_repository.dart';
 import '../../domain/repositories/auth_repository.dart';
+
 
 class LoginViewModel extends BaseViewModel {
   LoginViewModel({
@@ -60,6 +62,23 @@ class LoginViewModel extends BaseViewModel {
         );
 
         await _sessionService.saveUser(response.user);
+
+        try {
+          final profileRepo = Get.find<ProfileRepository>();
+          final rolesResponse = await profileRepo.getUserRoles();
+          if (rolesResponse.status && rolesResponse.data != null) {
+            final data = rolesResponse.data!;
+            final roles = data.roles.map((e) => e.name).toList();
+            await _sessionService.saveRolesData(
+              roles: roles,
+              traderStatus: data.traderStatus,
+              isSubscription: data.isSubscription,
+            );
+          }
+        } catch (e) {
+          debugPrint('Error fetching user roles on login: $e');
+        }
+
         showSuccess(response.message);
         Get.offAllNamed(AppRoutes.roleSelection);
       } on ApiException catch (error) {
@@ -69,4 +88,5 @@ class LoginViewModel extends BaseViewModel {
       }
     });
   }
+
 }

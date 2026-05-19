@@ -19,11 +19,17 @@ class ApiEndpoints {
   static const logout = 'api/logout';
   static const getProfile = 'api/profile/get';
   static const updateProfile = 'api/profile/update';
+  static const getRoles = 'api/profile/get-roles';
+
 
   // Trader Endpoints
   static const applyTrader = 'api/trader/apply';
   static const getTraderSubscriptions = 'api/trader/subscription-plan/get';
   static const buyTraderSubscription = 'api/trader/subscription-plan/buy';
   static const getMyTraderSubscription = 'api/trader/subscription-plan/my-subscription';
+  static const getTraderDashboard = 'api/trader/deashboard';
+  static const getGroupCategories = 'api/trader/groups/category';
+  static const createTraderGroup = 'api/trader/groups/create';
+  static const getAllTraderGroups = 'api/trader/groups/all';
 }
 

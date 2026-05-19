@@ -2,6 +2,7 @@ import '../../../../core/network/api_client.dart';
 import '../../../../core/services/session_service.dart';
 import '../../../../core/values/app_constants.dart';
 import '../models/profile_response.dart';
+import '../models/user_roles_response.dart';
 
 class ProfileRemoteDataSource {
   ProfileRemoteDataSource({
@@ -13,6 +14,15 @@ class ProfileRemoteDataSource {
   final ApiClient _apiClient;
   final SessionService _sessionService;
 
+  Future<UserRolesResponse> getUserRoles() async {
+    final response = await _apiClient.get(
+      ApiEndpoints.getRoles,
+      headers: {'Authorization': 'Bearer ${_sessionService.authToken ?? ''}'},
+    );
+
+    return UserRolesResponse.fromJson(response);
+  }
+
   Future<ProfileResponse> getProfile() async {
     final response = await _apiClient.get(
       ApiEndpoints.getProfile,
@@ -21,6 +31,7 @@ class ProfileRemoteDataSource {
 
     return ProfileResponse.fromJson(response);
   }
+
 
   Future<ProfileResponse> updateProfile({
     required String name,
